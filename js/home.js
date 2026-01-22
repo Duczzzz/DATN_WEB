@@ -25,9 +25,45 @@ onValue(ref(db, "dht11/Temp"), (snapshot) => {
 onValue(ref(db, "dht11/Humi"), (snapshot) => {
   document.getElementById("doam").innerText = snapshot.val() + " %";
 });
-let a = -1;
-window.getvalueDHT11 = function () {
-  a = a + 1;
-  if (a > 5) a = -1;
-  set(ref(db, "mode"), a);
+onValue(ref(db, "bme280/Temp"), (snapshot) => {
+  document.getElementById("nhietdoBME280").innerText = snapshot.val() + " °C";
+});
+onValue(ref(db, "bme280/Humi"), (snapshot) => {
+  document.getElementById("doamBME280").innerText = snapshot.val() + " %";
+});
+onValue(ref(db, "Out/Out1"), (snapshot) => {
+  var status1 = document.getElementById("status1");
+  if (snapshot.val() == 1) {
+    status1.innerText = "OUT 1 Đang bật";
+  } else {
+    status1.innerText = "OUT 1 Đang tắt";
+  }
+});
+onValue(ref(db, "Out/Out2"), (snapshot) => {
+  var status2 = document.getElementById("status2");
+  if (snapshot.val() == 1) {
+    status2.innerText = "OUT 2 Đang bật";
+  } else {
+    status2.innerText = "OUT 2 Đang tắt";
+  }
+});
+document.getElementById("btn-inout1").onclick = function () {
+  const btn = document.getElementById("btn-inout1");
+  if (btn.style.backgroundColor == "rgb(255, 152, 152)") {
+    set(ref(db, "In/In1"), 1);
+    btn.style.backgroundColor = "rgb(41, 63, 255)";
+  } else {
+    set(ref(db, "In/In1"), 0);
+    btn.style.backgroundColor = "rgb(255, 152, 152)";
+  }
+};
+document.getElementById("btn-inout2").onclick = function () {
+  const btn = document.getElementById("btn-inout2");
+  if (btn.style.backgroundColor == "rgb(255, 152, 152)") {
+    set(ref(db, "In/In2"), 1);
+    btn.style.backgroundColor = "rgb(41, 63, 255)";
+  } else {
+    set(ref(db, "In/In2"), 0);
+    btn.style.backgroundColor = "rgb(255, 152, 152)";
+  }
 };
