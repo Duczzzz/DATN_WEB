@@ -6,13 +6,14 @@
     <title>Document</title>
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/home.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <h1 class="head">KIT STEM</h1>
     <div class="menu">
       <ul>
         <li><a href="#">Trang chủ</a></li>
-        <li><a href="#">Điều khiển</a></li>
+        <li><a href="#">Chat Bot AI</a></li>
         <li><a href="#">Cảm biến</a></li>
         <li><a href="#">Liên hệ</a></li>
       </ul>
@@ -29,20 +30,22 @@
       </div>
       <div class="box box2">
         <h1 class="heading">Cảm biến DHT11</h1>
-        <h2>Nhiệt độ: <span id="nhietdo">-- °C</span></h2>
-        <h2>Độ ẩm: <span id="doam">-- %</span></h2>
+        <h2>Nhiệt độ hiện tại: <span id="nhietdo">-- °C</span></h2>
+        <h2>Độ ẩm hiện tại: <span id="doam">-- %</span></h2>
+        <div class="chDHT11">
+          <canvas id="ChartDHT11"></canvas>
+        </div>
       </div>
       <div class="box box3">
         <h1 class="heading">Cảm biến BME280</h1>
-        <h2>Nhiệt độ: <span id="nhietdoBME280">-- °C</span></h2>
-        <h2>Độ ẩm: <span id="doamBME280">-- %</span></h2>
+        <h2>Nhiệt độ hiện tại: <span id="nhietdoBME280">-- °C</span></h2>
+        <h2>Độ ẩm hiện tại: <span id="doamBME280">-- %</span></h2>
+        <div class="chBME">
+          <canvas id="ChartBME280"></canvas>
+        </div>
       </div>
       <div class="box box4">
-        <h1 class="heading">Điều khiển In Out4</h1>
-        <div class="button_group">
-          <button id="btn-inout1">Bật 1</button>
-          <button id="btn-inout2">Bật 2</button>
-        </div>
+        <h1 class="heading">Biểu đồ Nhiệt độ DHT11</h1>
       </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>

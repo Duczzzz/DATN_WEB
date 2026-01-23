@@ -16,20 +16,89 @@ const firebaseConfig = {
   messagingSenderId: "599011961788",
   appId: "1:599011961788:web:008c324dbfc6b3cf6699b9",
 };
-
+const ctx1 = document.getElementById("ChartDHT11");
+const mixedChart = new Chart(ctx1, {
+  data: {
+    datasets: [
+      {
+        type: "bar",
+        label: "Nhiệt độ",
+        data: [],
+      },
+      {
+        type: "line",
+        label: "Độ ẩm",
+        data: [],
+      },
+    ],
+    labels: [],
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  },
+});
+const ctx2 = document.getElementById("ChartBME280");
+const mixedChart2 = new Chart(ctx2, {
+  data: {
+    datasets: [
+      {
+        type: "bar",
+        label: "Nhiệt độ",
+        data: [],
+      },
+      {
+        type: "line",
+        label: "Độ ẩm",
+        data: [],
+      },
+    ],
+    labels: [],
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  },
+});
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 onValue(ref(db, "dht11/Temp"), (snapshot) => {
   document.getElementById("nhietdo").innerText = snapshot.val() + " °C";
+  const temp = snapshot.val();
+
+  mixedChart.data.labels.push(new Date().toLocaleTimeString());
+  mixedChart.data.datasets[0].data.push(temp);
+
+  mixedChart.update();
 });
 onValue(ref(db, "dht11/Humi"), (snapshot) => {
   document.getElementById("doam").innerText = snapshot.val() + " %";
+  const humi = snapshot.val();
+
+  mixedChart.data.datasets[1].data.push(humi);
+  mixedChart.update();
 });
 onValue(ref(db, "bme280/Temp"), (snapshot) => {
   document.getElementById("nhietdoBME280").innerText = snapshot.val() + " °C";
+  const temp = snapshot.val();
+
+  mixedChart2.data.labels.push(new Date().toLocaleTimeString());
+  mixedChart2.data.datasets[0].data.push(temp);
+
+  mixedChart2.update();
 });
 onValue(ref(db, "bme280/Humi"), (snapshot) => {
   document.getElementById("doamBME280").innerText = snapshot.val() + " %";
+  const humi = snapshot.val();
+
+  mixedChart2.data.datasets[1].data.push(humi);
+  mixedChart2.update();
 });
 onValue(ref(db, "Out/Out1"), (snapshot) => {
   var status1 = document.getElementById("status1");
