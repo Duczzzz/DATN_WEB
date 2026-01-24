@@ -28,7 +28,7 @@ $(document).ready(function () {
   });
 });
 
-window.checklogin = function () {
+document.getElementById("submit").onclick = function () {
   const username = document.getElementById("user").value.trim();
   const password = document.getElementById("pass").value.trim();
 
