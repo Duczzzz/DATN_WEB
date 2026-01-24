@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/home.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <h1 class="head">KIT STEM</h1>
+    <div class="menu">
+      <ul>
+        <li><a href="home.html">Trang chủ</a></li>
+        <li><a href="#" id="chatbot">Chat Bot AI</a></li>
+        <li><a href="cambien.html">Cảm biến</a></li>
+        <li><a href="lienhe.html">Liên hệ</a></li>
+      </ul>
+    </div>
+    <button id="addblock">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+    <div class="container">
+      <div class="box box1">
+        <h1 class="heading">Điều khiển In Out1</h1>
+        <div class="button_group">
+          <button id="btn-inout1">IN 1</button>
+          <p id="status1">OUT 1 Đang tắt</p>
+          <button id="btn-inout2">IN 2</button>
+          <p id="status2">OUT 2 Đang tắt</p>
+        </div>
+      </div>
+      <div class="box box2">
+        <h1 class="heading">Cảm biến DHT11</h1>
+        <h2>Nhiệt độ hiện tại: <span id="nhietdo">-- °C</span></h2>
+        <h2>Độ ẩm hiện tại: <span id="doam">-- %</span></h2>
+        <div class="card-chart">
+          <canvas id="ChartDHT11"></canvas>
+        </div>
+      </div>
+      <div class="box box3">
+        <h1 class="heading">Cảm biến BME280</h1>
+        <h2>Nhiệt độ hiện tại: <span id="nhietdoBME280">-- °C</span></h2>
+        <h2>Độ ẩm hiện tại: <span id="doamBME280">-- %</span></h2>
+        <div class="card-chart">
+          <canvas id="ChartBME280"></canvas>
+        </div>
+      </div>
+      <div class="box box4">
+        <h1 class="heading">Test</h1>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script type="module" src="js/home.js"></script>
+  </body>
+</html>

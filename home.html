@@ -1,54 +1,58 @@
 <!doctype html>
-<html lang="en">
+<html lang="vn">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Kit STEM</title>
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/home.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <h1 class="head">KIT STEM</h1>
     <div class="menu">
       <ul>
-        <li><a href="#">Trang chủ</a></li>
-        <li><a href="#">Chat Bot AI</a></li>
-        <li><a href="#">Cảm biến</a></li>
-        <li><a href="#">Liên hệ</a></li>
+        <li><a href="home.html">Trang chủ</a></li>
+        <li><a href="#" id="chatbot">Chat Bot AI</a></li>
+        <li><a href="cambien.html">Cảm biến</a></li>
+        <li><a href="lienhe.html">Liên hệ</a></li>
       </ul>
     </div>
-    <div class="container">
-      <div class="box box1">
-        <h1 class="heading">Điều khiển In Out1</h1>
-        <div class="button_group">
-          <button id="btn-inout1">IN 1</button>
-          <p id="status1">OUT 1 Đang tắt</p>
-          <button id="btn-inout2">IN 2</button>
-          <p id="status2">OUT 2 Đang tắt</p>
-        </div>
-      </div>
-      <div class="box box2">
-        <h1 class="heading">Cảm biến DHT11</h1>
-        <h2>Nhiệt độ hiện tại: <span id="nhietdo">-- °C</span></h2>
-        <h2>Độ ẩm hiện tại: <span id="doam">-- %</span></h2>
-        <div class="chDHT11">
-          <canvas id="ChartDHT11"></canvas>
-        </div>
-      </div>
-      <div class="box box3">
-        <h1 class="heading">Cảm biến BME280</h1>
-        <h2>Nhiệt độ hiện tại: <span id="nhietdoBME280">-- °C</span></h2>
-        <h2>Độ ẩm hiện tại: <span id="doamBME280">-- %</span></h2>
-        <div class="chBME">
-          <canvas id="ChartBME280"></canvas>
-        </div>
-      </div>
-      <div class="box box4">
-        <h1 class="heading">Biểu đồ Nhiệt độ DHT11</h1>
-      </div>
+    <div class="box">
+      <section class="intro">
+        <h1 class="heading">Giới thiệu đề tài Kit STEM</h1>
+
+        <p>
+          Đề tài <strong>Kit STEM</strong> được thực hiện với mục tiêu nghiên
+          cứu, thiết kế và xây dựng một <strong>nền tảng IoT</strong> phục vụ
+          cho học tập và thực hành trong lĩnh vực STEM (Science, Technology,
+          Engineering, Mathematics).
+        </p>
+
+        <p>
+          Dự án hướng đến việc kết nối giữa <strong>phần cứng</strong> (vi điều
+          khiển, cảm biến) và <strong>phần mềm</strong> (website, cơ sở dữ liệu,
+          xử lý dữ liệu thời gian thực), giúp người học dễ dàng tiếp cận và làm
+          chủ các công nghệ hiện đại.
+        </p>
+
+        <p>
+          Thông qua Kit STEM, người dùng có thể theo dõi, điều khiển và quản lý
+          các thiết bị IoT trực quan trên nền tảng web, đồng thời hiểu rõ hơn về
+          cách hệ thống IoT hoạt động từ tầng thiết bị đến tầng ứng dụng.
+        </p>
+
+        <p>
+          Website của đề tài sẽ liên tục được
+          <strong>cập nhật và mở rộng các tính năng mới</strong> trong thời gian
+          tới, nhằm nâng cao trải nghiệm người dùng và đáp ứng tốt hơn nhu cầu
+          học tập, nghiên cứu.
+        </p>
+      </section>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script type="module" src="js/home.js"></script>
+    <script>
+      document.getElementById("chatbot").onclick = function () {
+        alert("Tính năng Chat Bot AI đang được phát triển!");
+      };
+    </script>
   </body>
 </html>

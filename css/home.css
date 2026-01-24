@@ -14,7 +14,6 @@ body {
   padding-bottom: 60px;
   position: relative;
 }
-
 body::before {
   content: "";
   position: fixed;
@@ -42,7 +41,19 @@ body::before {
   z-index: 1;
   letter-spacing: -1px;
 }
-
+#addblock {
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 20px;
+  margin-top: 40px;
+  margin-left: 25px;
+  background: linear-gradient(90deg, #acd1ff, #8bffd4);
+  cursor: pointer;
+}
+#addblock:active {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, #8bffd4, #d4ff00);
+}
 @keyframes gradient {
   0%,
   100% {
@@ -134,14 +145,15 @@ body::before {
 .box {
   display: flex;
   flex-direction: column;
-  flex: 1 1 calc(50% - 15px);
-  min-width: 320px;
+  min-width: 300px;
+  height: auto;
   background: rgba(255, 255, 255, 0.95);
-  padding: 35px;
+  padding: 30px;
   border-radius: 24px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(255, 255, 255, 0.8);
+  margin-top: 30px;
   position: relative;
 }
 
@@ -256,22 +268,11 @@ body::before {
   text-transform: uppercase;
 }
 
-.button_group button:hover {
+#btn-inout1:hover,
+#btn-inout2:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
-  background: rgb(220, 38, 38);
+  background: linear-gradient(90deg, #e9d2ff, #472fff);
 }
-
-.button_group button.active {
-  background: rgb(16, 185, 129);
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-}
-
-.button_group button.active:hover {
-  background: rgb(5, 150, 105);
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-}
-
 .button_group p {
   grid-column: span 2;
   font-size: 17px;
@@ -330,6 +331,25 @@ body::before {
     min-height: 400px;
     height: 400px;
   }
+  form {
+    padding: 18px;
+    margin: 12px;
+  }
+
+  form label {
+    font-size: 13px;
+  }
+
+  form input[type="text"],
+  form select {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  form button {
+    padding: 11px 16px;
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -382,26 +402,41 @@ body::before {
     font-size: 13px;
     padding: 14px 20px;
   }
+  form {
+    padding: 20px;
+    margin: 16px;
+  }
+
+  form input[type="text"],
+  form select {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  form button {
+    padding: 12px 18px;
+    font-size: 15px;
+  }
 }
 
 @media (max-width: 480px) {
   .head {
     font-size: 32px;
-    padding: 30px 15px;
+    padding: 10px;
   }
 
   .menu li {
-    flex: 1 1 100%;
+    display: inline-block;
   }
 
   .menu a {
-    padding: 14px 15px;
+    padding: 5px;
     font-size: 12px;
   }
 
   .container {
     padding: 0 15px;
-    gap: 20px;
+    gap: 30px;
   }
 
   .box {
@@ -420,6 +455,25 @@ body::before {
 
   .button_group {
     gap: 12px;
+  }
+  form {
+    padding: 18px;
+    margin: 12px;
+  }
+
+  form label {
+    font-size: 13px;
+  }
+
+  form input[type="text"],
+  form select {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  form button {
+    padding: 11px 16px;
+    font-size: 14px;
   }
 }
 
@@ -449,4 +503,115 @@ body::before {
 }
 .box:nth-child(4) {
   animation-delay: 0.4s;
+}
+form {
+  background: #ffffff;
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 20px auto;
+}
+form {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+form label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 16px 0 8px 0;
+}
+
+form input[type="text"],
+form select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #2d3748;
+  margin-bottom: 4px;
+  font-family: inherit;
+}
+
+form input[type="text"]:focus,
+form select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+form button {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.social {
+  text-align: center;
+  margin-top: 40px;
+}
+.social #fb {
+  color: #007ced;
+  font-size: 30px;
+  margin-right: 20px;
+  margin-left: 2px;
+  transition: transform 0.6s ease;
+}
+.social #ig {
+  color: #ff5e00;
+  font-size: 30px;
+  margin-right: 20px;
+  margin-left: 2px;
+  transition: transform 0.6s ease;
+}
+.social #ln {
+  color: #a3d2ff;
+  font-size: 30px;
+  margin-right: 20px;
+  margin-left: 2px;
+  transition: transform 0.6s ease;
+}
+.social #git {
+  color: #dfc3ff;
+  font-size: 30px;
+  margin-right: 20px;
+  margin-left: 2px;
+  transition: transform 0.6s ease;
+}
+.social #fb:hover {
+  color: #1877f2;
+  transform: rotateY(180deg);
+}
+
+.social #ig:hover {
+  color: #e1306c;
+  transform: scale(1.4) rotate(20deg);
+}
+
+.social #ln:hover {
+  color: #0a66c2;
+  transform: translateY(-10px);
+}
+
+.social #git:hover {
+  color: #333;
+  animation: shake 0.4s;
 }

@@ -136,3 +136,104 @@ document.getElementById("btn-inout2").onclick = function () {
     btn.style.backgroundColor = "rgb(255, 152, 152)";
   }
 };
+var count = 0;
+document.getElementById("addblock").onclick = function () {
+  let box = document.createElement("div");
+  count += 1;
+  box.className = "box box5";
+  box.innerHTML = `
+    <h2>Thêm card mới</h2>
+    <form>
+      <input type="text" placeholder="Nhập tên card" id = "cardName"><br>
+      <label>Lựa chọn loại card</label>
+      <select id="cardType">
+        <option value="Cảm biến">Cảm biến</option>
+        <option value="Điều khiển In Out">Điều khiển In Out</option>
+      </select><br>
+      <label>Lựa chọn loại biểu đồ</label>
+      <select id="chartType">
+        <option value="line">Biểu đồ đường</option>
+        <option value="bar">Biểu đồ cột</option>
+        <option value="pie">Biểu đồ tròn</option>
+        <option value="doughnut">Biểu đồ vòng</option>
+        <option value="mixchart">Biểu đồ hỗn hợp</option>
+        <option value="none">Không</option>
+      </select><br>
+      <label>Lựa chọn chân kết nối</label>
+      <select id="selectPin">
+        <option value="2">GPIO2</option>
+        <option value="4">GPIO4</option>
+        <option value="5">GPIO5</option>
+        <option value="16">GPIO16</option>
+        <option value="17">GPIO17</option>
+        <option value="18">GPIO18</option>
+        <option value="19">GPIO19</option>
+        <option value="21">GPIO21</option>
+        <option value="22">GPIO22</option>
+        <option value="23">GPIO23</option>
+        <option value="25">GPIO25</option>
+        <option value="26">GPIO26</option>
+        <option value="27">GPIO27</option>
+        <option value="32">GPIO32</option>
+        <option value="33">GPIO33</option>
+      </select><br>
+      <button type="button" id="getInfor">Xác nhận</button>
+    </form>
+  `;
+  document.querySelector(".container").appendChild(box);
+  box.querySelector("#getInfor").onclick = function () {
+    const selectChart = box.querySelector("#chartType").value;
+    const selectCard = box.querySelector("#cardType").value;
+    const selectPin = box.querySelector("#selectPin").value;
+    const cardName = box.querySelector("#cardName").value;
+    alert(
+      `Bạn đã chọn:
+      Biểu đồ: ${selectChart}
+      Card: ${selectCard}
+      GPIO: ${selectPin}`,
+    );
+    box.innerHTML = `
+    <h1 class="heading">${cardName}</h1>
+    <h2>Loại card: ${selectCard}</h2>
+    <h2>Chân kết nối: GPIO${selectPin}</h2>
+    <h2>Loại biểu đồ: ${selectChart}</h2>
+    ${
+      selectChart !== "none"
+        ? `<div class="card-chart">
+             <canvas id="Chart${count}"></canvas>
+           </div>`
+        : ""
+    }
+  `;
+    if (selectChart != "none") {
+      const ctxNew = document.getElementById(`Chart${count}`);
+      const mixedChart1 = new Chart(ctxNew, {
+        data: {
+          datasets: [
+            {
+              type: "bar",
+              label: "Nhiệt độ",
+              data: [],
+            },
+            {
+              type: "line",
+              label: "Độ ẩm",
+              data: [],
+            },
+          ],
+          labels: [],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+    }
+  };
+};
+document.getElementById("chatbot").onclick = function () {
+  alert("Tính năng Chat Bot AI đang được phát triển!");
+};
