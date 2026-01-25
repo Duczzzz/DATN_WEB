@@ -11,6 +11,10 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="
+https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js
+"></script>
   </head>
   <body>
     <h1 class="head">KIT STEM</h1>
@@ -47,6 +51,9 @@
         <h1 class="heading">Cảm biến BME280</h1>
         <h2>Nhiệt độ hiện tại: <span id="nhietdoBME280">-- °C</span></h2>
         <h2>Độ ẩm hiện tại: <span id="doamBME280">-- %</span></h2>
+        <button class="golive" id="live">
+          <img src="img/stream.png" alt="lỗi tải ảnh" />
+        </button>
         <div class="card-chart">
           <canvas id="ChartBME280"></canvas>
         </div>

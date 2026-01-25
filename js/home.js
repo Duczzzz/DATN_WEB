@@ -63,41 +63,64 @@ const mixedChart2 = new Chart(ctx2, {
       y: {
         beginAtZero: true,
       },
+      y: {
+        min: 0,
+        max: 100,
+      },
+    },
+    plugins: {
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: "x",
+        },
+        pan: {
+          enabled: true,
+          mode: "x",
+        },
+      },
     },
   },
 });
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-onValue(ref(db, "dht11/Temp"), (snapshot) => {
-  document.getElementById("nhietdo").innerText = snapshot.val() + " °C";
-  const temp = snapshot.val();
+onValue(ref(db, "dht11"), (snapshot) => {
+  const data = snapshot.val();
+  if (!data) return;
 
-  mixedChart.data.labels.push(new Date().toLocaleTimeString());
+  const temp = data.Temp;
+  const humi = data.Humi;
+  const time = new Date().toLocaleTimeString();
+
+  document.getElementById("nhietdo").innerText = temp + " °C";
+  document.getElementById("doam").innerText = humi + " %";
+
+  mixedChart.data.labels.push(time);
   mixedChart.data.datasets[0].data.push(temp);
-
-  mixedChart.update();
-});
-onValue(ref(db, "dht11/Humi"), (snapshot) => {
-  document.getElementById("doam").innerText = snapshot.val() + " %";
-  const humi = snapshot.val();
-
   mixedChart.data.datasets[1].data.push(humi);
+
   mixedChart.update();
 });
-onValue(ref(db, "bme280/Temp"), (snapshot) => {
-  document.getElementById("nhietdoBME280").innerText = snapshot.val() + " °C";
-  const temp = snapshot.val();
-
-  mixedChart2.data.labels.push(new Date().toLocaleTimeString());
+onValue(ref(db, "bme280"), (snapshot) => {
+  const data = snapshot.val();
+  if (!data) return;
+  const temp = data.Temp;
+  const humi = data.Humi;
+  const time = new Date().toLocaleTimeString();
+  document.getElementById("nhietdoBME280").innerText = temp + " °C";
+  document.getElementById("doamBME280").innerText = humi + " %";
+  mixedChart2.data.labels.push(time);
   mixedChart2.data.datasets[0].data.push(temp);
-
-  mixedChart2.update();
-});
-onValue(ref(db, "bme280/Humi"), (snapshot) => {
-  document.getElementById("doamBME280").innerText = snapshot.val() + " %";
-  const humi = snapshot.val();
-
   mixedChart2.data.datasets[1].data.push(humi);
+  if (live) {
+    mixedChart2.resetZoom();
+  }
+  console.log(live);
   mixedChart2.update();
 });
 onValue(ref(db, "Out/Out1"), (snapshot) => {
@@ -236,4 +259,25 @@ document.getElementById("addblock").onclick = function () {
 };
 document.getElementById("chatbot").onclick = function () {
   alert("Tính năng Chat Bot AI đang được phát triển!");
+};
+let live = false;
+document.getElementById("live").onclick = function () {
+  live = !live;
+  const ele = document.getElementById("live");
+
+  const zoomOpt = mixedChart2.options.plugins.zoom;
+
+  if (live) {
+    zoomOpt.zoom.wheel.enabled = false;
+    zoomOpt.zoom.pinch.enabled = false;
+    zoomOpt.pan.enabled = false;
+    mixedChart2.resetZoom();
+    ele.style.backgroundColor = "rgb(255, 0, 0)";
+  } else {
+    zoomOpt.zoom.wheel.enabled = true;
+    zoomOpt.zoom.pinch.enabled = true;
+    zoomOpt.pan.enabled = true;
+    ele.style.backgroundColor = "rgb(255, 215, 215)";
+  }
+  mixedChart2.update("none");
 };
