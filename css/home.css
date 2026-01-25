@@ -316,6 +316,7 @@ body::before {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-size: 22px;
+  padding: 5px;
 }
 
 @media (max-width: 1024px) {
@@ -547,6 +548,13 @@ form select {
 form input[type="text"]:focus,
 form select:focus {
   outline: none;
+  border-color: #667eea;
+}
+form input[type="number"] {
+  padding: 10px;
+  outline: none;
+  font-size: 18px;
+  font-weight: 700;
   border-color: #667eea;
 }
 

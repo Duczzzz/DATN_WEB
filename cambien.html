@@ -43,6 +43,30 @@ https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.
         <h1 class="heading">Cảm biến DHT11</h1>
         <h2>Nhiệt độ hiện tại: <span id="nhietdo">-- °C</span></h2>
         <h2>Độ ẩm hiện tại: <span id="doam">-- %</span></h2>
+        <h2>Trạng thái đèn cảnh báo <span id="warnLedDht11">Đang tắt</span></h2>
+        <form>
+          <label for="WarnInfoTemp2">Ngưỡng nhiệt độ (°C)</label>
+          <input
+            id="WarnInfoTemp2"
+            type="number"
+            step="0.1"
+            min="0"
+            max="100"
+          />
+          <br />
+          <label for="WarnInfoHumi2">Ngưỡng độ ẩm (%)</label>
+          <input
+            id="WarnInfoHumi2"
+            type="number"
+            step="0.1"
+            min="0"
+            max="100"
+          />
+          <button type="button" id="Warnbtn2">Cài đặt</button>
+        </form>
+        <button class="golive" id="live2">
+          <img src="img/stream.png" alt="lỗi tải ảnh" />
+        </button>
         <div class="card-chart">
           <canvas id="ChartDHT11"></canvas>
         </div>
@@ -51,6 +75,29 @@ https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.
         <h1 class="heading">Cảm biến BME280</h1>
         <h2>Nhiệt độ hiện tại: <span id="nhietdoBME280">-- °C</span></h2>
         <h2>Độ ẩm hiện tại: <span id="doamBME280">-- %</span></h2>
+        <h2>
+          Trạng thái đèn cảnh báo <span id="warnLedBME280">Đang tắt</span>
+        </h2>
+        <form>
+          <label for="WarnInfoTemp1">Ngưỡng nhiệt độ (°C)</label>
+          <input
+            id="WarnInfoTemp1"
+            type="number"
+            step="0.1"
+            min="0"
+            max="100"
+          />
+          <br />
+          <label for="WarnInfoHumi1">Ngưỡng độ ẩm (%)</label>
+          <input
+            id="WarnInfoHumi1"
+            type="number"
+            step="0.1"
+            min="0"
+            max="100"
+          />
+          <button type="button" id="Warnbtn1">Cài đặt</button>
+        </form>
         <button class="golive" id="live">
           <img src="img/stream.png" alt="lỗi tải ảnh" />
         </button>

@@ -38,6 +38,27 @@ const mixedChart = new Chart(ctx1, {
       y: {
         beginAtZero: true,
       },
+      y: {
+        min: 0,
+        max: 100,
+      },
+    },
+    plugins: {
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: "x",
+        },
+        pan: {
+          enabled: true,
+          mode: "x",
+        },
+      },
     },
   },
 });
@@ -103,7 +124,9 @@ onValue(ref(db, "dht11"), (snapshot) => {
   mixedChart.data.labels.push(time);
   mixedChart.data.datasets[0].data.push(temp);
   mixedChart.data.datasets[1].data.push(humi);
-
+  if (live2) {
+    mixedChart.resetZoom();
+  }
   mixedChart.update();
 });
 onValue(ref(db, "bme280"), (snapshot) => {
@@ -117,27 +140,36 @@ onValue(ref(db, "bme280"), (snapshot) => {
   mixedChart2.data.labels.push(time);
   mixedChart2.data.datasets[0].data.push(temp);
   mixedChart2.data.datasets[1].data.push(humi);
-  if (live) {
+  if (live1) {
     mixedChart2.resetZoom();
   }
-  console.log(live);
   mixedChart2.update();
 });
-onValue(ref(db, "Out/Out1"), (snapshot) => {
-  var status1 = document.getElementById("status1");
-  if (snapshot.val() == 1) {
-    status1.innerText = "OUT 1 Đang bật";
+onValue(ref(db, "Out"), (snapshot) => {
+  const data = snapshot.val();
+  if (!data) return;
+  const status1 = data.Out1;
+  const status2 = data.Out2;
+  if (status1 == 1) {
+    document.getElementById("status1").innerText = "OUT 1 Đang bật";
   } else {
-    status1.innerText = "OUT 1 Đang tắt";
+    document.getElementById("status1").innerText = "OUT 1 Đang tắt";
+  }
+  if (status2 == 1) {
+    document.getElementById("status2").innerText = "OUT 2 Đang bật";
+  } else {
+    document.getElementById("status2").innerText = "OUT 2 Đang tắt";
   }
 });
-onValue(ref(db, "Out/Out2"), (snapshot) => {
-  var status2 = document.getElementById("status2");
+onValue(ref(db, "bme280/ledbme"), (snapshot) => {
   if (snapshot.val() == 1) {
-    status2.innerText = "OUT 2 Đang bật";
-  } else {
-    status2.innerText = "OUT 2 Đang tắt";
-  }
+    document.getElementById("warnLedBME280").innerText = "Đang bật";
+  } else document.getElementById("warnLedBME280").innerText = "Đang tắt";
+});
+onValue(ref(db, "dht11/leddht11"), (snapshot) => {
+  if (snapshot.val() == 1) {
+    document.getElementById("warnLedDht11").innerText = "Đang bật";
+  } else document.getElementById("warnLedDht11").innerText = "Đang tắt";
 });
 document.getElementById("btn-inout1").onclick = function () {
   const btn = document.getElementById("btn-inout1");
@@ -260,14 +292,14 @@ document.getElementById("addblock").onclick = function () {
 document.getElementById("chatbot").onclick = function () {
   alert("Tính năng Chat Bot AI đang được phát triển!");
 };
-let live = false;
+let live1 = false;
 document.getElementById("live").onclick = function () {
-  live = !live;
+  live1 = !live1;
   const ele = document.getElementById("live");
 
   const zoomOpt = mixedChart2.options.plugins.zoom;
 
-  if (live) {
+  if (live1) {
     zoomOpt.zoom.wheel.enabled = false;
     zoomOpt.zoom.pinch.enabled = false;
     zoomOpt.pan.enabled = false;
@@ -280,4 +312,53 @@ document.getElementById("live").onclick = function () {
     ele.style.backgroundColor = "rgb(255, 215, 215)";
   }
   mixedChart2.update("none");
+};
+let live2 = false;
+document.getElementById("live2").onclick = function () {
+  live2 = !live2;
+  const ele = document.getElementById("live2");
+
+  const zoomOpt = mixedChart.options.plugins.zoom;
+
+  if (live2) {
+    zoomOpt.zoom.wheel.enabled = false;
+    zoomOpt.zoom.pinch.enabled = false;
+    zoomOpt.pan.enabled = false;
+    mixedChart.resetZoom();
+    ele.style.backgroundColor = "rgb(255, 0, 0)";
+  } else {
+    zoomOpt.zoom.wheel.enabled = true;
+    zoomOpt.zoom.pinch.enabled = true;
+    zoomOpt.pan.enabled = true;
+    ele.style.backgroundColor = "rgb(255, 215, 215)";
+  }
+  mixedChart.update("none");
+};
+document.getElementById("Warnbtn1").onclick = function () {
+  let tempCB = document.getElementById("WarnInfoTemp1").value;
+  let humiCB = document.getElementById("WarnInfoHumi1").value;
+  tempCB = Number(tempCB);
+  humiCB = Number(humiCB);
+  set(ref(db, "CBNDBME"), tempCB);
+  set(ref(db, "CBDABME"), humiCB);
+  alert(
+    `Bạn đã cài đặt thành công ngưỡng:
+Nhiệt độ: ${tempCB}
+Độ ẩm: ${humiCB}
+Cho cảm biến BME280`,
+  );
+};
+document.getElementById("Warnbtn2").onclick = function () {
+  let tempCB = document.getElementById("WarnInfoTemp2").value;
+  let humiCB = document.getElementById("WarnInfoHumi2").value;
+  tempCB = Number(tempCB);
+  humiCB = Number(humiCB);
+  set(ref(db, "CBNDDht11"), tempCB);
+  set(ref(db, "CBDADht11"), humiCB);
+  alert(
+    `Bạn đã cài đặt thành công ngưỡng:
+Nhiệt độ: ${tempCB}
+Độ ẩm: ${humiCB}
+Cho cảm biến DHT11`,
+  );
 };
