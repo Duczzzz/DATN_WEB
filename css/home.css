@@ -551,6 +551,7 @@ form select:focus {
   border-color: #667eea;
 }
 form input[type="number"] {
+  width: 400px;
   padding: 10px;
   outline: none;
   font-size: 18px;
