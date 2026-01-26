@@ -6,6 +6,11 @@
     <title>Kit STEM</title>
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/home.css" />
+    <style>
+      .box {
+        margin: 30px;
+      }
+    </style>
   </head>
   <body>
     <h1 class="head">KIT STEM</h1>
@@ -17,10 +22,12 @@
         <li><a href="lienhe.html">Liên hệ</a></li>
       </ul>
     </div>
+    <h1 class="title">
+      Xin chào, chúc bạn <span id="name">------</span> có một ngày mới tốt lành
+    </h1>
     <div class="box">
       <section class="intro">
         <h1 class="heading">Giới thiệu đề tài Kit STEM</h1>
-
         <p>
           Đề tài <strong>Kit STEM</strong> được thực hiện với mục tiêu nghiên
           cứu, thiết kế và xây dựng một <strong>nền tảng IoT</strong> phục vụ
@@ -53,6 +60,8 @@
       document.getElementById("chatbot").onclick = function () {
         alert("Tính năng Chat Bot AI đang được phát triển!");
       };
+      const user = localStorage.getItem("username");
+      document.getElementById("name").innerText = user;
     </script>
   </body>
 </html>

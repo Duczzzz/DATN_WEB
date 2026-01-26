@@ -46,6 +46,7 @@ document.getElementById("submit").onclick = function () {
         return;
       }
       if (snapshot.val().password === password) {
+        localStorage.setItem("username", username);
         alert("Đăng nhập thành công");
         window.location.href = "home.html";
       } else {

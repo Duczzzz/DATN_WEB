@@ -241,6 +241,12 @@ document.getElementById("addblock").onclick = function () {
     const selectCard = box.querySelector("#cardType").value;
     const selectPin = box.querySelector("#selectPin").value;
     const cardName = box.querySelector("#cardName").value;
+    if (selectChart == "pie" || selectChart == "doughnut") {
+      alert(
+        "tính năng đang được phát triển \n bạn vui lòng chọn loại biểu đồ khác",
+      );
+      return;
+    }
     alert(
       `Bạn đã chọn:
       Biểu đồ: ${selectChart}
@@ -262,30 +268,72 @@ document.getElementById("addblock").onclick = function () {
   `;
     if (selectChart != "none") {
       const ctxNew = document.getElementById(`Chart${count}`);
-      const mixedChart1 = new Chart(ctxNew, {
-        data: {
-          datasets: [
-            {
-              type: "bar",
-              label: "Nhiệt độ",
-              data: [],
-            },
-            {
-              type: "line",
-              label: "Độ ẩm",
-              data: [],
-            },
-          ],
-          labels: [],
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
+      if (selectChart == "line") {
+        const mixedChart1 = new Chart(ctxNew, {
+          data: {
+            datasets: [
+              {
+                type: "line",
+                label: "Độ ẩm",
+                data: [30, 40, 50, 100],
+              },
+            ],
+            labels: [0, 1, 2, 3],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
             },
           },
-        },
-      });
+        });
+      } else if (selectChart == "bar") {
+        const mixedChart1 = new Chart(ctxNew, {
+          data: {
+            datasets: [
+              {
+                type: "bar",
+                label: "Nhiệt độ",
+                data: [10, 30, 100, 40, 50],
+              },
+            ],
+            labels: [0, 1, 2, 3, 4],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      } else if (selectChart == "mixchart") {
+        const mixedChart1 = new Chart(ctxNew, {
+          data: {
+            datasets: [
+              {
+                type: "bar",
+                label: "Nhiệt độ",
+                data: [10, 30, 40, 100],
+              },
+              {
+                type: "line",
+                label: "Độ ẩm",
+                data: [40, 50, 10, 40],
+              },
+            ],
+            labels: [0, 1, 2, 3],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      }
     }
   };
 };
