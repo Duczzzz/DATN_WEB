@@ -3,39 +3,78 @@
   padding: 0;
   box-sizing: border-box;
 }
-.title {
-  margin: 30px auto;
-  font-size: 26px;
-  font-weight: 800;
-  text-align: center;
-  color: #acc8ff;
-  background: linear-gradient(135deg, #ff7ea9, #e4c8ff, #ff5454, #71ffcb);
-  background-size: 300% 300%;
-  animation: gradient 8s ease infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  padding: 10px;
+:root {
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-text: linear-gradient(135deg, #ff6b9d, #c084fc, #60a5fa, #34d399);
+  --gradient-button: linear-gradient(90deg, #667eea, #764ba2);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 30px 80px rgba(255, 145, 145, 0.2);
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 24px;
+  --transition-fast: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --color-text-dark: #1a202c;
+  --color-text-gray: #2d3748;
+  --color-border: #e2e8f0;
+  --color-white-transparent: rgba(255, 255, 255, 0.95);
 }
+
 body {
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   background-attachment: fixed;
   min-height: 100vh;
   padding-bottom: 60px;
   position: relative;
 }
+
 body::before {
   content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><circle cx="200" cy="150" r="100" fill="rgba(255,255,255,0.05)"/><circle cx="900" cy="600" r="150" fill="rgba(255,255,255,0.05)"/><circle cx="600" cy="400" r="80" fill="rgba(255,255,255,0.05)"/></svg>');
   pointer-events: none;
   z-index: 0;
+}
+
+@keyframes gradient {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 .head {
@@ -43,7 +82,7 @@ body::before {
   text-align: center;
   font-size: 56px;
   font-weight: 900;
-  background: linear-gradient(135deg, #ff6b9d, #c084fc, #60a5fa, #34d399);
+  background: var(--gradient-text);
   background-size: 300% 300%;
   animation: gradient 8s ease infinite;
   -webkit-background-clip: text;
@@ -53,27 +92,31 @@ body::before {
   z-index: 1;
   letter-spacing: -1px;
 }
-#addblock {
-  border-radius: 10px;
+
+.title {
+  margin: 30px auto;
+  font-size: 26px;
+  font-weight: 800;
+  text-align: center;
+  background: linear-gradient(135deg, #ff7ea9, #e4c8ff, #ff5454, #71ffcb);
+  background-size: 300% 300%;
+  animation: gradient 8s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   padding: 10px;
-  font-size: 20px;
-  margin-top: 40px;
-  margin-left: 25px;
-  background: linear-gradient(90deg, #acd1ff, #8bffd4);
-  cursor: pointer;
 }
-#addblock:active {
-  transform: translateY(-2px);
-  background: linear-gradient(90deg, #8bffd4, #d4ff00);
-}
-@keyframes gradient {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
+
+.heading {
+  font-size: 26px;
+  font-weight: 800;
+  text-align: center;
+  color: var(--color-text-dark);
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid;
+  border-image: var(--gradient-button) 1;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
 }
 
 .menu {
@@ -109,7 +152,7 @@ body::before {
   text-decoration: none;
   font-size: 15px;
   font-weight: 600;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--transition-normal);
   position: relative;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -124,7 +167,7 @@ body::before {
   width: 0;
   height: 3px;
   background: linear-gradient(90deg, #60a5fa, #34d399);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--transition-normal);
   transform: translateX(-50%);
 }
 
@@ -142,6 +185,7 @@ body::before {
   transform: translateY(0);
 }
 
+/* ==================== LAYOUT ==================== */
 .container {
   display: flex;
   flex-wrap: wrap;
@@ -154,19 +198,21 @@ body::before {
   z-index: 1;
 }
 
+/* ==================== CARDS/BOXES ==================== */
 .box {
   display: flex;
   flex-direction: column;
   min-width: 300px;
-  height: auto;
-  background: rgba(255, 255, 255, 0.95);
+  min-height: fit-content;
+  background: var(--color-white-transparent);
   padding: 30px;
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-normal);
   border: 1px solid rgba(255, 255, 255, 0.8);
   margin-top: 30px;
   position: relative;
+  animation: fadeInUp 0.6s ease-out backwards;
 }
 
 .box::before {
@@ -176,11 +222,11 @@ body::before {
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: var(--gradient-button);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 24px 24px 0 0;
+  transition: transform var(--transition-normal);
+  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
 }
 
 .box:hover::before {
@@ -188,13 +234,26 @@ body::before {
 }
 
 .box:hover {
-  box-shadow: 0 30px 80px rgba(255, 145, 145, 0.2);
+  box-shadow: var(--shadow-xl);
   transform: translateY(-10px);
   border-color: rgba(102, 126, 234, 0.3);
 }
 
+.box:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.box:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.box:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.box:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* Box Variants */
 .box1 {
-  display: inline-block;
   background: linear-gradient(
     135deg,
     rgba(255, 238, 248, 0.95),
@@ -226,27 +285,50 @@ body::before {
   );
 }
 
-.heading {
-  font-size: 26px;
-  font-weight: 800;
-  text-align: center;
-  color: #1a202c;
-  margin-bottom: 25px;
-  padding-bottom: 15px;
-  border-bottom: 3px solid;
-  border-image: linear-gradient(90deg, #667eea, #764ba2) 1;
-  letter-spacing: -0.5px;
+.box h2 {
+  font-size: 16px;
+  color: var(--color-text-gray);
+  margin: 18px 0;
+  padding: 18px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: var(--border-radius-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all var(--transition-fast);
+  border-left: 4px solid transparent;
+  box-shadow: var(--shadow-sm);
   flex-shrink: 0;
 }
 
+.box h2:hover {
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 1);
+  border-left-color: #667eea;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.box h2 span {
+  font-weight: 800;
+  background: var(--gradient-button);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 22px;
+  padding: 5px;
+}
+
+/* ==================== CHART ==================== */
 .card-chart {
   width: 100%;
-  min-height: 450px;
-  height: 450px;
+  min-height: 400px;
   margin-top: 25px;
-  border-radius: 16px;
+  border-radius: var(--border-radius-lg);
   flex-grow: 1;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-chart canvas {
@@ -254,6 +336,25 @@ body::before {
   height: 100% !important;
   max-width: 100%;
   max-height: 100%;
+  min-height: 350px;
+}
+
+/* ==================== BUTTONS ==================== */
+#addblock {
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 20px;
+  margin-top: 40px;
+  margin-left: 25px;
+  background: linear-gradient(90deg, #acd1ff, #8bffd4);
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-fast);
+}
+
+#addblock:active {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, #8bffd4, #d4ff00);
 }
 
 .button_group {
@@ -275,7 +376,7 @@ body::before {
   background: rgb(255, 152, 152);
   color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-fast);
   box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
   text-transform: uppercase;
 }
@@ -285,50 +386,170 @@ body::before {
   transform: translateY(-2px);
   background: linear-gradient(90deg, #e9d2ff, #472fff);
 }
+
 .button_group p {
   grid-column: span 2;
   font-size: 17px;
   font-weight: 600;
-  color: #1a202c;
+  color: var(--color-text-dark);
   text-align: center;
   padding: 16px;
   background: rgba(255, 255, 255, 0.8);
-  border-radius: 12px;
+  border-radius: var(--border-radius-md);
   margin-top: 10px;
   border: 1px solid rgba(102, 126, 234, 0.2);
 }
 
-.box h2 {
+form {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+form label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-gray);
+  margin: 16px 0 8px 0;
+}
+
+form input[type="text"],
+form input[type="number"],
+form select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  background: #ffffff;
+  color: var(--color-text-gray);
+  margin-bottom: 4px;
+  font-family: inherit;
+  transition: border-color var(--transition-fast);
+}
+
+form input[type="text"]:focus,
+form input[type="number"]:focus,
+form select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+form input[type="number"] {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+form button {
+  width: 100%;
+  padding: 14px 20px;
   font-size: 16px;
-  color: #2d3748;
-  margin: 18px 0;
-  padding: 18px 20px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 12px;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  background: var(--gradient-button);
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all var(--transition-fast);
+}
+
+form button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.social {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.social a {
+  font-size: 30px;
+  margin: 0 10px;
+  display: inline-block;
+  transition: transform 0.6s ease;
+}
+
+.social #fb {
+  color: #007ced;
+}
+
+.social #ig {
+  color: #ff5e00;
+}
+
+.social #ln {
+  color: #a3d2ff;
+}
+
+.social #git {
+  color: #dfc3ff;
+}
+
+.social #fb:hover {
+  color: #1877f2;
+  transform: rotateY(180deg);
+}
+
+.social #ig:hover {
+  color: #e1306c;
+  transform: scale(1.4) rotate(20deg);
+}
+
+.social #ln:hover {
+  color: #0a66c2;
+  transform: translateY(-10px);
+}
+
+.social #git:hover {
+  color: #333;
+  animation: shake 0.4s;
+}
+
+.golive {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-left: 4px solid transparent;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  flex-shrink: 0;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #ffd3d3;
+  border-radius: var(--border-radius-sm);
+  transition: background-color var(--transition-fast);
 }
 
-.box h2:hover {
-  transform: translateX(5px);
-  background: rgba(255, 255, 255, 1);
-  border-left-color: #667eea;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.golive img {
+  width: 90%;
+  height: 90%;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
 }
 
-.box h2 span {
-  font-weight: 800;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-size: 22px;
-  padding: 5px;
+.golive:hover {
+  background-color: red;
+}
+
+.golive:hover img {
+  transform: scale(1.1);
+}
+
+@media (min-width: 1920px) {
+  .card-chart {
+    min-height: 500px;
+  }
+
+  .card-chart canvas {
+    min-height: 450px;
+  }
+
+  .box {
+    min-width: 400px;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -340,10 +561,6 @@ body::before {
     flex: 1 1 100%;
   }
 
-  .card-chart {
-    min-height: 400px;
-    height: 400px;
-  }
   form {
     padding: 18px;
     margin: 12px;
@@ -354,6 +571,7 @@ body::before {
   }
 
   form input[type="text"],
+  form input[type="number"],
   form select {
     padding: 10px 12px;
     font-size: 13px;
@@ -399,11 +617,6 @@ body::before {
     font-size: 22px;
   }
 
-  .card-chart {
-    min-height: 350px;
-    height: 350px;
-  }
-
   .box h2 {
     font-size: 15px;
     flex-direction: column;
@@ -415,12 +628,14 @@ body::before {
     font-size: 13px;
     padding: 14px 20px;
   }
+
   form {
     padding: 20px;
     margin: 16px;
   }
 
   form input[type="text"],
+  form input[type="number"],
   form select {
     padding: 10px 14px;
     font-size: 14px;
@@ -461,14 +676,10 @@ body::before {
     font-size: 20px;
   }
 
-  .card-chart {
-    min-height: 300px;
-    height: 300px;
-  }
-
   .button_group {
     gap: 12px;
   }
+
   form {
     padding: 18px;
     margin: 12px;
@@ -479,6 +690,7 @@ body::before {
   }
 
   form input[type="text"],
+  form input[type="number"],
   form select {
     padding: 10px 12px;
     font-size: 13px;
@@ -488,166 +700,4 @@ body::before {
     padding: 11px 16px;
     font-size: 14px;
   }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.box {
-  animation: fadeInUp 0.6s ease-out backwards;
-}
-
-.box:nth-child(1) {
-  animation-delay: 0.1s;
-}
-.box:nth-child(2) {
-  animation-delay: 0.2s;
-}
-.box:nth-child(3) {
-  animation-delay: 0.3s;
-}
-.box:nth-child(4) {
-  animation-delay: 0.4s;
-}
-form {
-  background: #ffffff;
-  width: 100%;
-  height: auto;
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  max-width: 500px;
-  margin: 20px auto;
-}
-form {
-  background: #ffffff;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  max-width: 500px;
-  margin: 20px auto;
-}
-
-form label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: #2d3748;
-  margin: 16px 0 8px 0;
-}
-
-form input[type="text"],
-form select {
-  width: 100%;
-  padding: 12px 16px;
-  font-size: 15px;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  background: #ffffff;
-  color: #2d3748;
-  margin-bottom: 4px;
-  font-family: inherit;
-}
-
-form input[type="text"]:focus,
-form select:focus {
-  outline: none;
-  border-color: #667eea;
-}
-form input[type="number"] {
-  width: 400px;
-  padding: 10px;
-  outline: none;
-  font-size: 18px;
-  font-weight: 700;
-  border-color: #667eea;
-}
-
-form button {
-  width: 100%;
-  padding: 14px 20px;
-  font-size: 16px;
-  font-weight: 700;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
-  color: white;
-  cursor: pointer;
-  margin-top: 20px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.social {
-  text-align: center;
-  margin-top: 40px;
-}
-.social #fb {
-  color: #007ced;
-  font-size: 30px;
-  margin-right: 20px;
-  margin-left: 2px;
-  transition: transform 0.6s ease;
-}
-.social #ig {
-  color: #ff5e00;
-  font-size: 30px;
-  margin-right: 20px;
-  margin-left: 2px;
-  transition: transform 0.6s ease;
-}
-.social #ln {
-  color: #a3d2ff;
-  font-size: 30px;
-  margin-right: 20px;
-  margin-left: 2px;
-  transition: transform 0.6s ease;
-}
-.social #git {
-  color: #dfc3ff;
-  font-size: 30px;
-  margin-right: 20px;
-  margin-left: 2px;
-  transition: transform 0.6s ease;
-}
-.social #fb:hover {
-  color: #1877f2;
-  transform: rotateY(180deg);
-}
-
-.social #ig:hover {
-  color: #e1306c;
-  transform: scale(1.4) rotate(20deg);
-}
-
-.social #ln:hover {
-  color: #0a66c2;
-  transform: translateY(-10px);
-}
-
-.social #git:hover {
-  color: #333;
-  animation: shake 0.4s;
-}
-.golive {
-  align-items: center;
-  width: 40px;
-  height: 40px;
-  background-color: #ffd3d3;
-}
-.golive img {
-  width: 90%;
-  height: 90%;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-.golive:hover {
-  background-color: red;
 }
