@@ -234,9 +234,9 @@ window.onload = () => {
             max="100"
             placeholder="Nhập giá trị"
           />
-          <button type="button" id="Warnbtn1">Cài đặt</button>
+          <button type="button" id="Warnbtn-${card.id}">Cài đặt</button>
         </form>
-        <button class="golive" id="live">
+        <button class="golive" id="live-${card.id}">
           <img src="img/stream.png" alt="lỗi tải ảnh" />
         </button>
         ${
@@ -266,6 +266,27 @@ window.onload = () => {
                 y: {
                   beginAtZero: true,
                 },
+                y: {
+                  min: 0,
+                  max: 100,
+                },
+              },
+              plugins: {
+                zoom: {
+                  zoom: {
+                    wheel: {
+                      enabled: true,
+                    },
+                    pinch: {
+                      enabled: true,
+                    },
+                    mode: "x",
+                  },
+                  pan: {
+                    enabled: true,
+                    mode: "x",
+                  },
+                },
               },
             },
           });
@@ -285,6 +306,27 @@ window.onload = () => {
               scales: {
                 y: {
                   beginAtZero: true,
+                },
+                y: {
+                  min: 0,
+                  max: 100,
+                },
+              },
+              plugins: {
+                zoom: {
+                  zoom: {
+                    wheel: {
+                      enabled: true,
+                    },
+                    pinch: {
+                      enabled: true,
+                    },
+                    mode: "x",
+                  },
+                  pan: {
+                    enabled: true,
+                    mode: "x",
+                  },
                 },
               },
             },
@@ -311,6 +353,27 @@ window.onload = () => {
                 y: {
                   beginAtZero: true,
                 },
+                y: {
+                  min: 0,
+                  max: 100,
+                },
+              },
+              plugins: {
+                zoom: {
+                  zoom: {
+                    wheel: {
+                      enabled: true,
+                    },
+                    pinch: {
+                      enabled: true,
+                    },
+                    mode: "x",
+                  },
+                  pan: {
+                    enabled: true,
+                    mode: "x",
+                  },
+                },
               },
             },
           });
@@ -334,6 +397,7 @@ window.onload = () => {
     }
   });
 };
+
 const charts = {};
 document.getElementById("addblock").onclick = function () {
   let box = document.createElement("div");
@@ -487,6 +551,7 @@ document.getElementById("addblock").onclick = function () {
 document.getElementById("chatbot").onclick = function () {
   alert("Tính năng Chat Bot AI đang được phát triển!");
 };
+
 let live1 = false;
 document.getElementById("live").onclick = function () {
   live1 = !live1;
@@ -506,6 +571,7 @@ document.getElementById("live").onclick = function () {
   }
   mixedChart2.update("none");
 };
+
 let live2 = false;
 document.getElementById("live2").onclick = function () {
   live2 = !live2;
@@ -527,6 +593,7 @@ document.getElementById("live2").onclick = function () {
   }
   mixedChart.update("none");
 };
+
 document.getElementById("Warnbtn1").onclick = function () {
   let tempCB = document.getElementById("WarnInfoTemp1").value;
   let humiCB = document.getElementById("WarnInfoHumi1").value;
@@ -541,6 +608,7 @@ Nhiệt độ: ${tempCB}
 Cho cảm biến BME280`,
   );
 };
+
 document.getElementById("Warnbtn2").onclick = function () {
   let tempCB = document.getElementById("WarnInfoTemp2").value;
   let humiCB = document.getElementById("WarnInfoHumi2").value;
@@ -555,6 +623,7 @@ Nhiệt độ: ${tempCB}
 Cho cảm biến DHT11`,
   );
 };
+
 document.getElementById("removeblock").onclick = function () {
   let box = document.createElement("div");
   box.className = "delete";
@@ -595,6 +664,7 @@ document.getElementById("removeblock").onclick = function () {
     location.reload();
   };
 };
+
 document.addEventListener("click", (e) => {
   const btn = e.target.closest(".btnControl");
   if (!btn) return;
@@ -615,15 +685,14 @@ document.addEventListener("click", (e) => {
     btn.style.backgroundColor = "rgb(255, 152, 152)";
   }
 });
-const path = `users/${user}/Out`;
 
+const path = `users/${user}/Out`;
 onValue(ref(db, path), (snapshot) => {
   const inData = snapshot.val();
   if (!inData) return;
-
   Object.entries(inData).forEach(([key, val]) => {
     const parts = key.split("-");
-    console.log(parts[0], parts[1], parts[2]);
+    // console.log(parts[0], parts[1], parts[2]);
     const stt = document.getElementById(`status-${parts[1]}-${parts[2]}`);
     if (val == 1) {
       stt.innerText = `OUT ${parts[1]} Đang bật`;
@@ -631,4 +700,27 @@ onValue(ref(db, path), (snapshot) => {
       stt.innerText = `OUT ${parts[1]} Đang tắt`;
     }
   });
+});
+
+let live3 = false;
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".golive");
+  if (!btn) return;
+  const cardId = Number(btn.id.replace("live-", ""));
+  live3 = !live3;
+  const ele = document.getElementById(`live-${cardId}`);
+  const zoomOpt = charts[cardId].options.plugins.zoom;
+  if (live3) {
+    zoomOpt.zoom.wheel.enabled = false;
+    zoomOpt.zoom.pinch.enabled = false;
+    zoomOpt.pan.enabled = false;
+    charts[cardId].resetZoom();
+    ele.style.backgroundColor = "rgb(255, 0, 0)";
+  } else {
+    zoomOpt.zoom.wheel.enabled = true;
+    zoomOpt.zoom.pinch.enabled = true;
+    zoomOpt.pan.enabled = true;
+    ele.style.backgroundColor = "rgb(255, 215, 215)";
+  }
+  charts[cardId].update("none");
 });
