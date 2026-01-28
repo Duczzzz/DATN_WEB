@@ -1,3 +1,4 @@
+let count = Number(localStorage.getItem("cardCount")) || 4;
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import {
   getDatabase,
@@ -191,11 +192,146 @@ document.getElementById("btn-inout2").onclick = function () {
     btn.style.backgroundColor = "rgb(255, 152, 152)";
   }
 };
-var count = 4;
+function saveCardToLocal(cardData) {
+  let cards = JSON.parse(localStorage.getItem("cards")) || [];
+  cards.push(cardData);
+  localStorage.setItem("cards", JSON.stringify(cards));
+}
+window.onload = () => {
+  const cards = JSON.parse(localStorage.getItem("cards")) || [];
+  cards.forEach((card) => {
+    let box = document.createElement("div");
+    box.className = "box box" + card.id;
+    document.querySelector(".container").appendChild(box);
+    if (card.type == "Sensor") {
+      box.innerHTML = `
+        <h1 class="heading">${card.name}</h1>
+        <h2>Loại card: ${card.type}</h2>
+        <h2>Chân kết nối: GPIO${card.pin1}</h2>
+        <h2>Loại biểu đồ: ${card.chartType}</h2>
+        <form>
+          <label>Ngưỡng nhiệt độ (°C)</label>
+          <input
+            id="temp + card.id"
+            type="number"
+            step="0.1"
+            min="0"
+            max="100"
+            placeholder="Nhập giá trị"
+          />
+          <br />
+          <label>Ngưỡng độ ẩm (%)</label>
+          <input
+            id="hum + card.id"
+            type="number"
+            step="0.1"
+            min="0"
+            max="100"
+            placeholder="Nhập giá trị"
+          />
+          <button type="button" id="Warnbtn1">Cài đặt</button>
+        </form>
+        <button class="golive" id="live">
+          <img src="img/stream.png" alt="lỗi tải ảnh" />
+        </button>
+        ${
+          card.chartType !== "none"
+            ? `<div class="card-chart">
+                <canvas id="Chart${card.id}"></canvas>
+              </div>`
+            : ""
+        }
+      `;
+      if (card.chartType != "none") {
+        const ctxNew = document.getElementById(`Chart${card.id}`);
+        if (card.chartType == "line") {
+          charts[card.id] = new Chart(ctxNew, {
+            data: {
+              datasets: [
+                {
+                  type: "line",
+                  label: "Độ ẩm",
+                  data: [30, 40, 50, 100],
+                },
+              ],
+              labels: [0, 1, 2, 3],
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          });
+        } else if (card.chartType == "bar") {
+          charts[card.id] = new Chart(ctxNew, {
+            data: {
+              datasets: [
+                {
+                  type: "bar",
+                  label: "Nhiệt độ",
+                  data: [10, 30, 100, 40, 50],
+                },
+              ],
+              labels: [0, 1, 2, 3, 4],
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          });
+        } else if (card.chartType == "mixchart") {
+          charts[card.id] = new Chart(ctxNew, {
+            data: {
+              datasets: [
+                {
+                  type: "bar",
+                  label: "Nhiệt độ",
+                  data: [10, 30, 40, 100],
+                },
+                {
+                  type: "line",
+                  label: "Độ ẩm",
+                  data: [40, 50, 10, 40],
+                },
+              ],
+              labels: [0, 1, 2, 3],
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          });
+        }
+      }
+    } else {
+      box.innerHTML = `
+        <h1 class="heading">${card.name}</h1>
+        <h2>Loại card: ${card.type}</h2>
+        <h2>Chân kết nối: GPIO${card.pin1}</h2>
+        <h2>Chân kết nối2: GPIO${card.pin2}</h2>
+        <div class="button_group">
+          <button class="btnControl" id="btn-inout1">IN 1</button>
+          <p id="status${card.id}">OUT 1 Đang tắt</p>
+          <button class="btnControl" id="btn-inout2">IN 2</button>
+          <p id="status${card.id + 1}">OUT 2 Đang tắt</p>
+        </div>
+      `;
+    }
+  });
+};
 const charts = {};
 document.getElementById("addblock").onclick = function () {
   let box = document.createElement("div");
-  count += 1;
+  count++;
+  localStorage.setItem("cardCount", count);
   box.className = "box box" + count;
   box.innerHTML = `
     <h2>Thêm card mới</h2>
@@ -204,7 +340,7 @@ document.getElementById("addblock").onclick = function () {
       <label>Lựa chọn loại card</label>
       <select id="cardType">
         <option value="" selected disabled>-- Chọn loại card --</option>
-        <option value="Cảm biến">Cảm biến</option>
+        <option value="Sensor">Cảm biến</option>
         <option value="control">Điều khiển In Out</option>
       </select>
       <br>
@@ -270,7 +406,7 @@ document.getElementById("addblock").onclick = function () {
   const selectChart = box.querySelector(".chartSelect");
   const selectPin = box.querySelector(".PinSelect");
   cardTypeSelect.addEventListener("change", () => {
-    if (cardTypeSelect.value === "Cảm biến") {
+    if (cardTypeSelect.value === "Sensor") {
       selectPin2.style.display = "none";
       selectChart.style.display = "block";
       selectPin.style.display = "block";
@@ -286,6 +422,7 @@ document.getElementById("addblock").onclick = function () {
     const selectCard = box.querySelector("#cardType").value;
     const selectPin = box.querySelector("#selectPin").value;
     let cardName = box.querySelector("#cardName").value;
+    var saved = 0;
     if (cardName == "") {
       cardName = "test" + count;
     }
@@ -295,95 +432,22 @@ document.getElementById("addblock").onclick = function () {
       );
       return;
     }
-    if (selectCard == "Cảm biến") {
+    if (selectCard == "Sensor") {
       alert(
         `Bạn đã chọn:
       Card: ${selectCard}
       Biểu đồ: ${selectChart}
       GPIO: ${selectPin}`,
       );
-      box.innerHTML = `
-        <h1 class="heading">${cardName}</h1>
-        <h2>Loại card: ${selectCard}</h2>
-        <h2>Chân kết nối: GPIO${selectPin}</h2>
-        <h2>Loại biểu đồ: ${selectChart}</h2>
-        ${
-          selectChart !== "none"
-            ? `<div class="card-chart">
-                <canvas id="Chart${count}"></canvas>
-              </div>`
-            : ""
-        }
-      `;
-      if (selectChart != "none") {
-        const ctxNew = document.getElementById(`Chart${count}`);
-        if (selectChart == "line") {
-          charts[count] = new Chart(ctxNew, {
-            data: {
-              datasets: [
-                {
-                  type: "line",
-                  label: "Độ ẩm",
-                  data: [30, 40, 50, 100],
-                },
-              ],
-              labels: [0, 1, 2, 3],
-            },
-            options: {
-              scales: {
-                y: {
-                  beginAtZero: true,
-                },
-              },
-            },
-          });
-        } else if (selectChart == "bar") {
-          charts[count] = new Chart(ctxNew, {
-            data: {
-              datasets: [
-                {
-                  type: "bar",
-                  label: "Nhiệt độ",
-                  data: [10, 30, 100, 40, 50],
-                },
-              ],
-              labels: [0, 1, 2, 3, 4],
-            },
-            options: {
-              scales: {
-                y: {
-                  beginAtZero: true,
-                },
-              },
-            },
-          });
-        } else if (selectChart == "mixchart") {
-          charts[count] = new Chart(ctxNew, {
-            data: {
-              datasets: [
-                {
-                  type: "bar",
-                  label: "Nhiệt độ",
-                  data: [10, 30, 40, 100],
-                },
-                {
-                  type: "line",
-                  label: "Độ ẩm",
-                  data: [40, 50, 10, 40],
-                },
-              ],
-              labels: [0, 1, 2, 3],
-            },
-            options: {
-              scales: {
-                y: {
-                  beginAtZero: true,
-                },
-              },
-            },
-          });
-        }
-      }
+      saveCardToLocal({
+        id: count,
+        name: cardName,
+        type: selectCard,
+        pin1: selectPin,
+        pin2: null,
+        chartType: selectChart,
+      });
+      saved = 1;
     } else if (selectCard == "control") {
       const selectPin2 = box.querySelector("#selectPin2").value;
       if (selectPin == selectPin2) {
@@ -396,18 +460,20 @@ document.getElementById("addblock").onclick = function () {
       GPIO: ${selectPin}
       GPIO2: ${selectPin2}`,
       );
-      box.innerHTML = `
-        <h1 class="heading">${cardName}</h1>
-        <h2>Loại card: ${selectCard}</h2>
-        <h2>Chân kết nối: GPIO${selectPin}</h2>
-        <h2>Chân kết nối2: GPIO${selectPin2}</h2>
-        <div class="button_group">
-          <button id="btn-inout3">IN 1</button>
-          <p id="status1">OUT 1 Đang tắt</p>
-          <button id="btn-inout4">IN 2</button>
-          <p id="status2">OUT 2 Đang tắt</p>
-        </div>
-      `;
+      saveCardToLocal({
+        id: count,
+        name: cardName,
+        type: selectCard,
+        pin1: selectPin,
+        pin2: selectPin2,
+        chartType: null,
+      });
+      saved = 1;
+    }
+    if (saved == 1) {
+      setTimeout(() => {
+        location.reload();
+      }, 300);
     }
   };
 };
@@ -481,4 +547,46 @@ Nhiệt độ: ${tempCB}
 Độ ẩm: ${humiCB}
 Cho cảm biến DHT11`,
   );
+};
+document.getElementById("removeblock").onclick = function () {
+  // khóa hover + click toàn bộ (trừ delete)
+  document.body.classList.add("delete-active");
+
+  let box = document.createElement("div");
+  box.className = "delete";
+
+  box.innerHTML = `
+    <form>
+      <label>Lựa chọn card cần xóa</label>
+      <select id="chooseCard"></select>
+      <br><br>
+      <button type="button" id="confirmDelete">Xóa</button>
+      <button type="button" id="cancelDelete">Hủy</button>
+    </form>
+  `;
+  document.querySelector(".container").style.display = "none";
+  document.querySelector(".remove").appendChild(box);
+  const select = box.querySelector("#chooseCard");
+  const cards = JSON.parse(localStorage.getItem("cards")) || [];
+  cards.forEach((card) => {
+    const option = document.createElement("option");
+    option.value = card.id;
+    option.textContent = `Card ${card.id} - ${card.name}`;
+    select.appendChild(option);
+    console.log(option.text);
+  });
+  box.querySelector("#cancelDelete").onclick = () => {
+    box.remove();
+    document.body.classList.remove("box");
+    location.reload();
+  };
+  box.querySelector("#confirmDelete").onclick = () => {
+    const selectedId = Number(select.value);
+
+    const newCards = cards.filter((card) => card.id !== selectedId);
+    alert("Đã xóa card: " + selectedId);
+
+    localStorage.setItem("cards", JSON.stringify(newCards));
+    location.reload();
+  };
 };
