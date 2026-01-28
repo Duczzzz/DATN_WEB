@@ -7,6 +7,7 @@ import {
   child,
   set,
   onValue,
+  remove,
 } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 const firebaseConfig = {
   apiKey: "AIzaSyBliSd_F2NAl02D4FzMdtY0szkhpHdMf8c",
@@ -17,6 +18,8 @@ const firebaseConfig = {
   messagingSenderId: "599011961788",
   appId: "1:599011961788:web:008c324dbfc6b3cf6699b9",
 };
+
+const user = localStorage.getItem("username");
 const ctx1 = document.getElementById("ChartDHT11");
 const mixedChart = new Chart(ctx1, {
   data: {
@@ -172,6 +175,7 @@ onValue(ref(db, "dht11/leddht11"), (snapshot) => {
     document.getElementById("warnLedDht11").innerText = "Đang bật";
   } else document.getElementById("warnLedDht11").innerText = "Đang tắt";
 });
+
 document.getElementById("btn-inout1").onclick = function () {
   const btn = document.getElementById("btn-inout1");
   if (btn.style.backgroundColor == "rgb(255, 152, 152)") {
@@ -192,6 +196,7 @@ document.getElementById("btn-inout2").onclick = function () {
     btn.style.backgroundColor = "rgb(255, 152, 152)";
   }
 };
+
 function saveCardToLocal(cardData) {
   let cards = JSON.parse(localStorage.getItem("cards")) || [];
   cards.push(cardData);
@@ -212,7 +217,7 @@ window.onload = () => {
         <form>
           <label>Ngưỡng nhiệt độ (°C)</label>
           <input
-            id="temp + card.id"
+            id="temp${card.id}"
             type="number"
             step="0.1"
             min="0"
@@ -222,7 +227,7 @@ window.onload = () => {
           <br />
           <label>Ngưỡng độ ẩm (%)</label>
           <input
-            id="hum + card.id"
+            id="hum${card.id}"
             type="number"
             step="0.1"
             min="0"
@@ -312,16 +317,18 @@ window.onload = () => {
         }
       }
     } else {
+      set(ref(db, `users/${user}/Out/Out-${card.id}-1`), 0);
+      set(ref(db, `users/${user}/Out/Out-${card.id}-2`), 0);
       box.innerHTML = `
         <h1 class="heading">${card.name}</h1>
         <h2>Loại card: ${card.type}</h2>
         <h2>Chân kết nối: GPIO${card.pin1}</h2>
         <h2>Chân kết nối2: GPIO${card.pin2}</h2>
         <div class="button_group">
-          <button class="btnControl" id="btn-inout1">IN 1</button>
-          <p id="status${card.id}">OUT 1 Đang tắt</p>
-          <button class="btnControl" id="btn-inout2">IN 2</button>
-          <p id="status${card.id + 1}">OUT 2 Đang tắt</p>
+          <button class="btnControl" id="btnin-${card.id}-1">IN 1</button>
+          <p id="status-${card.id}-1">OUT 1 Đang tắt</p>
+          <button class="btnControl" id="btnin-${card.id}-2">IN 2</button>
+          <p id="status-${card.id}-2">OUT 2 Đang tắt</p>
         </div>
       `;
     }
@@ -549,12 +556,8 @@ Cho cảm biến DHT11`,
   );
 };
 document.getElementById("removeblock").onclick = function () {
-  // khóa hover + click toàn bộ (trừ delete)
-  document.body.classList.add("delete-active");
-
   let box = document.createElement("div");
   box.className = "delete";
-
   box.innerHTML = `
     <form>
       <label>Lựa chọn card cần xóa</label>
@@ -582,11 +585,50 @@ document.getElementById("removeblock").onclick = function () {
   };
   box.querySelector("#confirmDelete").onclick = () => {
     const selectedId = Number(select.value);
-
     const newCards = cards.filter((card) => card.id !== selectedId);
+    remove(ref(db, `users/${user}/Out/Out-${selectedId}-1`));
+    remove(ref(db, `users/${user}/Out/Out-${selectedId}-2`));
+    remove(ref(db, `users/${user}/In/In-${selectedId}-1`));
+    remove(ref(db, `users/${user}/In/In-${selectedId}-2`));
     alert("Đã xóa card: " + selectedId);
-
     localStorage.setItem("cards", JSON.stringify(newCards));
     location.reload();
   };
 };
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".btnControl");
+  if (!btn) return;
+  const box = btn.closest(".box");
+  if (!box) return;
+  const parts = btn.id.split("-");
+  const inId = Number(parts[1]);
+  const channel = Number(parts[2]);
+  const btnId = btn.id;
+  console.log(channel);
+  console.log(btnId);
+  const currentCL = getComputedStyle(btn).backgroundColor;
+  if (currentCL == "rgb(255, 152, 152)") {
+    set(ref(db, `users/${user}/In/In-${inId}-${channel}`), 1);
+    btn.style.backgroundColor = "rgb(41, 63, 255)";
+  } else {
+    set(ref(db, `users/${user}/In/In-${inId}-${channel}`), 0);
+    btn.style.backgroundColor = "rgb(255, 152, 152)";
+  }
+});
+const path = `users/${user}/Out`;
+
+onValue(ref(db, path), (snapshot) => {
+  const inData = snapshot.val();
+  if (!inData) return;
+
+  Object.entries(inData).forEach(([key, val]) => {
+    const parts = key.split("-");
+    console.log(parts[0], parts[1], parts[2]);
+    const stt = document.getElementById(`status-${parts[1]}-${parts[2]}`);
+    if (val == 1) {
+      stt.innerText = `OUT ${parts[1]} Đang bật`;
+    } else {
+      stt.innerText = `OUT ${parts[1]} Đang tắt`;
+    }
+  });
+});
