@@ -27,7 +27,7 @@ body {
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;
-  background: url(img/img_bg_2.jpg);
+  background-image: url("../img/img_bg_2.jpg");
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
@@ -740,4 +740,5 @@ form button:hover {
   box-shadow: none;
   cursor: pointer;
 }
+
 
