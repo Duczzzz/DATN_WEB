@@ -724,3 +724,21 @@ document.addEventListener("click", (e) => {
   }
   charts[cardId].update("none");
 });
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("button");
+  const parts = btn.id.split("-");
+  const cardId = parts[1];
+  if (parts[0] != "Warnbtn") {
+    return;
+  } else {
+    let tempCB = document.getElementById(`temp${cardId}`).value;
+    let humiCB = document.getElementById(`hum${cardId}`).value;
+    tempCB = Number(tempCB);
+    humiCB = Number(humiCB);
+    alert(
+      `Bạn đã cài đặt thành công:
+  Nhiệt độ ngưỡng: ${tempCB}
+  Độ ẩm ngưỡng: ${humiCB}`,
+    );
+  }
+});
