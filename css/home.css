@@ -27,8 +27,10 @@ body {
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;
-  background: var(--gradient-primary);
+  background: url(/img/img_bg_2.jpg);
   background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
   min-height: 100vh;
   padding-bottom: 60px;
   position: relative;
@@ -38,7 +40,6 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><circle cx="200" cy="150" r="100" fill="rgba(255,255,255,0.05)"/><circle cx="900" cy="600" r="150" fill="rgba(255,255,255,0.05)"/><circle cx="600" cy="400" r="80" fill="rgba(255,255,255,0.05)"/></svg>');
   pointer-events: none;
   z-index: 0;
 }
@@ -78,11 +79,11 @@ body::before {
 }
 
 .head {
-  padding: 60px 30px;
+  padding: 30px 20px;
   text-align: center;
   font-size: 56px;
   font-weight: 900;
-  background: var(--gradient-text);
+  background: linear-gradient(135deg, #ff7ea9, #e4c8ff, #ffacac, #71ffcb);
   background-size: 300% 300%;
   animation: gradient 8s ease infinite;
   -webkit-background-clip: text;
@@ -93,7 +94,7 @@ body::before {
   letter-spacing: -1px;
 }
 
-.title {
+/* .title {
   margin: 30px auto;
   font-size: 26px;
   font-weight: 800;
@@ -104,7 +105,7 @@ body::before {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   padding: 10px;
-}
+} */
 
 .heading {
   font-size: 26px;
@@ -185,20 +186,17 @@ body::before {
   transform: translateY(0);
 }
 
-/* ==================== LAYOUT ==================== */
 .container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 30px;
   max-width: 1400px;
-  margin: 50px auto;
+  margin: 0px auto;
   padding: 0 30px;
   position: relative;
   z-index: 1;
 }
-
-/* ==================== CARDS/BOXES ==================== */
 .box {
   display: flex;
   flex-direction: column;
@@ -317,8 +315,6 @@ body::before {
   font-size: 22px;
   padding: 5px;
 }
-
-/* ==================== CHART ==================== */
 .card-chart {
   width: 100%;
   min-height: 400px;
@@ -338,12 +334,22 @@ body::before {
   max-height: 100%;
   min-height: 350px;
 }
+.blockbtn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: sticky;
+  gap: 10px;
+  top: 70px;
+  z-index: 1000;
+  width: 70px;
+  margin-left: 0px;
+  padding: 10px;
+}
 .btnFunc {
   border-radius: 10px;
   padding: 10px;
   font-size: 20px;
-  margin-top: 40px;
-  margin-left: 25px;
   background: linear-gradient(90deg, #acd1ff, #8bffd4);
   cursor: pointer;
   border: none;
@@ -547,6 +553,22 @@ form button:hover {
     min-width: 400px;
   }
 }
+@media (min-width: 1080px) {
+  .card-chart {
+    min-height: 500px;
+  }
+
+  .card-chart canvas {
+    min-height: 450px;
+  }
+
+  .box {
+    min-width: 400px;
+  }
+  .container {
+    max-width: 900px;
+  }
+}
 
 @media (max-width: 1024px) {
   .container {
@@ -602,6 +624,7 @@ form button:hover {
     gap: 25px;
     padding: 0 20px;
     margin: 35px auto;
+    margin-left: 60px;
   }
 
   .box {
@@ -661,6 +684,7 @@ form button:hover {
   .container {
     padding: 0 15px;
     gap: 30px;
+    margin-left: 60px;
   }
 
   .box {
@@ -689,7 +713,7 @@ form button:hover {
   form input[type="number"],
   form select {
     padding: 10px 12px;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   form button {

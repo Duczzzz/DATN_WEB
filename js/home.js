@@ -250,12 +250,13 @@ window.onload = () => {
       if (card.chartType != "none") {
         const ctxNew = document.getElementById(`Chart${card.id}`);
         if (card.chartType == "line") {
+          set(ref(db, `users/${user}/Card/Data-${card.id}-1`), 0);
           charts[card.id] = new Chart(ctxNew, {
             data: {
               datasets: [
                 {
                   type: "line",
-                  label: "Độ ẩm",
+                  label: card.label,
                   data: [30, 40, 50, 100],
                 },
               ],
@@ -291,12 +292,13 @@ window.onload = () => {
             },
           });
         } else if (card.chartType == "bar") {
+          set(ref(db, `users/${user}/Card/Data-${card.id}-1`), 0);
           charts[card.id] = new Chart(ctxNew, {
             data: {
               datasets: [
                 {
                   type: "bar",
-                  label: "Nhiệt độ",
+                  label: card.label,
                   data: [10, 30, 100, 40, 50],
                 },
               ],
@@ -332,17 +334,19 @@ window.onload = () => {
             },
           });
         } else if (card.chartType == "mixchart") {
+          set(ref(db, `users/${user}/Card/Data-${card.id}-1`), 0);
+          set(ref(db, `users/${user}/Card/Data-${card.id}-2`), 0);
           charts[card.id] = new Chart(ctxNew, {
             data: {
               datasets: [
                 {
                   type: "bar",
-                  label: "Nhiệt độ",
+                  label: card.label,
                   data: [10, 30, 40, 100],
                 },
                 {
                   type: "line",
-                  label: "Độ ẩm",
+                  label: card.label2,
                   data: [40, 50, 10, 40],
                 },
               ],
@@ -407,7 +411,7 @@ document.getElementById("addblock").onclick = function () {
   box.innerHTML = `
     <h2>Thêm card mới</h2>
     <form>
-      <input type="text" placeholder="Nhập tên card" id = "cardName" required="required"><br>
+      <input type="text" placeholder="Nhập tên card" id = "cardName"><br>
       <label>Lựa chọn loại card</label>
       <select id="cardType">
         <option value="" selected disabled>-- Chọn loại card --</option>
@@ -425,6 +429,8 @@ document.getElementById("addblock").onclick = function () {
           <option value="mixchart">Biểu đồ hỗn hợp</option>
           <option value="none">Không</option>
         </select>
+        <input type="text" placeholder="Nhập nhãn biểu đồ" id = "labelchart"><br>
+        <input type="text" placeholder="Nhập nhãn 2 biểu đồ" id = "labelchart2" style="display:none;"><br>
       </div>
       <br>
       <div class="PinSelect" style="display:none;">
@@ -469,13 +475,15 @@ document.getElementById("addblock").onclick = function () {
         </select>
       </div>
       <br>
-      <button type="button" id="getInfor">Xác nhận</button>
+      <button type="submit" id="getInfor">Xác nhận</button>
     </form>
   `;
   const cardTypeSelect = box.querySelector("#cardType");
   const selectPin2 = box.querySelector(".Pin2Select");
   const selectChart = box.querySelector(".chartSelect");
   const selectPin = box.querySelector(".PinSelect");
+  const labelchart2 = box.querySelector("#labelchart2");
+  const chartType = box.querySelector("#chartType");
   cardTypeSelect.addEventListener("change", () => {
     if (cardTypeSelect.value === "Sensor") {
       selectPin2.style.display = "none";
@@ -487,12 +495,21 @@ document.getElementById("addblock").onclick = function () {
       selectPin.style.display = "block";
     }
   });
+  chartType.addEventListener("change", () => {
+    if (chartType.value === "mixchart") {
+      labelchart2.style.display = "block";
+    } else {
+      labelchart2.style.display = "none";
+    }
+  });
   document.querySelector(".container").appendChild(box);
   box.querySelector("#getInfor").onclick = function () {
     const selectChart = box.querySelector("#chartType").value;
     const selectCard = box.querySelector("#cardType").value;
     const selectPin = box.querySelector("#selectPin").value;
     let cardName = box.querySelector("#cardName").value;
+    const labelchart = box.querySelector("#labelchart").value;
+    const labelchart2 = box.querySelector("#labelchart2").value;
     var saved = 0;
     if (cardName == "") {
       cardName = "test" + count;
@@ -504,6 +521,17 @@ document.getElementById("addblock").onclick = function () {
       return;
     }
     if (selectCard == "Sensor") {
+      if (selectChart == "mixchart") {
+        if (labelchart2 == "") {
+          alert("vui lòng bổ sung nhãn 2 cho biểu đồ,vui lòng tạo lại card");
+          return;
+        }
+      } else {
+        if (labelchart == "") {
+          alert("vui lòng bổ sung nhãn cho biểu đồ,vui lòng tạo lại card");
+          return;
+        }
+      }
       alert(
         `Bạn đã chọn:
       Card: ${selectCard}
@@ -517,6 +545,8 @@ document.getElementById("addblock").onclick = function () {
         pin1: selectPin,
         pin2: null,
         chartType: selectChart,
+        label: labelchart,
+        label2: labelchart2,
       });
       saved = 1;
     } else if (selectCard == "control") {
@@ -576,9 +606,7 @@ let live2 = false;
 document.getElementById("live2").onclick = function () {
   live2 = !live2;
   const ele = document.getElementById("live2");
-
   const zoomOpt = mixedChart.options.plugins.zoom;
-
   if (live2) {
     zoomOpt.zoom.wheel.enabled = false;
     zoomOpt.zoom.pinch.enabled = false;
@@ -654,11 +682,20 @@ document.getElementById("removeblock").onclick = function () {
   };
   box.querySelector("#confirmDelete").onclick = () => {
     const selectedId = Number(select.value);
+    const cardToDelete = cards.find((card) => card.id === selectedId);
+    alert("Đã xóa card: " + cardToDelete.chartType);
+    if (cardToDelete.chartType == null) {
+      remove(ref(db, `users/${user}/Out/Out-${selectedId}-1`));
+      remove(ref(db, `users/${user}/Out/Out-${selectedId}-2`));
+      remove(ref(db, `users/${user}/In/In-${selectedId}-1`));
+      remove(ref(db, `users/${user}/In/In-${selectedId}-2`));
+    } else if (cardToDelete.chartType == "mixchart") {
+      remove(ref(db, `users/${user}/Card/Data-${selectedId}-1`));
+      remove(ref(db, `users/${user}/Card/Data-${selectedId}-2`));
+    } else {
+      remove(ref(db, `users/${user}/Card/Data-${selectedId}-1`));
+    }
     const newCards = cards.filter((card) => card.id !== selectedId);
-    remove(ref(db, `users/${user}/Out/Out-${selectedId}-1`));
-    remove(ref(db, `users/${user}/Out/Out-${selectedId}-2`));
-    remove(ref(db, `users/${user}/In/In-${selectedId}-1`));
-    remove(ref(db, `users/${user}/In/In-${selectedId}-2`));
     alert("Đã xóa card: " + selectedId);
     localStorage.setItem("cards", JSON.stringify(newCards));
     location.reload();
@@ -726,6 +763,7 @@ document.addEventListener("click", (e) => {
 });
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("button");
+  if (!btn) return;
   const parts = btn.id.split("-");
   const cardId = parts[1];
   if (parts[0] != "Warnbtn") {
