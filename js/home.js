@@ -181,9 +181,11 @@ document.getElementById("btn-inout1").onclick = function () {
   if (btn.style.backgroundColor == "rgb(255, 152, 152)") {
     set(ref(db, "In/In1"), 1);
     btn.style.backgroundColor = "rgb(41, 63, 255)";
+    btn.innerText = "ON 1";
   } else {
     set(ref(db, "In/In1"), 0);
     btn.style.backgroundColor = "rgb(255, 152, 152)";
+    btn.innerText = "OFF 1";
   }
 };
 document.getElementById("btn-inout2").onclick = function () {
@@ -191,9 +193,11 @@ document.getElementById("btn-inout2").onclick = function () {
   if (btn.style.backgroundColor == "rgb(255, 152, 152)") {
     set(ref(db, "In/In2"), 1);
     btn.style.backgroundColor = "rgb(41, 63, 255)";
+    btn.innerText = "ON 2";
   } else {
     set(ref(db, "In/In2"), 0);
     btn.style.backgroundColor = "rgb(255, 152, 152)";
+    btn.innerText = "OFF 2";
   }
 };
 
@@ -392,9 +396,9 @@ window.onload = () => {
         <h2>Chân kết nối: GPIO${card.pin1}</h2>
         <h2>Chân kết nối2: GPIO${card.pin2}</h2>
         <div class="button_group">
-          <button class="btnControl" id="btnin-${card.id}-1">IN 1</button>
+          <button class="btnControl" id="btnin-${card.id}-1">OFF 1</button>
           <p id="status-${card.id}-1">OUT 1 Đang tắt</p>
-          <button class="btnControl" id="btnin-${card.id}-2">IN 2</button>
+          <button class="btnControl" id="btnin-${card.id}-2">OFF 2</button>
           <p id="status-${card.id}-2">OUT 2 Đang tắt</p>
         </div>
       `;
@@ -717,9 +721,11 @@ document.addEventListener("click", (e) => {
   if (currentCL == "rgb(255, 152, 152)") {
     set(ref(db, `users/${user}/In/In-${inId}-${channel}`), 1);
     btn.style.backgroundColor = "rgb(41, 63, 255)";
+    btn.innerText = `ON ${parts[2]}`;
   } else {
     set(ref(db, `users/${user}/In/In-${inId}-${channel}`), 0);
     btn.style.backgroundColor = "rgb(255, 152, 152)";
+    btn.innerText = `OFF ${parts[2]}`;
   }
 });
 
