@@ -213,13 +213,14 @@ window.onload = () => {
     box.className = "box box" + card.id;
     document.querySelector(".container").appendChild(box);
     if (card.type == "Sensor") {
+      const cardRef = ref(db, `users/${user}/Card`);
       box.innerHTML = `
         <h1 class="heading">${card.name}</h1>
         <h2>Loại card: ${card.type}</h2>
         <h2>Chân kết nối: GPIO${card.pin1}</h2>
         <h2>Loại biểu đồ: ${card.chartType}</h2>
         <form>
-          <label>Ngưỡng nhiệt độ (°C)</label>
+          <label for="temp${card.id}">Ngưỡng nhiệt độ (°C)</label>
           <input
             id="temp${card.id}"
             type="number"
@@ -229,7 +230,7 @@ window.onload = () => {
             placeholder="Nhập giá trị"
           />
           <br />
-          <label>Ngưỡng độ ẩm (%)</label>
+          <label for="hum${card.id}">Ngưỡng độ ẩm (%)</label>
           <input
             id="hum${card.id}"
             type="number"
@@ -254,17 +255,21 @@ window.onload = () => {
       if (card.chartType != "none") {
         const ctxNew = document.getElementById(`Chart${card.id}`);
         if (card.chartType == "line") {
-          set(ref(db, `users/${user}/Card/Data-${card.id}-1`), 0);
+          get(cardRef).then((snapshot) => {
+            if (!snapshot.hasChild(`Data-${card.id}-1`)) {
+              set(ref(db, `users/${user}/Card/Data-${card.id}-1`), 0);
+            }
+          });
           charts[card.id] = new Chart(ctxNew, {
             data: {
               datasets: [
                 {
                   type: "line",
                   label: card.label,
-                  data: [30, 40, 50, 100],
+                  data: [],
                 },
               ],
-              labels: [0, 1, 2, 3],
+              labels: [],
             },
             options: {
               scales: {
@@ -296,17 +301,21 @@ window.onload = () => {
             },
           });
         } else if (card.chartType == "bar") {
-          set(ref(db, `users/${user}/Card/Data-${card.id}-1`), 0);
+          get(cardRef).then((snapshot) => {
+            if (!snapshot.hasChild(`Data-${card.id}-1`)) {
+              set(ref(db, `users/${user}/Card/Data-${card.id}-1`), 0);
+            }
+          });
           charts[card.id] = new Chart(ctxNew, {
             data: {
               datasets: [
                 {
                   type: "bar",
                   label: card.label,
-                  data: [10, 30, 100, 40, 50],
+                  data: [],
                 },
               ],
-              labels: [0, 1, 2, 3, 4],
+              labels: [],
             },
             options: {
               scales: {
@@ -338,23 +347,29 @@ window.onload = () => {
             },
           });
         } else if (card.chartType == "mixchart") {
-          set(ref(db, `users/${user}/Card/Data-${card.id}-1`), 0);
-          set(ref(db, `users/${user}/Card/Data-${card.id}-2`), 0);
+          get(cardRef).then((snapshot) => {
+            if (!snapshot.hasChild(`Data-${card.id}-1`)) {
+              set(ref(db, `users/${user}/Card/Data-${card.id}-1`), 0);
+            }
+            if (!snapshot.hasChild(`Data-${card.id}-2`)) {
+              set(ref(db, `users/${user}/Card/Data-${card.id}-2`), 0);
+            }
+          });
           charts[card.id] = new Chart(ctxNew, {
             data: {
               datasets: [
                 {
                   type: "bar",
                   label: card.label,
-                  data: [10, 30, 40, 100],
+                  data: [],
                 },
                 {
                   type: "line",
                   label: card.label2,
-                  data: [40, 50, 10, 40],
+                  data: [],
                 },
               ],
-              labels: [0, 1, 2, 3],
+              labels: [],
             },
             options: {
               scales: {
@@ -388,8 +403,15 @@ window.onload = () => {
         }
       }
     } else {
-      set(ref(db, `users/${user}/Out/Out-${card.id}-1`), 0);
-      set(ref(db, `users/${user}/Out/Out-${card.id}-2`), 0);
+      const cardRefco = ref(db, `users/${user}/Out`);
+      get(cardRefco).then((snapshot) => {
+        if (!snapshot.hasChild(`Out-${card.id}-1`)) {
+          set(ref(db, `users/${user}/Out/Out-${card.id}-1`), 0);
+        }
+        if (!snapshot.hasChild(`Out-${card.id}-2`)) {
+          set(ref(db, `users/${user}/Out/Out-${card.id}-2`), 0);
+        }
+      });
       box.innerHTML = `
         <h1 class="heading">${card.name}</h1>
         <h2>Loại card: ${card.type}</h2>
@@ -416,7 +438,7 @@ document.getElementById("addblock").onclick = function () {
     <h2>Thêm card mới</h2>
     <form>
       <input type="text" placeholder="Nhập tên card" id = "cardName"><br>
-      <label>Lựa chọn loại card</label>
+      <label for="cardType">Lựa chọn loại card</label>
       <select id="cardType">
         <option value="" selected disabled>-- Chọn loại card --</option>
         <option value="Sensor">Cảm biến</option>
@@ -424,7 +446,7 @@ document.getElementById("addblock").onclick = function () {
       </select>
       <br>
       <div class="chartSelect" style="display:none;">
-        <label>Lựa chọn loại biểu đồ</label>
+        <label for="chartType">Lựa chọn loại biểu đồ</label>
         <select id="chartType">
           <option value="line">Biểu đồ đường</option>
           <option value="bar">Biểu đồ cột</option>
@@ -438,7 +460,7 @@ document.getElementById("addblock").onclick = function () {
       </div>
       <br>
       <div class="PinSelect" style="display:none;">
-        <label>Lựa chọn chân kết nối</label>
+        <label for="selectPin">Lựa chọn chân kết nối</label>
         <select id="selectPin">
           <option value="2">GPIO2</option>
           <option value="4">GPIO4</option>
@@ -459,7 +481,7 @@ document.getElementById("addblock").onclick = function () {
       </div>
       <br>
       <div class="Pin2Select" style="display:none;">
-        <label>Lựa chọn chân kết nối2</label>
+        <label for="selectPin2">Lựa chọn chân kết nối2</label>
         <select id="selectPin2">
           <option value="2">GPIO2</option>
           <option value="4">GPIO4</option>
@@ -712,11 +734,11 @@ document.addEventListener("click", (e) => {
   const box = btn.closest(".box");
   if (!box) return;
   const parts = btn.id.split("-");
+  if (parts[1] == "inout1" || parts[1] == "inout2") {
+    return;
+  }
   const inId = Number(parts[1]);
   const channel = Number(parts[2]);
-  const btnId = btn.id;
-  console.log(channel);
-  console.log(btnId);
   const currentCL = getComputedStyle(btn).backgroundColor;
   if (currentCL == "rgb(255, 152, 152)") {
     set(ref(db, `users/${user}/In/In-${inId}-${channel}`), 1);
@@ -767,6 +789,27 @@ document.addEventListener("click", (e) => {
   }
   charts[cardId].update("none");
 });
+
+onValue(ref(db, `users/${user}/Card`), (snapshot) => {
+  const Data = snapshot.val();
+  if (!Data) return;
+  Object.entries(Data).forEach(([key, val]) => {
+    const parts = key.split("-");
+    const cardId = parts[1];
+    const time = new Date().toLocaleTimeString();
+    charts[cardId].data.labels.push(time);
+    if (parts[2] == "CB1" || parts[2] == "CB2") return;
+    if (parts[2] == "1") {
+      charts[cardId].data.datasets[0].data.push(val);
+      console.log(val);
+    } else {
+      charts[cardId].data.datasets[1].data.push(val);
+      console.log(val);
+    }
+    charts[cardId].update("none");
+  });
+});
+
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("button");
   if (!btn) return;
@@ -779,6 +822,8 @@ document.addEventListener("click", (e) => {
     let humiCB = document.getElementById(`hum${cardId}`).value;
     tempCB = Number(tempCB);
     humiCB = Number(humiCB);
+    set(ref(db, `users/${user}/Card/Data-${cardId}-CB1`), tempCB);
+    set(ref(db, `users/${user}/Card/Data-${cardId}-CB2`), humiCB);
     alert(
       `Bạn đã cài đặt thành công:
   Nhiệt độ ngưỡng: ${tempCB}
