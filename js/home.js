@@ -504,6 +504,10 @@ document.getElementById("addblock").onclick = function () {
       <button type="submit" id="getInfor">Xác nhận</button>
     </form>
   `;
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "smooth",
+  });
   const cardTypeSelect = box.querySelector("#cardType");
   const selectPin2 = box.querySelector(".Pin2Select");
   const selectChart = box.querySelector(".chartSelect");
