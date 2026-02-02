@@ -18,7 +18,10 @@ const firebaseConfig = {
   messagingSenderId: "599011961788",
   appId: "1:599011961788:web:008c324dbfc6b3cf6699b9",
 };
-
+window.scrollTo({
+  top: 0,
+  behavior: "smooth",
+});
 const user = localStorage.getItem("username");
 const ctx1 = document.getElementById("ChartDHT11");
 const mixedChart = new Chart(ctx1, {
@@ -835,4 +838,5 @@ document.addEventListener("click", (e) => {
     );
   }
 });
+
 
