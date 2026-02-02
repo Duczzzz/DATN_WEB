@@ -212,6 +212,9 @@ function saveCardToLocal(cardData) {
 }
 window.onload = () => {
   const cards = JSON.parse(localStorage.getItem("cards")) || [];
+  if (cards.length === 0) {
+    localStorage.setItem("cardCount", 4);
+  }
   cards.forEach((card) => {
     let box = document.createElement("div");
     box.className = "box box" + card.id;
@@ -423,10 +426,10 @@ window.onload = () => {
           <h2>Chân kết nối: GPIO${card.pin1}</h2>
           <h2>Chân kết nối2: GPIO${card.pin2}</h2>
           <div class="button_group">
-            <button class="btnControl" id="btnin-${card.id}-1">OFF 1</button>
-            <p id="status-${card.id}-1">OUT 1 Đang tắt</p>
-            <button class="btnControl" id="btnin-${card.id}-2">OFF 2</button>
-            <p id="status-${card.id}-2">OUT 2 Đang tắt</p>
+            <button class="btnControl" id="btnin-${card.id}-1">OFF ${card.pin1}</button>
+            <p id="status-${card.id}-1">OUT ${card.pin1} Đang tắt</p>
+            <button class="btnControl" id="btnin-${card.id}-2">OFF ${card.pin2}</button>
+            <p id="status-${card.id}-2">OUT ${card.pin2} Đang tắt</p>
           </div>
         `;
       } else {
@@ -440,8 +443,8 @@ window.onload = () => {
           <h2>Loại card: ${card.type}</h2>
           <h2>Chân kết nối: GPIO${card.pin1}</h2>
           <div class="button_group">
-            <button class="btnControl" id="btnin-${card.id}-1">OFF 1</button>
-            <p id="status-${card.id}-1">OUT 1 Đang tắt</p>
+            <button class="btnControl" id="btnin-${card.id}-1">OFF ${card.pin1}</button>
+            <p id="status-${card.id}-1">OUT ${card.pin1} Đang tắt</p>
           </div>
         `;
       }
@@ -789,15 +792,24 @@ document.getElementById("removeblock").onclick = function () {
     const selectedId = Number(select.value);
     const cardToDelete = cards.find((card) => card.id === selectedId);
     if (cardToDelete.chartType == null) {
-      remove(ref(db, `users/${user}/Out/Out-${selectedId}-1`));
-      remove(ref(db, `users/${user}/Out/Out-${selectedId}-2`));
-      remove(ref(db, `users/${user}/In/In-${selectedId}-1`));
-      remove(ref(db, `users/${user}/In/In-${selectedId}-2`));
+      if (cardToDelete.pin2 == null) {
+        remove(ref(db, `users/${user}/Out/Out-${selectedId}-1`));
+        remove(ref(db, `users/${user}/In/In-${selectedId}-1`));
+      } else {
+        remove(ref(db, `users/${user}/Out/Out-${selectedId}-1`));
+        remove(ref(db, `users/${user}/Out/Out-${selectedId}-2`));
+        remove(ref(db, `users/${user}/In/In-${selectedId}-1`));
+        remove(ref(db, `users/${user}/In/In-${selectedId}-2`));
+      }
     } else if (cardToDelete.chartType == "mixchart") {
       remove(ref(db, `users/${user}/Card/Data-${selectedId}-1`));
       remove(ref(db, `users/${user}/Card/Data-${selectedId}-2`));
+      remove(ref(db, `users/${user}/Card/Data-${selectedId}-CB1`));
+      remove(ref(db, `users/${user}/Card/Data-${selectedId}-CB2`));
     } else {
       remove(ref(db, `users/${user}/Card/Data-${selectedId}-1`));
+      remove(ref(db, `users/${user}/Card/Data-${selectedId}-CB1`));
+      remove(ref(db, `users/${user}/Card/Data-${selectedId}-CB2`));
     }
     const newCards = cards.filter((card) => card.id !== selectedId);
     alert("Đã xóa card: " + selectedId);
@@ -818,30 +830,58 @@ document.addEventListener("click", (e) => {
   const inId = Number(parts[1]);
   const channel = Number(parts[2]);
   const currentCL = getComputedStyle(btn).backgroundColor;
-  if (currentCL == "rgb(255, 152, 152)") {
-    set(ref(db, `users/${user}/In/In-${inId}-${channel}`), 1);
-    btn.style.backgroundColor = "rgb(41, 63, 255)";
-    btn.innerText = `ON ${parts[2]}`;
-  } else {
-    set(ref(db, `users/${user}/In/In-${inId}-${channel}`), 0);
-    btn.style.backgroundColor = "rgb(255, 152, 152)";
-    btn.innerText = `OFF ${parts[2]}`;
-  }
+  const cards = JSON.parse(localStorage.getItem("cards")) || [];
+  cards.forEach((card) => {
+    if (card.id == inId) {
+      if (parts[2] == "1") {
+        if (currentCL == "rgb(255, 152, 152)") {
+          set(ref(db, `users/${user}/In/In-${inId}-${channel}`), 1);
+          btn.style.backgroundColor = "rgb(41, 63, 255)";
+          btn.innerText = `ON ${card.pin1}`;
+        } else {
+          set(ref(db, `users/${user}/In/In-${inId}-${channel}`), 0);
+          btn.style.backgroundColor = "rgb(255, 152, 152)";
+          btn.innerText = `OFF ${card.pin1}`;
+        }
+      } else {
+        if (currentCL == "rgb(255, 152, 152)") {
+          set(ref(db, `users/${user}/In/In-${inId}-${channel}`), 1);
+          btn.style.backgroundColor = "rgb(41, 63, 255)";
+          btn.innerText = `ON ${card.pin2}`;
+        } else {
+          set(ref(db, `users/${user}/In/In-${inId}-${channel}`), 0);
+          btn.style.backgroundColor = "rgb(255, 152, 152)";
+          btn.innerText = `OFF ${card.pin2}`;
+        }
+      }
+    }
+  });
 });
 
 const path = `users/${user}/Out`;
 onValue(ref(db, path), (snapshot) => {
   const inData = snapshot.val();
   if (!inData) return;
+  const cards = JSON.parse(localStorage.getItem("cards")) || [];
+  if (cards.length === 0) {
+    return;
+  }
   Object.entries(inData).forEach(([key, val]) => {
     const parts = key.split("-");
-    // console.log(parts[0], parts[1], parts[2]);
     const stt = document.getElementById(`status-${parts[1]}-${parts[2]}`);
-    if (val == 1) {
-      stt.innerText = `OUT ${parts[1]} Đang bật`;
-    } else {
-      stt.innerText = `OUT ${parts[1]} Đang tắt`;
-    }
+    cards.forEach((card) => {
+      if (card.id == Number(parts[1])) {
+        if (val == 1 && parts[2] == "1") {
+          stt.innerText = `OUT ${card.pin1} Đang bật`;
+        } else if (val == 0 && parts[2] == "1") {
+          stt.innerText = `OUT ${card.pin1} Đang tắt`;
+        } else if (val == 1 && parts[2] == "2") {
+          stt.innerText = `OUT ${card.pin2} Đang bật`;
+        } else if (val == 0 && parts[2] == "2") {
+          stt.innerText = `OUT ${card.pin2} Đang tắt`;
+        }
+      }
+    });
   });
 });
 
@@ -869,6 +909,10 @@ document.addEventListener("click", (e) => {
 });
 
 onValue(ref(db, `users/${user}/Card`), (snapshot) => {
+  const cards = JSON.parse(localStorage.getItem("cards")) || [];
+  if (cards.length === 0) {
+    return;
+  }
   const Data = snapshot.val();
   if (!Data) return;
   Object.entries(Data).forEach(([key, val]) => {
@@ -879,10 +923,8 @@ onValue(ref(db, `users/${user}/Card`), (snapshot) => {
     if (parts[2] == "CB1" || parts[2] == "CB2") return;
     if (parts[2] == "1") {
       charts[cardId].data.datasets[0].data.push(val);
-      console.log(val);
     } else {
       charts[cardId].data.datasets[1].data.push(val);
-      console.log(val);
     }
     charts[cardId].update("none");
   });
