@@ -189,7 +189,7 @@ body::before {
 .container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-evenly;
   gap: 30px;
   max-width: 1400px;
   margin: 0px auto;
@@ -207,7 +207,7 @@ body::before {
   border-radius: var(--border-radius-xl);
   box-shadow: var(--shadow-lg);
   transition: all var(--transition-normal);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255);
   margin-top: 30px;
   position: relative;
   animation: fadeInUp 0.6s ease-out backwards;
@@ -250,37 +250,20 @@ body::before {
   animation-delay: 0.4s;
 }
 
-/* Box Variants */
 .box1 {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 238, 248, 0.95),
-    rgba(224, 195, 252, 0.95)
-  );
+  background: linear-gradient(135deg, rgba(255, 238, 248), rgba(224, 195, 252));
 }
 
 .box2 {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 244, 230, 0.95),
-    rgba(255, 216, 155, 0.95)
-  );
+  background: linear-gradient(135deg, rgba(255, 244, 230), rgba(255, 216, 155));
 }
 
 .box3 {
-  background: linear-gradient(
-    135deg,
-    rgba(224, 247, 255, 0.95),
-    rgba(167, 216, 240, 0.95)
-  );
+  background: linear-gradient(135deg, rgba(224, 247, 255), rgba(167, 216, 240));
 }
 
 .box4 {
-  background: linear-gradient(
-    135deg,
-    rgba(232, 245, 233, 0.95),
-    rgba(185, 246, 202, 0.95)
-  );
+  background: linear-gradient(135deg, rgba(232, 245, 233), rgba(185, 246, 202));
 }
 
 .box h2 {
@@ -386,7 +369,7 @@ body::before {
 
 .btnControl:hover {
   transform: translateY(-2px);
-  background: linear-gradient(90deg, #e9d2ff, #472fff);
+  background: linear-gradient(90deg, #ff5757, #6d5aff);
 }
 
 .button_group p {
