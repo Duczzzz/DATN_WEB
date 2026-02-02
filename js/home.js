@@ -504,10 +504,6 @@ document.getElementById("addblock").onclick = function () {
       <button type="submit" id="getInfor">Xác nhận</button>
     </form>
   `;
-  window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: "smooth",
-  });
   const cardTypeSelect = box.querySelector("#cardType");
   const selectPin2 = box.querySelector(".Pin2Select");
   const selectChart = box.querySelector(".chartSelect");
@@ -533,6 +529,10 @@ document.getElementById("addblock").onclick = function () {
     }
   });
   document.querySelector(".container").appendChild(box);
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "smooth",
+  });
   box.querySelector("#getInfor").onclick = function () {
     const selectChart = box.querySelector("#chartType").value;
     const selectCard = box.querySelector("#cardType").value;
@@ -835,3 +835,4 @@ document.addEventListener("click", (e) => {
     );
   }
 });
+
