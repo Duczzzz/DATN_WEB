@@ -22,6 +22,7 @@ window.scrollTo({
   top: 0,
   behavior: "smooth",
 });
+
 const user = localStorage.getItem("username");
 const ctx1 = document.getElementById("ChartDHT11");
 const mixedChart = new Chart(ctx1, {
@@ -407,26 +408,43 @@ window.onload = () => {
       }
     } else {
       const cardRefco = ref(db, `users/${user}/Out`);
-      get(cardRefco).then((snapshot) => {
-        if (!snapshot.hasChild(`Out-${card.id}-1`)) {
-          set(ref(db, `users/${user}/Out/Out-${card.id}-1`), 0);
-        }
-        if (!snapshot.hasChild(`Out-${card.id}-2`)) {
-          set(ref(db, `users/${user}/Out/Out-${card.id}-2`), 0);
-        }
-      });
-      box.innerHTML = `
-        <h1 class="heading">${card.name}</h1>
-        <h2>Loại card: ${card.type}</h2>
-        <h2>Chân kết nối: GPIO${card.pin1}</h2>
-        <h2>Chân kết nối2: GPIO${card.pin2}</h2>
-        <div class="button_group">
-          <button class="btnControl" id="btnin-${card.id}-1">OFF 1</button>
-          <p id="status-${card.id}-1">OUT 1 Đang tắt</p>
-          <button class="btnControl" id="btnin-${card.id}-2">OFF 2</button>
-          <p id="status-${card.id}-2">OUT 2 Đang tắt</p>
-        </div>
-      `;
+      if (card.pin2 != null) {
+        get(cardRefco).then((snapshot) => {
+          if (!snapshot.hasChild(`Out-${card.id}-1`)) {
+            set(ref(db, `users/${user}/Out/Out-${card.id}-1`), 0);
+          }
+          if (!snapshot.hasChild(`Out-${card.id}-2`)) {
+            set(ref(db, `users/${user}/Out/Out-${card.id}-2`), 0);
+          }
+        });
+        box.innerHTML = `
+          <h1 class="heading">${card.name}</h1>
+          <h2>Loại card: ${card.type}</h2>
+          <h2>Chân kết nối: GPIO${card.pin1}</h2>
+          <h2>Chân kết nối2: GPIO${card.pin2}</h2>
+          <div class="button_group">
+            <button class="btnControl" id="btnin-${card.id}-1">OFF 1</button>
+            <p id="status-${card.id}-1">OUT 1 Đang tắt</p>
+            <button class="btnControl" id="btnin-${card.id}-2">OFF 2</button>
+            <p id="status-${card.id}-2">OUT 2 Đang tắt</p>
+          </div>
+        `;
+      } else {
+        get(cardRefco).then((snapshot) => {
+          if (!snapshot.hasChild(`Out-${card.id}-1`)) {
+            set(ref(db, `users/${user}/Out/Out-${card.id}-1`), 0);
+          }
+        });
+        box.innerHTML = `
+          <h1 class="heading">${card.name}</h1>
+          <h2>Loại card: ${card.type}</h2>
+          <h2>Chân kết nối: GPIO${card.pin1}</h2>
+          <div class="button_group">
+            <button class="btnControl" id="btnin-${card.id}-1">OFF 1</button>
+            <p id="status-${card.id}-1">OUT 1 Đang tắt</p>
+          </div>
+        `;
+      }
     }
   });
 };
@@ -461,6 +479,15 @@ document.getElementById("addblock").onclick = function () {
         <input type="text" placeholder="Nhập nhãn biểu đồ" id = "labelchart"><br>
         <input type="text" placeholder="Nhập nhãn 2 biểu đồ" id = "labelchart2" style="display:none;"><br>
       </div>
+      <br>
+      <div class="SelectMuchPin" style="display:none;">
+        <label for="Manypin">Lựa chọn số ngõ ra muốn điều khiển</label>
+        <select id="Manypin">
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </div>
+      <br>
       <br>
       <div class="PinSelect" style="display:none;">
         <label for="selectPin">Lựa chọn chân kết nối</label>
@@ -507,21 +534,25 @@ document.getElementById("addblock").onclick = function () {
       <button type="submit" id="getInfor">Xác nhận</button>
     </form>
   `;
+
   const cardTypeSelect = box.querySelector("#cardType");
   const selectPin2 = box.querySelector(".Pin2Select");
   const selectChart = box.querySelector(".chartSelect");
   const selectPin = box.querySelector(".PinSelect");
   const labelchart2 = box.querySelector("#labelchart2");
   const chartType = box.querySelector("#chartType");
+  const SelectMuchPin = box.querySelector(".SelectMuchPin");
+  const manypin = box.querySelector("#Manypin");
   cardTypeSelect.addEventListener("change", () => {
     if (cardTypeSelect.value === "Sensor") {
       selectPin2.style.display = "none";
       selectChart.style.display = "block";
       selectPin.style.display = "block";
+      SelectMuchPin.style.display = "none";
     } else {
-      selectPin2.style.display = "block";
       selectChart.style.display = "none";
       selectPin.style.display = "block";
+      SelectMuchPin.style.display = "block";
     }
   });
   chartType.addEventListener("change", () => {
@@ -531,11 +562,35 @@ document.getElementById("addblock").onclick = function () {
       labelchart2.style.display = "none";
     }
   });
+  manypin.addEventListener("change", () => {
+    if (manypin.value === "1") {
+      selectPin2.style.display = "none";
+    } else {
+      selectPin2.style.display = "block";
+    }
+  });
   document.querySelector(".container").appendChild(box);
   window.scrollTo({
     top: document.body.scrollHeight,
     behavior: "smooth",
   });
+  const select = document.getElementById("selectPin");
+  const select2 = document.getElementById("selectPin2");
+  const cards = JSON.parse(localStorage.getItem("cards")) || [];
+  const usedPins = new Set();
+  cards.forEach((card) => {
+    console.log(card.pin1, card.pin2);
+    if (card.pin1 != null) usedPins.add(card.pin1);
+    if (card.pin2 != null) usedPins.add(card.pin2);
+  });
+  [...select.options].forEach((option) => {
+    if (usedPins.has(option.value)) option.remove();
+  });
+
+  [...select2.options].forEach((option) => {
+    if (usedPins.has(option.value)) option.remove();
+  });
+
   box.querySelector("#getInfor").onclick = function () {
     const selectChart = box.querySelector("#chartType").value;
     const selectCard = box.querySelector("#cardType").value;
@@ -583,25 +638,42 @@ document.getElementById("addblock").onclick = function () {
       });
       saved = 1;
     } else if (selectCard == "control") {
-      const selectPin2 = box.querySelector("#selectPin2").value;
-      if (selectPin == selectPin2) {
-        alert("vui lòng thay đổi chân GPIO");
-        return;
-      }
-      alert(
-        `Bạn đã chọn:
+      const manypin = box.querySelector("#Manypin").value;
+      if (manypin == "1") {
+        alert(
+          `Bạn đã chọn:
+        Card: ${selectCard}
+        OUT1: GPIO${selectPin}`,
+        );
+        saveCardToLocal({
+          id: count,
+          name: cardName,
+          type: selectCard,
+          pin1: selectPin,
+          pin2: null,
+          chartType: null,
+        });
+      } else {
+        const selectPin2 = box.querySelector("#selectPin2").value;
+        if (selectPin == selectPin2) {
+          alert("vui lòng thay đổi chân GPIO");
+          return;
+        }
+        alert(
+          `Bạn đã chọn:
       Card: ${selectCard}
-      GPIO: ${selectPin}
-      GPIO2: ${selectPin2}`,
-      );
-      saveCardToLocal({
-        id: count,
-        name: cardName,
-        type: selectCard,
-        pin1: selectPin,
-        pin2: selectPin2,
-        chartType: null,
-      });
+      OUT1: ${selectPin}
+      OUT2: ${selectPin2}`,
+        );
+        saveCardToLocal({
+          id: count,
+          name: cardName,
+          type: selectCard,
+          pin1: selectPin,
+          pin2: selectPin2,
+          chartType: null,
+        });
+      }
       saved = 1;
     }
     if (saved == 1) {
@@ -716,7 +788,6 @@ document.getElementById("removeblock").onclick = function () {
   box.querySelector("#confirmDelete").onclick = () => {
     const selectedId = Number(select.value);
     const cardToDelete = cards.find((card) => card.id === selectedId);
-    alert("Đã xóa card: " + cardToDelete.chartType);
     if (cardToDelete.chartType == null) {
       remove(ref(db, `users/${user}/Out/Out-${selectedId}-1`));
       remove(ref(db, `users/${user}/Out/Out-${selectedId}-2`));
@@ -838,5 +909,3 @@ document.addEventListener("click", (e) => {
     );
   }
 });
-
-
