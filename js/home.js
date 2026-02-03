@@ -18,6 +18,7 @@ const firebaseConfig = {
   messagingSenderId: "599011961788",
   appId: "1:599011961788:web:008c324dbfc6b3cf6699b9",
 };
+
 window.scrollTo({
   top: 0,
   behavior: "smooth",
@@ -210,16 +211,47 @@ function saveCardToLocal(cardData) {
   cards.push(cardData);
   localStorage.setItem("cards", JSON.stringify(cards));
 }
+let x = 0;
+let y = 0;
 window.onload = () => {
   const cards = JSON.parse(localStorage.getItem("cards")) || [];
   if (cards.length === 0) {
     localStorage.setItem("cardCount", 4);
   }
+  var drawflowContainer = document.getElementById("drawflow");
+  var editor = new Drawflow(drawflowContainer);
+  const maxWidth = document.querySelector("#drawflow").offsetWidth;
+  const maxHeight = document.querySelector("#drawflow").offsetHeight;
+  editor.start();
+  var espId = editor.addNode(
+    "Main",
+    1,
+    1,
+    320,
+    200,
+    "node",
+    {},
+    `<div>ESP32</div>`,
+  );
   cards.forEach((card) => {
     let box = document.createElement("div");
     box.className = "box box" + card.id;
     document.querySelector(".container").appendChild(box);
     if (card.type == "Sensor") {
+      var nodeId = editor.addNode(
+        card.type,
+        0,
+        1,
+        0,
+        y,
+        "hi",
+        { card },
+        `<div>Cardname:${card.name}</div>
+      <br>
+      <div>GPIO${card.pin1}</div>`,
+      );
+      editor.addConnection(nodeId, espId, "output_1", "input_1");
+      y = y + 115;
       const cardRef = ref(db, `users/${user}/Card`);
       box.innerHTML = `
         <h1 class="heading">${card.name}</h1>
@@ -410,6 +442,22 @@ window.onload = () => {
         }
       }
     } else {
+      var nodeId = editor.addNode(
+        card.type,
+        1,
+        0,
+        650,
+        x,
+        "hi",
+        { card },
+        `<div>Cardname:${card.name}</div>
+      <br>
+      <div>GPIO${card.pin1}</div>
+      <br>
+      ${card.pin2 != null ? `<div>GPIO${card.pin2}</div>` : ``}`,
+      );
+      editor.addConnection(espId, nodeId, "output_1", "input_1");
+      x = x + 120;
       const cardRefco = ref(db, `users/${user}/Out`);
       if (card.pin2 != null) {
         get(cardRefco).then((snapshot) => {
