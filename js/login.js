@@ -31,14 +31,11 @@ $(document).ready(function () {
 document.getElementById("submit").onclick = function () {
   const username = document.getElementById("user").value.trim();
   const password = document.getElementById("pass").value.trim();
-
   if (!username || !password) {
     alert("Vui lòng nhập đủ thông tin");
     return;
   }
-
   const dbRef = ref(db);
-
   get(child(dbRef, `users/${username}`))
     .then((snapshot) => {
       if (!snapshot.exists()) {

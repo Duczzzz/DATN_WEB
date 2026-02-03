@@ -220,7 +220,6 @@ window.onload = () => {
   }
   var drawflowContainer = document.getElementById("drawflow");
   var editor = new Drawflow(drawflowContainer);
-  const maxWidth = document.querySelector("#drawflow").offsetWidth;
   const maxHeight = document.querySelector("#drawflow").offsetHeight;
   editor.start();
   var espId = editor.addNode(
@@ -251,7 +250,10 @@ window.onload = () => {
       <div>GPIO${card.pin1}</div>`,
       );
       editor.addConnection(nodeId, espId, "output_1", "input_1");
-      y = y + 115;
+      y = y + 120;
+      if (y > maxHeight) {
+        document.querySelector("#drawflow").offsetHeight = Number(y);
+      }
       const cardRef = ref(db, `users/${user}/Card`);
       box.innerHTML = `
         <h1 class="heading">${card.name}</h1>
@@ -458,6 +460,9 @@ window.onload = () => {
       );
       editor.addConnection(espId, nodeId, "output_1", "input_1");
       x = x + 120;
+      if (x > maxHeight) {
+        drawflow.style.height = x + "px";
+      }
       const cardRefco = ref(db, `users/${user}/Out`);
       if (card.pin2 != null) {
         get(cardRefco).then((snapshot) => {
@@ -585,7 +590,6 @@ document.getElementById("addblock").onclick = function () {
       <button type="submit" id="getInfor">Xác nhận</button>
     </form>
   `;
-
   const cardTypeSelect = box.querySelector("#cardType");
   const selectPin2 = box.querySelector(".Pin2Select");
   const selectChart = box.querySelector(".chartSelect");
@@ -641,7 +645,14 @@ document.getElementById("addblock").onclick = function () {
   [...select2.options].forEach((option) => {
     if (usedPins.has(option.value)) option.remove();
   });
-
+  if (select.options.length === 0 && select2.options.length === 0) {
+    alert(
+      "đã sử dụng hết tài nguyên của hệ thống, để có thể tiếp tục tạo card mới thì xin vui lòng xóa card cũ",
+    );
+    setTimeout(() => {
+      location.reload();
+    }, 300);
+  }
   box.querySelector("#getInfor").onclick = function () {
     const selectChart = box.querySelector("#chartType").value;
     const selectCard = box.querySelector("#cardType").value;

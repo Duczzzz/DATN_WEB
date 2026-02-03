@@ -265,14 +265,25 @@ body::before {
 .box4 {
   background: linear-gradient(135deg, rgba(232, 245, 233), rgba(185, 246, 202));
 }
-
-#drawflow {
+.flow {
+  align-items: center;
+  width: 900px;
+  height: fit-content;
   background: linear-gradient(135deg, rgba(232, 245, 233), rgb(178, 254, 255));
-  width: 100%;
-  height: 1000px;
-  border: 1px solid #ffd5d5;
-  border-radius: 20px;
   padding: 20px;
+  border-radius: 20px;
+}
+#drawflow {
+  width: 840px;
+  height: 700px;
+  padding: 5px;
+}
+.drawflow-node {
+  height: 105px;
+}
+.drawflow-node:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(91, 255, 124, 0.2);
 }
 .box h2 {
   font-size: 16px;
