@@ -285,6 +285,11 @@ body::before {
   transform: translateY(-4px);
   box-shadow: 0 12px 28px rgba(91, 255, 124, 0.2);
 }
+footer {
+  width: auto;
+  height: 40px;
+  font-weight: 500;
+}
 .box h2 {
   font-size: 16px;
   color: var(--color-text-gray);
