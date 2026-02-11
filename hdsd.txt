@@ -3,24 +3,24 @@ Hướng dẫn sử dụng loại card control:
 ________________________________________
 🔹 Kênh 1
 •	Đường dẫn database:
-users/${user}/Out/Out-${card.id}-1
+users/{user}/Out/Out-${card.id}-1
 •	Cài đặt giá trị kênh 1:
-setInt(fbdo,"users/${user}/Out/Out-${card.id}-1", #gia_tri)
+setInt(fbdo,"users/{user}/Out/Out-${card.id}-1", #gia_tri)
 •	Tải giá trị kênh 1:
-getInt(fbdo,"users/${user}/Out/Out-${card.id}-1")
+getInt(fbdo,"users/{user}/Out/Out-${card.id}-1")
 ________________________________________
 🔹 Kênh 2
 •	Đường dẫn database:
-users/${user}/Out/Out-${card.id}-2
+users/{user}/Out/Out-${card.id}-2
 •	Cài đặt giá trị kênh 2:
-setInt(fbdo,"users/${user}/Out/Out-${card.id}-2", #gia_tri)
+setInt(fbdo,"users/{user}/Out/Out-${card.id}-2", #gia_tri)
 •	Tải giá trị kênh 2:
-getInt(fbdo,"users/${user}/Out/Out-${card.id}-2")
+getInt(fbdo,"users/{user}/Out/Out-${card.id}-2")
 ________________________________________
 ⚠️ Chú ý
 •	Dữ liệu tải về từ database có định dạng JSON, vì vậy cần chuyển đổi sang kiểu int hoặc float trước khi sử dụng.
 •	Ví dụ:
-getInt(fbdo,"users/${user}/Out/Out-${card.id}-2");
+getInt(fbdo,"users/{user}/Out/Out-${card.id}-2");
 int out2 = fbdo.intData();
 
 
@@ -33,19 +33,20 @@ setFloat(fbdo,"users/${user}/Card/Data-${card.id}-1", #giá_trị)
 •	Cài đặt giá trị cho kênh thông tin 2:
 setFloat(fbdo,"users/${user}/Card/Data-${card.id}-2", #giá_trị)
 •	Tải về giá trị ngưỡng nhiệt độ:
-getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1")
+getFloat(fbdo,"users/{user}/Card/Data-${card.id}-CB1")
 •	Tải về giá trị ngưỡng độ ẩm:
-getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB2")
+getFloat(fbdo,"users/{user}/Card/Data-${card.id}-CB2")
 + Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới cho card loại sensor có loại biểu đồ là line và bar:
 •	Cài đặt giá trị cho kênh thông tin 1:
-setFloat(fbdo,"users/${user}/Card/Data-${card.id}-1", #giá_trị)
+setFloat(fbdo,"users/{user}/Card/Data-${card.id}-1", #giá_trị)
 •	Tải về giá trị ngưỡng nhiệt độ:
-getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1")
+getFloat(fbdo,"users/{user}/Card/Data-${card.id}-CB1")
 •	Tải về giá trị ngưỡng độ ẩm:
-getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB2")
+getFloat(fbdo,"users/{user}/Card/Data-${card.id}-CB2")
 ⚠️ Chú ý
 •	Dữ liệu tải về từ database có định dạng JSON, vì vậy cần chuyển đổi sang kiểu int hoặc float trước khi sử dụng.
 •	Ví dụ:
-•	getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1");
+•	getFloat(fbdo,"users/{user}/Card/Data-${card.id}-CB1");
 •	float tempCB = fbdo.floatData();
+
 
