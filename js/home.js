@@ -43,6 +43,9 @@ async function initchat() {
   const response = await fetch(
     "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
     {
+        header: {
+          "ngrok-skip-browser-warning": "true",
+        },
       method: "POST",
       body: JSON.stringify({
         // model: "gpt-oss:120b-cloud",
@@ -1196,3 +1199,4 @@ document.getElementById("sendChat").onclick = function () {
     chatNor(msgu);
   }
 };
+
