@@ -1,4 +1,6 @@
 let count = Number(localStorage.getItem("cardCount")) || 4;
+const user = localStorage.getItem("username");
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import {
   getDatabase,
@@ -24,7 +26,155 @@ window.scrollTo({
   behavior: "smooth",
 });
 
-const user = localStorage.getItem("username");
+// const source = await fetch(
+//   "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/js/home.js",
+// ).then((r) => r.text());
+
+async function loadhdsd() {
+  const hdsdRaw = await fetch(
+    "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/hdsd.txt",
+  ).then((r) => r.text());
+  return hdsdRaw.replaceAll("{user}", user);
+}
+
+async function initchat() {
+  const fullsrc = document.documentElement.outerHTML;
+  console.log(fullsrc);
+  const response = await fetch(
+    "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        // model: "gpt-oss:120b-cloud",
+        model: "gemma3:4b",
+        messages: [
+          // {
+          //   role: "system",
+          //   content: `
+          //   Bạn là một trợ lý ảo hỗ trợ người dùng cho nền tảng của tôi, bạn tên là NukeChat.
+          //   `,
+          // },
+          {
+            role: "system",
+            content: `
+          Bạn là trợ lý ảo cho nền tảng của tôi.
+          QUY TẮC:
+          - CHỈ được trả lời dựa trên source code bên dưới.
+          - KHÔNG suy đoán.
+          - KHÔNG bổ sung kiến thức bên ngoài.
+          - Nếu không tìm thấy thông tin trong source code thì hãy trả lời đúng duy nhất:
+          "Không tìm thấy thông tin trong source code"
+          - Mỗi class có nhãn box box được đánh số ví dụ như: box box4 là card số 4, box box5 là card số 5
+          - Trả lời ngắn gọn.
+          ====================
+          Source code:
+          ${fullsrc}
+          `,
+          },
+          {
+            role: "user",
+            content: "bạn là ai",
+          },
+        ],
+        temperature: 0,
+        stream: false,
+      }),
+    },
+  );
+  const data = await response.json();
+  let box = document.createElement("div");
+  box.className = "msg bot";
+  box.innerText = `${data.choices[0].message.content}
+  `;
+  document.querySelector("#chatBody").appendChild(box);
+}
+initchat();
+async function chatNor(msgu) {
+  const hdsd = await loadhdsd();
+  const response = await fetch(
+    "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        // model: "gpt-oss:120b-cloud",
+        model: "gemma3:4b",
+        messages: [
+          {
+            role: "system",
+            content: `
+          Bạn là trợ lý ảo cho nền tảng của tôi. Hãy trả lời cho người dùng ngắn gọn nhất có thể bằng tiếng việt.
+          `,
+          },
+          {
+            role: "user",
+            content: msgu,
+          },
+        ],
+        temperature: 0,
+        stream: false,
+      }),
+    },
+  );
+  const data = await response.json();
+  let box = document.createElement("div");
+  box.className = "msg bot";
+  box.innerText = `${data.choices[0].message.content}
+  `;
+  document.querySelector("#chatBody").appendChild(box);
+}
+async function chat(msgu) {
+  const hdsd = await loadhdsd();
+  const response = await fetch(
+    "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        // model: "gpt-oss:120b-cloud",
+        model: "gemma3:4b",
+        messages: [
+          {
+            role: "system",
+            content: `
+          Bạn là trợ lý ảo cho nền tảng của tôi.
+          QUY TẮC:
+          - CHỈ được trả lời dựa trên HƯỚNG DẪN SỬ DỤNG bên dưới.
+          - Tôi có user là ${user} bạn hãy thay vào "{user}" trong vào đường dẫn database trong hướng dẫn sử dụng (bắt buộc).
+          - KHÔNG suy đoán.
+          - KHÔNG bổ sung kiến thức bên ngoài.
+          - Nếu không tìm thấy thông tin, trả lời đúng duy nhất:
+          "Không tìm thấy thông tin trong hướng dẫn sử dụng"
+          - Nếu người dùng không yêu cầu cách tải và lấy về dữ liệu thì không trả lời.
+
+          ĐỊNH DẠNG TRẢ LỜI (bắt buộc):
+          ===Đường dẫn database===
+          <ghi đúng nội dung tìm thấy>
+
+          ===Cách tải và lấy về dữ liệu===
+          <ghi đúng nội dung tìm thấy>
+
+          ====================
+          HƯỚNG DẪN SỬ DỤNG:
+          ${hdsd}
+          `,
+          },
+          {
+            role: "user",
+            content: msgu,
+          },
+        ],
+        temperature: 0,
+        stream: false,
+      }),
+    },
+  );
+  const data = await response.json();
+  let box = document.createElement("div");
+  box.className = "msg bot";
+  box.innerText = `${data.choices[0].message.content}
+  `;
+  document.querySelector("#chatBody").appendChild(box);
+}
+
 const ctx1 = document.getElementById("ChartDHT11");
 const mixedChart = new Chart(ctx1, {
   data: {
@@ -222,20 +372,6 @@ window.onload = () => {
   var editor = new Drawflow(drawflowContainer);
   const maxHeight = document.querySelector("#drawflow").offsetHeight;
   editor.start();
-  // console.log(editor.value);
-  // setTimeout(() => {
-  //   const df = document.querySelector("#drawflow .drawflow");
-  //   const node = df.querySelector(".drawflow-node");
-  //   if (!node) return;
-
-  //   const dfRect = df.getBoundingClientRect();
-  //   const nodeRect = node.getBoundingClientRect();
-
-  //   const x = dfRect.width / 2 - nodeRect.width / 2 - node.offsetLeft;
-  //   const y = dfRect.height / 2 - nodeRect.height / 2 - node.offsetTop;
-
-  //   df.style.transform = `translate(${x}px, ${y}px) scale(1)`;
-  // }, 100);
   var espId = editor.addNode(
     "Main",
     1,
@@ -271,6 +407,7 @@ window.onload = () => {
       const cardRef = ref(db, `users/${user}/Card`);
       box.innerHTML = `
         <h1 class="heading">${card.name}</h1>
+        <h2>ID card: ${card.id}</h2>
         <h2>Loại card: ${card.type}</h2>
         <h2>Chân kết nối: GPIO${card.pin1}</h2>
         <h2>Loại biểu đồ: ${card.chartType}</h2>
@@ -305,89 +442,6 @@ window.onload = () => {
                 <canvas id="Chart${card.id}"></canvas>
               </div>`
             : ""
-        }
-        <div class="swBTN">
-          <p>Hướng dẫn sử dụng</p>
-          <label class="switch">
-            <input type="checkbox" id="SW-${card.id}"/>
-            <span class="slider round"></span>
-          </label>
-        </div>
-        ${
-          card.chartType == "line" || card.chartType == "bar"
-            ? `<div class="txt-hd">
-                <p id="txt-${card.id}" style="display: none; line-height: 1.6;">
-                  Để có thể sử dụng được card: <b>${card.name}</b>
-                  <br>
-                  Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
-                  <br> - Đường dẫn database:
-                  <span class="ref-dtb">"users/${user}/Card/Data-${card.id}-1"</span>
-                  <br> - Cài đặt giá trị:
-                  <span class="ref-dtb">
-                    setFloat(fbdo,"users/${user}/Card/Data-${card.id}-1", #giá_trị)
-                  </span>
-                  <br> - Tải về giá trị ngưỡng nhiệt độ:
-                  <span class="ref-dtb">
-                    getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1")
-                  </span>
-                  <br> - Tải về giá trị ngưỡng độ ẩm:
-                  <span class="ref-dtb">
-                    getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB2")
-                  </span>
-                  <br> * Chú ý:
-                  <br> - Dữ liệu tải về từ database là json nên phải chuyển đổi sang Interge hoặc Float để sử dụng
-                  <br> - Ví dụ:
-                  <br> + <span class="ref-dtb">
-                    getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1");
-                  </span>
-                  <br> + <span class="ref-dtb">
-                    float tempCB = fbdo.floatData();
-                  </span>
-                </p>
-                </div>`
-            : `
-            <div class="txt-hd">
-              <p id="txt-${card.id}" style="display: none; line-height: 1.6">
-                Để có thể sử dụng được card: <b>${card.name}</b>
-                <br />
-                Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới <br />
-                - Đường dẫn database kênh 1: <br />
-                <span class="ref-dtb">"users/${user}/Card/Data-${card.id}-1"</span> <br />
-                - Đường dẫn database kênh 2: <br />
-                <span class="ref-dtb">"users/${user}/Card/Data-${card.id}-2"</span> <br />
-                - Cài đặt giá trị kênh 1: <br />
-                <span class="ref-dtb">
-                  setFloat(fbdo,"users/${user}/Card/Data-${card.id}-1", #giá_trị)
-                </span>
-                <br />
-                - Cài đặt giá trị kênh 2: <br />
-                <span class="ref-dtb">
-                  setFloat(fbdo,"users/${user}/Card/Data-${card.id}-2", #giá_trị)
-                </span>
-                <br />
-                - Tải về giá trị ngưỡng nhiệt độ: <br />
-                <span class="ref-dtb">
-                  getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1")
-                </span>
-                <br />
-                - Tải về giá trị ngưỡng độ ẩm: <br />
-                <span class="ref-dtb">
-                  getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB2")
-                </span>
-                <br />
-                * Chú ý: <br />
-                - Dữ liệu tải về từ database là json nên phải chuyển đổi sang Integer hoặc Float để sử dụng <br />
-                - Ví dụ: <br />
-                <span class="ref-dtb">
-                  getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1");
-                </span>
-                <br />
-                <span class="ref-dtb">
-                  float tempCB = fbdo.floatData();
-                </span>
-              </p
-            </div>
-            `
         }
       `;
       if (card.chartType != "none") {
@@ -572,6 +626,7 @@ window.onload = () => {
         });
         box.innerHTML = `
           <h1 class="heading">${card.name}</h1>
+          <h2>ID card: ${card.id}</h2>
           <h2>Loại card: ${card.type}</h2>
           <h2>Chân kết nối: GPIO${card.pin1}</h2>
           <h2>Chân kết nối2: GPIO${card.pin2}</h2>
@@ -580,36 +635,6 @@ window.onload = () => {
             <p id="status-${card.id}-1">OUT ${card.pin1} Đang tắt</p>
             <button class="btnControl" id="btnin-${card.id}-2">OFF ${card.pin2}</button>
             <p id="status-${card.id}-2">OUT ${card.pin2} Đang tắt</p>
-          </div>
-          <div class="swBTN">
-            <p>Hướng dẫn sử dụng</p>
-            <label class="switch">
-              <<input type="checkbox" id="SW-${card.id}"/>
-              <span class="slider round"></span>
-            </label>
-          </div>
-          <div class="txt-hd">
-            <p id="txt-${card.id}" style="display:none;line-height:1.6;">
-              Để có thể sử dụng được card:<span class="ref-dtb">${card.name}</span>
-              <br>Vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
-              <br>- Đường dẫn database kênh 1:
-              <br><span class="ref-dtb">users/${user}/Out/Out-${card.id}-1</span>
-              <br>- Cài đặt giá trị kênh 1:
-              <br><span class="ref-dtb">setInt(fbdo,"users/${user}/Out/Out-${card.id}-1",#gia_tri)</span>
-              <br>- Tải về giá trị kênh 1:
-              <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1")</span>
-              <br>- Đường dẫn database kênh 2:
-              <br><span class="ref-dtb">users/${user}/Out/Out-${card.id}-2</span>
-              <br>- Cài đặt giá trị kênh 2:
-              <br><span class="ref-dtb">setInt(fbdo,"users/${user}/Out/Out-${card.id}-2",#gia_tri)</span>
-              <br>- Tải về giá trị kênh 2:
-              <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-2")</span>
-              <br>* Chú ý:
-              <br>- Dữ liệu tải về từ database là<span class="ref-dtb">JSON</span>nên cần chuyển sang<span class="ref-dtb">int</span>hoặc<span class="ref-dtb">float</span>để sử dụng
-              <br>- Ví dụ:
-              <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-2");</span>
-              <br><span class="ref-dtb">int out2=fbdo.intData();</span>
-            </p>
           </div>
         `;
       } else {
@@ -620,35 +645,12 @@ window.onload = () => {
         });
         box.innerHTML = `
           <h1 class="heading">${card.name}</h1>
+          <h2>ID card: ${card.id}</h2>
           <h2>Loại card: ${card.type}</h2>
           <h2>Chân kết nối: GPIO${card.pin1}</h2>
           <div class="button_group">
             <button class="btnControl" id="btnin-${card.id}-1">OFF ${card.pin1}</button>
             <p id="status-${card.id}-1">OUT ${card.pin1} Đang tắt</p>
-          </div>
-          <div class="swBTN">
-            <p>Hướng dẫn sử dụng</p>
-            <label class="switch">
-              <input type="checkbox" id="SW-${card.id}"/>
-              <span class="slider round"></span>
-            </label>
-          </div>
-          <div class="txt-hd">
-            <p id="txt-${card.id}" style="display:none;line-height:1.6;">
-            Để có thể sử dụng được card:${card.name}
-            <br>Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
-            <br>- Đường dẫn database:
-            <br><span class="ref-dtb">users/${user}/Out/Out-${card.id}-1</span>
-            <br>- Để cài đặt giá trị:
-            <br><span class="ref-dtb">setInt(fbdo,"users/${user}/Out/Out-${card.id}-1",#gia_tri)</span>
-            <br>- Để tải về giá trị:
-            <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1")</span>
-            <br>* Chú ý:
-            <br>- Dữ liệu tải về từ database là<span class="ref-dtb">json</span>nên phải chuyển đổi sang<span class="ref-dtb">Integer</span>hoặc<span class="ref-dtb">Float</span>để sử dụng
-            <br>- Ví dụ:
-            <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1");</span>
-            <br><span class="ref-dtb">int out1=fbdo.intData();</span>
-            </p>
           </div>
           `;
       }
@@ -975,7 +977,7 @@ document.getElementById("removeblock").onclick = function () {
   box.className = "delete";
   box.innerHTML = `
     <form>
-      <label>Lựa chọn card cần xóa</label>
+      <label for="chooseCard">Lựa chọn card cần xóa</label>
       <select id="chooseCard"></select>
       <br><br>
       <button type="button" id="confirmDelete">Xóa</button>
@@ -1079,19 +1081,13 @@ onValue(ref(db, path), (snapshot) => {
   Object.entries(inData).forEach(([key, val]) => {
     const parts = key.split("-");
     const stt = document.getElementById(`status-${parts[1]}-${parts[2]}`);
-    cards.forEach((card) => {
-      if (card.id == Number(parts[1])) {
-        if (val == 1 && parts[2] == "1") {
-          stt.innerText = `OUT ${card.pin1} Đang bật`;
-        } else if (val == 0 && parts[2] == "1") {
-          stt.innerText = `OUT ${card.pin1} Đang tắt`;
-        } else if (val == 1 && parts[2] == "2") {
-          stt.innerText = `OUT ${card.pin2} Đang bật`;
-        } else if (val == 0 && parts[2] == "2") {
-          stt.innerText = `OUT ${card.pin2} Đang tắt`;
-        }
-      }
-    });
+    const card = cards.find((c) => c.id === Number(parts[1]));
+    if (!card) return;
+    if (card.id === Number(parts[1])) {
+      const pin = parts[2] === "1" ? card.pin1 : card.pin2;
+      const state = val === 1 ? "Đang bật" : "Đang tắt";
+      stt.innerText = `OUT ${pin} ${state}`;
+    }
   });
 });
 
@@ -1155,9 +1151,10 @@ document.addEventListener("click", (e) => {
     set(ref(db, `users/${user}/Card/Data-${cardId}-CB1`), tempCB);
     set(ref(db, `users/${user}/Card/Data-${cardId}-CB2`), humiCB);
     alert(
-      `Bạn đã cài đặt thành công:
-  Nhiệt độ ngưỡng: ${tempCB}
-  Độ ẩm ngưỡng: ${humiCB}`,
+      `
+    Bạn đã cài đặt thành công:
+    Nhiệt độ ngưỡng: ${tempCB}
+    Độ ẩm ngưỡng: ${humiCB}`,
     );
   }
 });
@@ -1174,3 +1171,28 @@ document.addEventListener("change", function (e) {
     }
   }
 });
+
+document.getElementById("logout").onclick = function () {
+  window.location.href = "index.html";
+};
+
+document.getElementById("chat").onclick = function () {
+  document.querySelector(".chat").style.display = "block";
+};
+document.getElementById("closeChat").onclick = function () {
+  document.querySelector(".chat").style.display = "none";
+};
+document.getElementById("sendChat").onclick = function () {
+  const msgu = document.querySelector("#chatInput").value;
+  let box = document.createElement("div");
+  box.className = "msg user";
+  box.innerText = `${msgu}
+  `;
+  document.querySelector("#chatBody").appendChild(box);
+  document.querySelector("#chatInput").value = "";
+  if (msgu.includes("id") || msgu.includes("hướng dẫn")) {
+    chat(msgu);
+  } else {
+    chatNor(msgu);
+  }
+};

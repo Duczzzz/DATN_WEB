@@ -31,14 +31,48 @@
       </ul>
     </div>
     <div class="blockbtn">
-      <button class="btnFunc" id="addblock">
-        <i class="fa-solid fa-plus"></i>
-      </button>
-      <button class="btnFunc" id="removeblock">
-        <i class="fa-solid fa-trash-can"></i>
-      </button>
+      <div class="btn1">
+        <button class="btnFunc" id="addblock">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+        <span class="tooltip">Thêm Card</span>
+      </div>
+      <div class="btn2">
+        <button class="btnFunc" id="removeblock">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+        <span class="tooltip">Xóa Card</span>
+      </div>
+      <div class="btn3">
+        <button class="btnFunc" id="chat">
+          <i class="fa-solid fa-comment-dots"></i>
+        </button>
+        <span class="tooltip">Chat bot</span>
+      </div>
+      <div class="btn4">
+        <button class="btnFunc" id="logout">
+          <i class="fa-solid fa-power-off"></i>
+        </button>
+        <span class="tooltip">Đăng xuất</span>
+      </div>
     </div>
     <div class="remove"></div>
+    <div class="chat">
+      <div class="box chat">
+        <h1>Chatbot</h1>
+        <div id="chatWindow" class="chat-window">
+          <div class="chat-header">
+            <span>🤖 Chat Bot</span>
+            <button id="closeChat">✖</button>
+          </div>
+          <div class="chat-body" id="chatBody"></div>
+          <div class="chat-footer">
+            <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." />
+            <button id="sendChat">Gửi</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container">
       <div class="flow">
         <div class="contentMain">
