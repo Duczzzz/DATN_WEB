@@ -43,7 +43,7 @@ async function initchat() {
   const response = await fetch(
     "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
     {
-        header: {
+        headers: {
           "ngrok-skip-browser-warning": "true",
         },
       method: "POST",
@@ -1199,4 +1199,5 @@ document.getElementById("sendChat").onclick = function () {
     chatNor(msgu);
   }
 };
+
 
