@@ -745,6 +745,10 @@ form button:hover {
 }
 
 @media (max-width: 480px) {
+  .box.chat {
+    min-width: 200px;
+    height: min(620px, 90vh);
+  }
   .txt-hd p {
     word-break: break-word;
     overflow-wrap: break-word;
