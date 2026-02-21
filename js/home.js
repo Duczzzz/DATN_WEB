@@ -45,6 +45,9 @@ async function initchat() {
     {
       method: "POST",
       body: JSON.stringify({
+        headers: new Headers({
+          origin: "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
+        }),
         // model: "gpt-oss:120b-cloud",
         model: "gemma3:4b",
         messages: [
@@ -57,7 +60,7 @@ async function initchat() {
           {
             role: "system",
             content: `
-          Bạn là trợ lý ảo cho nền tảng của tôi. Nền tảng có tên Nuke Board
+          Bạn là trợ lý ảo cho nền tảng của tôi. Nền tảng có tên Nuke Board. Bạn chỉ cần trả lời ngắn gọn 3-4 dòng
           `,
           },
           {
@@ -85,10 +88,10 @@ async function chatNor(msgu) {
     {
       method: "POST",
       body: JSON.stringify({
-        // model: "gpt-oss:120b-cloud",
         headers: new Headers({
           origin: "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
         }),
+        // model: "gpt-oss:120b-cloud",
         model: "gemma3:4b",
         messages: [
           {
@@ -120,10 +123,10 @@ async function chat(msgu) {
     "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
     {
       method: "POST",
-      headers: new Headers({
-        origin: "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
-      }),
       body: JSON.stringify({
+        headers: new Headers({
+          origin: "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
+        }),
         // model: "gpt-oss:120b-cloud",
         model: "gemma3:4b",
         messages: [
