@@ -45,9 +45,9 @@ async function initchat() {
     {
       method: "POST",
       body: JSON.stringify({
-        headers: new Headers({
-          origin: "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
-        }),
+        // headers: new Headers({
+        //   origin: "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
+        // }),
         // model: "gpt-oss:120b-cloud",
         model: "gemma3:4b",
         messages: [
@@ -88,9 +88,9 @@ async function chatNor(msgu) {
     {
       method: "POST",
       body: JSON.stringify({
-        headers: new Headers({
-          origin: "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
-        }),
+        // headers: new Headers({
+        //   origin: "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
+        // }),
         // model: "gpt-oss:120b-cloud",
         model: "gemma3:4b",
         messages: [
@@ -124,9 +124,9 @@ async function chat(msgu) {
     {
       method: "POST",
       body: JSON.stringify({
-        headers: new Headers({
-          origin: "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
-        }),
+        // headers: new Headers({
+        //   origin: "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
+        // }),
         // model: "gpt-oss:120b-cloud",
         model: "gemma3:4b",
         messages: [
@@ -1194,3 +1194,4 @@ document.getElementById("sendChat").onclick = function () {
     chatNor(msgu);
   }
 };
+
