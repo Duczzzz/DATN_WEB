@@ -38,14 +38,11 @@ async function loadhdsd() {
 }
 
 async function initchat() {
-  const fullsrc = document.documentElement.outerHTML;
-  console.log(fullsrc);
+  // const fullsrc = document.documentElement.outerHTML;
+  // console.log(fullsrc);
   const response = await fetch(
     "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
     {
-        headers: {
-          "ngrok-skip-browser-warning": "true",
-        },
       method: "POST",
       body: JSON.stringify({
         // model: "gpt-oss:120b-cloud",
@@ -60,18 +57,7 @@ async function initchat() {
           {
             role: "system",
             content: `
-          Bạn là trợ lý ảo cho nền tảng của tôi.
-          QUY TẮC:
-          - CHỈ được trả lời dựa trên source code bên dưới.
-          - KHÔNG suy đoán.
-          - KHÔNG bổ sung kiến thức bên ngoài.
-          - Nếu không tìm thấy thông tin trong source code thì hãy trả lời đúng duy nhất:
-          "Không tìm thấy thông tin trong source code"
-          - Mỗi class có nhãn box box được đánh số ví dụ như: box box4 là card số 4, box box5 là card số 5
-          - Trả lời ngắn gọn.
-          ====================
-          Source code:
-          ${fullsrc}
+          Bạn là trợ lý ảo cho nền tảng của tôi. Nền tảng có tên Nuke Board
           `,
           },
           {
@@ -100,6 +86,9 @@ async function chatNor(msgu) {
       method: "POST",
       body: JSON.stringify({
         // model: "gpt-oss:120b-cloud",
+        headers: new Headers({
+          origin: "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
+        }),
         model: "gemma3:4b",
         messages: [
           {
@@ -131,6 +120,9 @@ async function chat(msgu) {
     "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
     {
       method: "POST",
+      headers: new Headers({
+        origin: "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
+      }),
       body: JSON.stringify({
         // model: "gpt-oss:120b-cloud",
         model: "gemma3:4b",
@@ -1199,5 +1191,3 @@ document.getElementById("sendChat").onclick = function () {
     chatNor(msgu);
   }
 };
-
-
