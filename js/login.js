@@ -55,3 +55,9 @@ document.getElementById("submit").onclick = function () {
       alert("Lỗi Firebase");
     });
 };
+document.getElementById("forgetpass").onclick = function () {
+  alert("Chức năng đang được phát triển");
+};
+document.getElementById("signup").onclick = function () {
+  alert("Chức năng đang được phát triển");
+};

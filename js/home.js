@@ -453,7 +453,7 @@ window.onload = () => {
                 },
                 y: {
                   min: 0,
-                  max: 100,
+                  // max: 100,
                 },
               },
               plugins: {
@@ -499,7 +499,7 @@ window.onload = () => {
                 },
                 y: {
                   min: 0,
-                  max: 100,
+                  // max: 100,
                 },
               },
               plugins: {
@@ -553,7 +553,7 @@ window.onload = () => {
                 },
                 y: {
                   min: 0,
-                  max: 100,
+                  // max: 100,
                 },
               },
               plugins: {
@@ -985,6 +985,10 @@ document.getElementById("removeblock").onclick = function () {
   };
   box.querySelector("#confirmDelete").onclick = () => {
     const selectedId = Number(select.value);
+    if (selectedId == 0) {
+      alert("Không có card nào được chọn");
+      return;
+    }
     const cardToDelete = cards.find((card) => card.id === selectedId);
     if (cardToDelete.chartType == null) {
       if (cardToDelete.pin2 == null) {
