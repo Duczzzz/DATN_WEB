@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="vn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DashBoard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/login.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <style>
+      p {
+        color: red;
+        font-size: 14px;
+        margin-left: 10px;
+        display: none;
+      }
+      #sendOTP {
+        background-color: #ff9898;
+        color: white;
+        border: none;
+        border-radius: 7px;
+        cursor: pointer;
+      }
+      #sendOTP:hover {
+        background-color: #ff1f1f;
+      }
+    </style>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
+    ></script>
+    <script type="text/javascript">
+      (function () {
+        emailjs.init({
+          publicKey: "8PG_9-e7qajDxBHhf",
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="form">
+      <form action="" id="form-login">
+        <h1 class="form-heading">Đăng ký tài khoản</h1>
+        <div class="inputBox">
+          <i class="fa-regular fa-user"></i>
+          <input
+            id="user"
+            type="text"
+            placeholder="Tên đăng nhập"
+            class="form-input"
+          />
+        </div>
+        <p id="error-user">* Vui lòng nhập tên đăng nhập</p>
+        <div class="inputBox">
+          <i class="fa-solid fa-key"></i>
+          <input
+            id="pass"
+            type="password"
+            placeholder="Mật khẩu"
+            class="form-input"
+          />
+          <div class="eye">
+            <i class="fa-solid fa-eye"></i>
+          </div>
+        </div>
+        <p id="error-password">* Vui lòng nhập mật khẩu</p>
+        <div class="inputBox">
+          <i class="fa-solid fa-key"></i>
+          <input
+            id="password"
+            type="password"
+            placeholder="Xác nhận mật khẩu"
+            class="form-input"
+          />
+        </div>
+        <p id="error-confirm-password">* Vui lòng xác nhận mật khẩu</p>
+        <div class="inputBox">
+          <i class="fa-solid fa-envelope"></i>
+          <input
+            id="email"
+            type="email"
+            placeholder="Email"
+            class="form-input"
+          />
+        </div>
+        <p id="error-email">* Vui lòng nhập email</p>
+        <div class="inputBox">
+          <i class="fa-solid fa-phone"></i>
+          <input
+            id="phone"
+            type="text"
+            placeholder="Số điện thoại"
+            class="form-input"
+          />
+        </div>
+        <p id="error-phone">* Vui lòng nhập số điện thoại</p>
+        <div class="inputBox">
+          <input
+            id="OTP"
+            type="text"
+            inputmode="numeric"
+            placeholder="Nhập mã OTP"
+            class="form-input"
+          />
+          <button type="button" id="sendOTP">Gửi mã OTP</button>
+        </div>
+        <p id="error-otp">* Vui lòng nhập mã OTP</p>
+        <input type="button" id="submit" value="Đăng ký" class="form-submit" />
+        <div class="links">
+          <p style="display: block; font-size: 20px; color: rgb(0, 140, 255)">
+            Bạn đã có tài khoản?
+          </p>
+          <a href="index.html">Đăng nhập</a>
+        </div>
+      </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script type="module" src="js/signup.js"></script>
+  </body>
+</html>

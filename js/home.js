@@ -388,6 +388,8 @@ window.onload = () => {
         document.querySelector("#drawflow").offsetHeight = Number(y);
       }
       const cardRef = ref(db, `users/${user}/Card`);
+      //<h2>Nhiệt độ hiện tại: <span id="txt-${card.id}">-- °C</span></h2>
+      //<h2>Độ ẩm hiện tại: <span id="txt2-${card.id}">-- %</span></h2>
       box.innerHTML = `
         <h1 class="heading">${card.name}</h1>
         <h2>ID card: ${card.id}</h2>
