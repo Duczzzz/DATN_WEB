@@ -8,6 +8,7 @@ import {
   onValue,
   remove,
 } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyBliSd_F2NAl02D4FzMdtY0szkhpHdMf8c",
   authDomain: "doantn-885dc.firebaseapp.com",
@@ -96,9 +97,11 @@ document.getElementById("sendOTP").addEventListener("click", function () {
       }
     });
 });
+
 function validatepone(number) {
   return /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/.test(number);
 }
+
 document.getElementById("submit").addEventListener("click", function () {
   var username = document.getElementById("user").value;
   var password = document.getElementById("pass").value;

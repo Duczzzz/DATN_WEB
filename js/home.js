@@ -1,6 +1,5 @@
 let count = Number(localStorage.getItem("cardCount")) || 4;
 const user = localStorage.getItem("username");
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import {
   getDatabase,
@@ -65,8 +64,7 @@ async function initchat() {
     },
   );
   const data = await response.json();
-  let box = document.createElement("div");
-  box.className = "msg bot";
+  let box = document.getElementById("chatinit");
   box.innerText = `${data.choices[0].message.content}
   `;
   document.querySelector("#chatBody").appendChild(box);
@@ -418,15 +416,98 @@ window.onload = () => {
           />
           <button type="button" id="Warnbtn-${card.id}">Cài đặt</button>
         </form>
-        <button class="golive" id="live-${card.id}">
-          <img src="img/stream.png" alt="lỗi tải ảnh" />
-        </button>
         ${
           card.chartType !== "none"
             ? `<div class="card-chart">
+                <button class="golive" id="live-${card.id}">
+                  <img src="img/stream.png" alt="lỗi tải ảnh" />
+                </button>
                 <canvas id="Chart${card.id}"></canvas>
               </div>`
             : ""
+        }
+        <div class="swBTN">
+          <p>Hướng dẫn sử dụng</p>
+          <label class="switch">
+            <input type="checkbox" id="SW-${card.id}"/>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        ${
+          card.chartType == "line" || card.chartType == "bar"
+            ? `<div class="txt-hd">
+                <p id="txt-${card.id}" style="display: none; line-height: 1.6;">
+                  Để có thể sử dụng được card: <b>${card.name}</b>
+                  <br>
+                  Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
+                  <br> - Đường dẫn database:
+                  <span class="ref-dtb">"users/${user}/Card/Data-${card.id}-1"</span>
+                  <br> - Cài đặt giá trị:
+                  <span class="ref-dtb">
+                    setFloat(fbdo,"users/${user}/Card/Data-${card.id}-1", #giá_trị)
+                  </span>
+                  <br> - Tải về giá trị ngưỡng nhiệt độ:
+                  <span class="ref-dtb">
+                    getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1")
+                  </span>
+                  <br> - Tải về giá trị ngưỡng độ ẩm:
+                  <span class="ref-dtb">
+                    getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB2")
+                  </span>
+                  <br> * Chú ý:
+                  <br> - Dữ liệu tải về từ database là json nên phải chuyển đổi sang Interge hoặc Float để sử dụng
+                  <br> - Ví dụ:
+                  <br> + <span class="ref-dtb">
+                    getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1");
+                  </span>
+                  <br> + <span class="ref-dtb">
+                    float tempCB = fbdo.floatData();
+                  </span>
+                </p>
+                </div>`
+            : `
+            <div class="txt-hd">
+              <p id="txt-${card.id}" style="display: none; line-height: 1.6">
+                Để có thể sử dụng được card: <b>${card.name}</b>
+                <br />
+                Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới <br />
+                - Đường dẫn database kênh 1: <br />
+                <span class="ref-dtb">"users/${user}/Card/Data-${card.id}-1"</span> <br />
+                - Đường dẫn database kênh 2: <br />
+                <span class="ref-dtb">"users/${user}/Card/Data-${card.id}-2"</span> <br />
+                - Cài đặt giá trị kênh 1: <br />
+                <span class="ref-dtb">
+                  setFloat(fbdo,"users/${user}/Card/Data-${card.id}-1", #giá_trị)
+                </span>
+                <br />
+                - Cài đặt giá trị kênh 2: <br />
+                <span class="ref-dtb">
+                  setFloat(fbdo,"users/${user}/Card/Data-${card.id}-2", #giá_trị)
+                </span>
+                <br />
+                - Tải về giá trị ngưỡng nhiệt độ: <br />
+                <span class="ref-dtb">
+                  getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1")
+                </span>
+                <br />
+                - Tải về giá trị ngưỡng độ ẩm: <br />
+                <span class="ref-dtb">
+                  getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB2")
+                </span>
+                <br />
+                * Chú ý: <br />
+                - Dữ liệu tải về từ database là json nên phải chuyển đổi sang Integer hoặc Float để sử dụng <br />
+                - Ví dụ: <br />
+                <span class="ref-dtb">
+                  getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1");
+                </span>
+                <br />
+                <span class="ref-dtb">
+                  float tempCB = fbdo.floatData();
+                </span>
+              </p
+            </div>
+            `
         }
       `;
       if (card.chartType != "none") {
@@ -621,6 +702,36 @@ window.onload = () => {
             <button class="btnControl" id="btnin-${card.id}-2">OFF ${card.pin2}</button>
             <p id="status-${card.id}-2">OUT ${card.pin2} Đang tắt</p>
           </div>
+          <div class="swBTN">
+            <p>Hướng dẫn sử dụng</p>
+            <label class="switch">
+              <<input type="checkbox" id="SW-${card.id}"/>
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="txt-hd">
+            <p id="txt-${card.id}" style="display:none;line-height:1.6;">
+              Để có thể sử dụng được card:<span class="ref-dtb">${card.name}</span>
+              <br>Vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
+              <br>- Đường dẫn database kênh 1:
+              <br><span class="ref-dtb">users/${user}/Out/Out-${card.id}-1</span>
+              <br>- Cài đặt giá trị kênh 1:
+              <br><span class="ref-dtb">setInt(fbdo,"users/${user}/Out/Out-${card.id}-1",#gia_tri)</span>
+              <br>- Tải về giá trị kênh 1:
+              <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1")</span>
+              <br>- Đường dẫn database kênh 2:
+              <br><span class="ref-dtb">users/${user}/Out/Out-${card.id}-2</span>
+              <br>- Cài đặt giá trị kênh 2:
+              <br><span class="ref-dtb">setInt(fbdo,"users/${user}/Out/Out-${card.id}-2",#gia_tri)</span>
+              <br>- Tải về giá trị kênh 2:
+              <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-2")</span>
+              <br>* Chú ý:
+              <br>- Dữ liệu tải về từ database là<span class="ref-dtb">JSON</span>nên cần chuyển sang<span class="ref-dtb">int</span>hoặc<span class="ref-dtb">float</span>để sử dụng
+              <br>- Ví dụ:
+              <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-2");</span>
+              <br><span class="ref-dtb">int out2=fbdo.intData();</span>
+            </p>
+          </div>
         `;
       } else {
         get(cardRefco).then((snapshot) => {
@@ -636,6 +747,30 @@ window.onload = () => {
           <div class="button_group">
             <button class="btnControl" id="btnin-${card.id}-1">OFF ${card.pin1}</button>
             <p id="status-${card.id}-1">OUT ${card.pin1} Đang tắt</p>
+          </div>
+          <div class="swBTN">
+            <p>Hướng dẫn sử dụng</p>
+            <label class="switch">
+              <input type="checkbox" id="SW-${card.id}"/>
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="txt-hd">
+            <p id="txt-${card.id}" style="display:none;line-height:1.6;">
+            Để có thể sử dụng được card:${card.name}
+            <br>Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
+            <br>- Đường dẫn database:
+            <br><span class="ref-dtb">users/${user}/Out/Out-${card.id}-1</span>
+            <br>- Để cài đặt giá trị:
+            <br><span class="ref-dtb">setInt(fbdo,"users/${user}/Out/Out-${card.id}-1",#gia_tri)</span>
+            <br>- Để tải về giá trị:
+            <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1")</span>
+            <br>* Chú ý:
+            <br>- Dữ liệu tải về từ database là<span class="ref-dtb">json</span>nên phải chuyển đổi sang<span class="ref-dtb">Integer</span>hoặc<span class="ref-dtb">Float</span>để sử dụng
+            <br>- Ví dụ:
+            <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1");</span>
+            <br><span class="ref-dtb">int out1=fbdo.intData();</span>
+            </p>
           </div>
           `;
       }

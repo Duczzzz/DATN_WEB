@@ -30,139 +30,149 @@
         <li><a href="lienhe.html">Liên hệ</a></li>
       </ul>
     </div>
-    <div class="blockbtn">
-      <div class="btn1">
-        <button class="btnFunc" id="addblock">
-          <i class="fa-solid fa-plus"></i>
-        </button>
-        <span class="tooltip">Thêm Card</span>
+    <div class="supercontainer">
+      <div class="blockbtn">
+        <div class="btn1">
+          <button class="btnFunc" id="addblock">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          <span class="tooltip">Thêm Card</span>
+        </div>
+        <div class="btn2">
+          <button class="btnFunc" id="removeblock">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+          <span class="tooltip">Xóa Card</span>
+        </div>
+        <div class="btn3">
+          <button class="btnFunc" id="chat">
+            <i class="fa-solid fa-comment-dots"></i>
+          </button>
+          <span class="tooltip">Chat bot</span>
+        </div>
+        <div class="btn4">
+          <button class="btnFunc" id="logout">
+            <i class="fa-solid fa-power-off"></i>
+          </button>
+          <span class="tooltip">Đăng xuất</span>
+        </div>
       </div>
-      <div class="btn2">
-        <button class="btnFunc" id="removeblock">
-          <i class="fa-solid fa-trash-can"></i>
-        </button>
-        <span class="tooltip">Xóa Card</span>
-      </div>
-      <div class="btn3">
-        <button class="btnFunc" id="chat">
-          <i class="fa-solid fa-comment-dots"></i>
-        </button>
-        <span class="tooltip">Chat bot</span>
-      </div>
-      <div class="btn4">
-        <button class="btnFunc" id="logout">
-          <i class="fa-solid fa-power-off"></i>
-        </button>
-        <span class="tooltip">Đăng xuất</span>
-      </div>
-    </div>
-    <div class="remove"></div>
-    <div class="chat">
-      <div class="box chat">
-        <h1>Chatbot</h1>
-        <div id="chatWindow" class="chat-window">
-          <div class="chat-header">
-            <span>🤖 Chat Bot</span>
-            <button id="closeChat">✖</button>
+      <div class="remove"></div>
+      <div class="chat" style="display: none">
+        <div class="box chat">
+          <h1>Chatbot</h1>
+          <div id="chatWindow" class="chat-window">
+            <div class="chat-header">
+              <span>🤖 Chat Bot</span>
+              <button id="closeChat">✖</button>
+            </div>
+            <div class="chat-body" id="chatBody">
+              <div class="msg bot" id="chatinit">
+                Đang kết nối tới server... Vui lòng chờ trong giây lát!
+              </div>
+            </div>
+            <div class="chat-footer">
+              <textarea
+                id="chatInput"
+                placeholder="Nhập tin nhắn..."
+              ></textarea>
+              <button id="sendChat">Gửi</button>
+            </div>
           </div>
-          <div class="chat-body" id="chatBody"></div>
-          <div class="chat-footer">
-            <textarea id="chatInput" placeholder="Nhập tin nhắn..."></textarea>
-            <!-- <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." /> -->
-            <button id="sendChat">Gửi</button>
+        </div>
+      </div>
+      <div class="container">
+        <div class="flow">
+          <div class="contentMain">
+            <h1 class="heading">Sơ đồ luồng hệ thống</h1>
+          </div>
+          <div id="drawflow" class="drawflow"></div>
+          <footer>Chú thích: 🟡: Input ⚪: Output</footer>
+        </div>
+        <div class="box box1">
+          <h1 class="heading">Điều khiển In Out1</h1>
+          <div class="button_group">
+            <button class="btnControl" id="btn-inout1">OFF 1</button>
+            <p id="status1">Đèn 1 Đang tắt</p>
+            <button class="btnControl" id="btn-inout2">OFF 2</button>
+            <p id="status2">Đèn 2 Đang tắt</p>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="container">
-      <div class="flow">
-        <div class="contentMain">
-          <h1 class="heading">Sơ đồ luồng hệ thống</h1>
+        <div class="box box2">
+          <h1 class="heading">Cảm biến DHT11</h1>
+          <h2>Nhiệt độ hiện tại: <span id="nhietdo">-- °C</span></h2>
+          <h2>Độ ẩm hiện tại: <span id="doam">-- %</span></h2>
+          <h2>
+            Trạng thái đèn cảnh báo <span id="warnLedDht11">Đang tắt</span>
+          </h2>
+          <form>
+            <label for="WarnInfoTemp2">Ngưỡng nhiệt độ (°C)</label>
+            <input
+              id="WarnInfoTemp2"
+              type="number"
+              step="0.1"
+              min="0"
+              max="100"
+              placeholder="Nhập giá trị"
+            />
+            <br />
+            <label for="WarnInfoHumi2">Ngưỡng độ ẩm (%)</label>
+            <input
+              id="WarnInfoHumi2"
+              type="number"
+              step="0.1"
+              min="0"
+              max="100"
+              placeholder="Nhập giá trị"
+            />
+            <button type="button" id="Warnbtn2">Cài đặt</button>
+          </form>
+          <div class="card-chart">
+            <button class="golive" id="live2">
+              <img src="img/stream.png" alt="lỗi tải ảnh" />
+            </button>
+            <canvas id="ChartDHT11"></canvas>
+          </div>
         </div>
-        <div id="drawflow" class="drawflow"></div>
-        <footer>Chú thích: 🟡: Output ⚪: Input</footer>
-      </div>
-      <div class="box box1">
-        <h1 class="heading">Điều khiển In Out1</h1>
-        <div class="button_group">
-          <button class="btnControl" id="btn-inout1">OFF 1</button>
-          <p id="status1">Đèn 1 Đang tắt</p>
-          <button class="btnControl" id="btn-inout2">OFF 2</button>
-          <p id="status2">Đèn 2 Đang tắt</p>
+        <div class="box box3">
+          <h1 class="heading">Cảm biến BME280</h1>
+          <h2>Nhiệt độ hiện tại: <span id="nhietdoBME280">-- °C</span></h2>
+          <h2>Độ ẩm hiện tại: <span id="doamBME280">-- %</span></h2>
+          <h2>
+            Trạng thái đèn cảnh báo <span id="warnLedBME280">Đang tắt</span>
+          </h2>
+          <form>
+            <label for="WarnInfoTemp1">Ngưỡng nhiệt độ (°C)</label>
+            <input
+              id="WarnInfoTemp1"
+              type="number"
+              step="0.1"
+              min="0"
+              max="100"
+              placeholder="Nhập giá trị"
+            />
+            <br />
+            <label for="WarnInfoHumi1">Ngưỡng độ ẩm (%)</label>
+            <input
+              id="WarnInfoHumi1"
+              type="number"
+              step="0.1"
+              min="0"
+              max="100"
+              placeholder="Nhập giá trị"
+            />
+            <button type="button" id="Warnbtn1">Cài đặt</button>
+          </form>
+          <div class="card-chart">
+            <button class="golive" id="live">
+              <img src="img/stream.png" alt="lỗi tải ảnh" />
+            </button>
+            <canvas id="ChartBME280"></canvas>
+          </div>
         </div>
-      </div>
-      <div class="box box2">
-        <h1 class="heading">Cảm biến DHT11</h1>
-        <h2>Nhiệt độ hiện tại: <span id="nhietdo">-- °C</span></h2>
-        <h2>Độ ẩm hiện tại: <span id="doam">-- %</span></h2>
-        <h2>Trạng thái đèn cảnh báo <span id="warnLedDht11">Đang tắt</span></h2>
-        <form>
-          <label for="WarnInfoTemp2">Ngưỡng nhiệt độ (°C)</label>
-          <input
-            id="WarnInfoTemp2"
-            type="number"
-            step="0.1"
-            min="0"
-            max="100"
-            placeholder="Nhập giá trị"
-          />
-          <br />
-          <label for="WarnInfoHumi2">Ngưỡng độ ẩm (%)</label>
-          <input
-            id="WarnInfoHumi2"
-            type="number"
-            step="0.1"
-            min="0"
-            max="100"
-            placeholder="Nhập giá trị"
-          />
-          <button type="button" id="Warnbtn2">Cài đặt</button>
-        </form>
-        <button class="golive" id="live2">
-          <img src="img/stream.png" alt="lỗi tải ảnh" />
-        </button>
-        <div class="card-chart">
-          <canvas id="ChartDHT11"></canvas>
+        <div class="box box4" style="display: none">
+          <h1 class="heading">Test</h1>
         </div>
-      </div>
-      <div class="box box3">
-        <h1 class="heading">Cảm biến BME280</h1>
-        <h2>Nhiệt độ hiện tại: <span id="nhietdoBME280">-- °C</span></h2>
-        <h2>Độ ẩm hiện tại: <span id="doamBME280">-- %</span></h2>
-        <h2>
-          Trạng thái đèn cảnh báo <span id="warnLedBME280">Đang tắt</span>
-        </h2>
-        <form>
-          <label for="WarnInfoTemp1">Ngưỡng nhiệt độ (°C)</label>
-          <input
-            id="WarnInfoTemp1"
-            type="number"
-            step="0.1"
-            min="0"
-            max="100"
-            placeholder="Nhập giá trị"
-          />
-          <br />
-          <label for="WarnInfoHumi1">Ngưỡng độ ẩm (%)</label>
-          <input
-            id="WarnInfoHumi1"
-            type="number"
-            step="0.1"
-            min="0"
-            max="100"
-            placeholder="Nhập giá trị"
-          />
-          <button type="button" id="Warnbtn1">Cài đặt</button>
-        </form>
-        <button class="golive" id="live">
-          <img src="img/stream.png" alt="lỗi tải ảnh" />
-        </button>
-        <div class="card-chart">
-          <canvas id="ChartBME280"></canvas>
-        </div>
-      </div>
-      <div class="box box4" style="display: none">
-        <h1 class="heading">Test</h1>
       </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
