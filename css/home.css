@@ -421,7 +421,7 @@ footer {
   flex-direction: column;
   position: sticky;
   align-self: flex-start;
-  top: 50px;
+  top: 70px;
   gap: 10px;
   z-index: 1000;
 }
