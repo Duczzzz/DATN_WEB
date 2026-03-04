@@ -677,19 +677,21 @@ form button:hover {
 }
 
 @media (max-width: 1024px) {
-  .container {
+  .supercontainer {
     max-width: 900px;
   }
-
-  .box {
-    flex: 1 1 100%;
+  .container {
+    max-width: 800px;
+    gap: 70px;
+    width: fit-content;
   }
-
   form {
     padding: 18px;
     margin: 12px;
   }
-
+  .box {
+    max-width: 400px;
+  }
   form label {
     font-size: 13px;
   }
@@ -701,6 +703,12 @@ form button:hover {
     font-size: 13px;
   }
 
+  .flow {
+    width: 800px;
+  }
+  .drawflow {
+    transform: translate(-18px, 40px) scale(1);
+  }
   form button {
     padding: 11px 16px;
     font-size: 14px;
@@ -889,15 +897,17 @@ form button:hover {
   }
 }
 
-/* card delete*/
-
 .remove {
   display: flex;
   justify-content: center;
+  margin: 0 auto;
+  width: fit-content;
+  height: auto;
+  margin-top: -10px;
 }
 .delete {
   text-align: center;
-  width: 400px;
+  width: 300px;
   height: auto;
   margin: 0 auto;
   position: fixed;
