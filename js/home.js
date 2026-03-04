@@ -1,5 +1,6 @@
 let count = Number(localStorage.getItem("cardCount")) || 4;
 const user = localStorage.getItem("username");
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import {
   getDatabase,
@@ -50,7 +51,7 @@ async function initchat() {
           {
             role: "system",
             content: `
-          Bạn là trợ lý ảo cho nền tảng của tôi. Nền tảng có tên Nuke Board. Bạn chỉ cần trả lời ngắn gọn 3-4 dòng
+          Bạn là trợ lý ảo cho nền tảng của tôi. Nền tảng có tên Nuke DashBoard. Bạn chỉ cần trả lời ngắn gọn 3-4 dòng
           `,
           },
           {
@@ -394,28 +395,47 @@ window.onload = () => {
         <h2>Loại card: ${card.type}</h2>
         <h2>Chân kết nối: GPIO${card.pin1}</h2>
         <h2>Loại biểu đồ: ${card.chartType}</h2>
-        <form>
-          <label for="temp${card.id}">Ngưỡng nhiệt độ (°C)</label>
-          <input
-            id="temp${card.id}"
-            type="number"
-            step="0.1"
-            min="0"
-            max="100"
-            placeholder="Nhập giá trị"
-          />
-          <br />
-          <label for="hum${card.id}">Ngưỡng độ ẩm (%)</label>
-          <input
-            id="hum${card.id}"
-            type="number"
-            step="0.1"
-            min="0"
-            max="100"
-            placeholder="Nhập giá trị"
-          />
-          <button type="button" id="Warnbtn-${card.id}">Cài đặt</button>
-        </form>
+        ${
+          card.chartType == "line" || card.chartType == "bar"
+            ? `
+            <form>
+              <label for="temp${card.id}">Ngưỡng cho ${card.label}</label>
+              <input
+                id="temp${card.id}"
+                type="number"
+                step="0.1"
+                min="0"
+                max="100"
+                placeholder="Nhập giá trị"
+              />
+              <button type="button" id="Warnbtn-${card.id}">Cài đặt</button>
+            </form>
+            `
+            : `
+            <form>
+              <label for="temp${card.id}">Ngưỡng cho ${card.label}</label>
+              <input
+                id="temp${card.id}"
+                type="number"
+                step="0.1"
+                min="0"
+                max="100"
+                placeholder="Nhập giá trị"
+              />
+              <br />
+              <label for="hum${card.id}">Ngưỡng cho ${card.label2}</label>
+              <input
+                id="hum${card.id}"
+                type="number"
+                step="0.1"
+                min="0"
+                max="100"
+                placeholder="Nhập giá trị"
+              />
+              <button type="button" id="Warnbtn-${card.id}">Cài đặt</button>
+            </form>
+            `
+        }
         ${
           card.chartType !== "none"
             ? `<div class="card-chart">
@@ -1145,7 +1165,6 @@ document.getElementById("removeblock").onclick = function () {
     } else {
       remove(ref(db, `users/${user}/Card/Data-${selectedId}-1`));
       remove(ref(db, `users/${user}/Card/Data-${selectedId}-CB1`));
-      remove(ref(db, `users/${user}/Card/Data-${selectedId}-CB2`));
     }
     const newCards = cards.filter((card) => card.id !== selectedId);
     alert("Đã xóa card: " + selectedId);
@@ -1268,18 +1287,31 @@ document.addEventListener("click", (e) => {
   if (parts[0] != "Warnbtn") {
     return;
   } else {
-    let tempCB = document.getElementById(`temp${cardId}`).value;
-    let humiCB = document.getElementById(`hum${cardId}`).value;
-    tempCB = Number(tempCB);
-    humiCB = Number(humiCB);
-    set(ref(db, `users/${user}/Card/Data-${cardId}-CB1`), tempCB);
-    set(ref(db, `users/${user}/Card/Data-${cardId}-CB2`), humiCB);
-    alert(
-      `
-    Bạn đã cài đặt thành công:
-    Nhiệt độ ngưỡng: ${tempCB}
-    Độ ẩm ngưỡng: ${humiCB}`,
-    );
+    let tempCB = document.getElementById(`temp${cardId}`);
+    let humiCB = document.getElementById(`hum${cardId}`);
+
+    if (humiCB == null) {
+      tempCB = Number(tempCB.value);
+      set(ref(db, `users/${user}/Card/Data-${cardId}-CB1`), tempCB);
+      alert(
+        `
+      Bạn đã cài đặt thành công ngưỡng cho ${cardId}:
+      Giá trị ngưỡng: ${tempCB}
+      `,
+      );
+    } else {
+      tempCB = Number(tempCB.value);
+      humiCB = Number(humiCB.value);
+      set(ref(db, `users/${user}/Card/Data-${cardId}-CB1`), tempCB);
+      set(ref(db, `users/${user}/Card/Data-${cardId}-CB2`), humiCB);
+      alert(
+        `
+      Bạn đã cài đặt thành công:
+      giá trị ngưỡng 1: ${tempCB}
+      giá trị ngưỡng 2: ${humiCB}
+      `,
+      );
+    }
   }
 });
 
