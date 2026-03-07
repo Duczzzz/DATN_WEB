@@ -94,9 +94,9 @@ void setup() {
   Firebase.reconnectWiFi(true);
   fbdo.setBSSLBufferSize(512, 512);
   Firebase.begin(&config, &auth);
-  Firebase.beginStream(fbdo, "/users/duc/dht11");
-  Firebase.setFloat(fbdo,"/users/duc/dht11/Temp",lastemp);
-  Firebase.setFloat(fbdo,"/users/duc/dht11/Humi",lasthum);  
+  Firebase.beginStream(fbdo, "/users/{user}/dht11");
+  Firebase.setFloat(fbdo,"/users/{user}/dht11/Temp",lastemp);
+  Firebase.setFloat(fbdo,"/users/{user}/dht11/Humi",lasthum);  
   // display.clearDisplay();
   // display.setTextSize(1);
   // display.setTextColor(SH110X_WHITE);
@@ -126,8 +126,8 @@ void loop() {
   //     Serial.printf("CBND update: %.2f\n", CBDA);
   //   }
   // }
-  if(Firebase.getFloat(fbdo,"/users/duc/dht11/CBNDDht11")) CBND = fbdo.floatData();
-  if(Firebase.getFloat(fbdo,"/users/duc/dht11/CBDADht11")) CBDA = fbdo.floatData();
+  if(Firebase.getFloat(fbdo,"/users/{user}/dht11/CBNDDht11")) CBND = fbdo.floatData();
+  if(Firebase.getFloat(fbdo,"/users/{user}/dht11/CBDADht11")) CBDA = fbdo.floatData();
   hum = dht.readHumidity();
   temp = dht.readTemperature();
   Serial.printf("DHT11: Nhiệt độ: %f, Độ ẩm: %f\n",temp,hum);
@@ -146,7 +146,7 @@ void loop() {
   if(temp > CBND || hum > CBDA) {
     led.setPixelColor(0, led.Color(255, 0, 0));
     led.show();
-    Firebase.setInt(fbdo,"/users/duc/dht11/leddht11",1);
+    Firebase.setInt(fbdo,"/users/{user}/dht11/leddht11",1);
     // display.setTextSize(1);
     // display.setCursor(0, 40);
     // display.print("Da bat den canh bao");
@@ -154,14 +154,14 @@ void loop() {
   else {
     led.setPixelColor(0, led.Color(0, 255, 0));
     led.show();
-    Firebase.setInt(fbdo,"/users/duc/dht11/leddht11",0);
+    Firebase.setInt(fbdo,"/users/{user}/dht11/leddht11",0);
     // display.setTextSize(1);
     // display.setCursor(0, 40);
     // display.print("Da tat den canh bao");
   }
   if(temp != lastemp) {
     lastemp = temp;
-    Firebase.setFloat(fbdo,"/users/duc/dht11/Temp",temp);
+    Firebase.setFloat(fbdo,"/users/{user}/dht11/Temp",temp);
   }
   if(hum != lasthum) {
     lasthum = hum;
