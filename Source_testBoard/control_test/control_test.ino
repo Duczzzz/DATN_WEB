@@ -1,7 +1,11 @@
-// Đây là source test các nút bấm trên board do Nuke Dashboard phát triển
+// Đây là source test điều khiển cổng động cơ tích hợp trên board do Nuke Dashboard phát triển
 // Để có thể sử dụng source code này bạn cần cài thư viện Adafruit NeoPixel by Adafruit
 // Tác giả MinhDuc
 // 07/03/2026
+// Các thư viện cần tải trước khi sử dụng code:
+// + thư viện Firebase ESP32 Client by Mobizt
+// + thư viện Adafruit GFX libraray by Adafruit
+// + thư viện Adafruit SH110X by Adafruit
 // Led RGB được cấu hình chân DIN ở GPIO9
 
 //Version điều khiển nút bấm trên Board
