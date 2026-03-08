@@ -1,6 +1,22 @@
 let count = Number(localStorage.getItem("cardCount")) || 4;
 const user = localStorage.getItem("username");
 
+// if (user == null) {
+//   alert("vui lòng đăng nhập");
+//   window.location.href = "index.html";
+// }
+
+// window.addEventListener("beforeunload", () => {
+//   localStorage.removeItem("username");
+//   console.log("Tab đã đóng");
+// });
+
+// document.addEventListener("visibilitychange", () => {
+//   if (document.visibilityState === "hidden") {
+//     localStorage.removeItem("username");
+//   }
+// });
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import {
   getDatabase,
@@ -20,6 +36,8 @@ const firebaseConfig = {
   messagingSenderId: "599011961788",
   appId: "1:599011961788:web:008c324dbfc6b3cf6699b9",
 };
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 window.scrollTo({
   top: 0,
@@ -249,9 +267,8 @@ const mixedChart2 = new Chart(ctx2, {
     },
   },
 });
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-onValue(ref(db, "dht11"), (snapshot) => {
+
+onValue(ref(db, `users/${user}/dht11`), (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
 
@@ -265,12 +282,13 @@ onValue(ref(db, "dht11"), (snapshot) => {
   mixedChart.data.labels.push(time);
   mixedChart.data.datasets[0].data.push(temp);
   mixedChart.data.datasets[1].data.push(humi);
+
   if (live2) {
     mixedChart.resetZoom();
   }
   mixedChart.update();
 });
-onValue(ref(db, "bme280"), (snapshot) => {
+onValue(ref(db, `users/${user}/bme280`), (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
   const temp = data.Temp;
@@ -286,7 +304,7 @@ onValue(ref(db, "bme280"), (snapshot) => {
   }
   mixedChart2.update();
 });
-onValue(ref(db, "Out"), (snapshot) => {
+onValue(ref(db, `users/${user}/Out`), (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
   const status1 = data.Out1;
@@ -302,12 +320,12 @@ onValue(ref(db, "Out"), (snapshot) => {
     document.getElementById("status2").innerText = "OUT 2 Đang tắt";
   }
 });
-onValue(ref(db, "bme280/ledbme"), (snapshot) => {
+onValue(ref(db, `users/${user}/bme280/ledbme280`), (snapshot) => {
   if (snapshot.val() == 1) {
     document.getElementById("warnLedBME280").innerText = "Đang bật";
   } else document.getElementById("warnLedBME280").innerText = "Đang tắt";
 });
-onValue(ref(db, "dht11/leddht11"), (snapshot) => {
+onValue(ref(db, `users/${user}/dht11/leddht11`), (snapshot) => {
   if (snapshot.val() == 1) {
     document.getElementById("warnLedDht11").innerText = "Đang bật";
   } else document.getElementById("warnLedDht11").innerText = "Đang tắt";
@@ -316,11 +334,11 @@ onValue(ref(db, "dht11/leddht11"), (snapshot) => {
 document.getElementById("btn-inout1").onclick = function () {
   const btn = document.getElementById("btn-inout1");
   if (btn.style.backgroundColor == "rgb(255, 152, 152)") {
-    set(ref(db, "In/In1"), 1);
+    set(ref(db, `users/${user}/In/In1`), 1);
     btn.style.backgroundColor = "rgb(41, 63, 255)";
     btn.innerText = "ON 1";
   } else {
-    set(ref(db, "In/In1"), 0);
+    set(ref(db, `users/${user}/In/In1`), 0);
     btn.style.backgroundColor = "rgb(255, 152, 152)";
     btn.innerText = "OFF 1";
   }
@@ -328,11 +346,11 @@ document.getElementById("btn-inout1").onclick = function () {
 document.getElementById("btn-inout2").onclick = function () {
   const btn = document.getElementById("btn-inout2");
   if (btn.style.backgroundColor == "rgb(255, 152, 152)") {
-    set(ref(db, "In/In2"), 1);
+    set(ref(db, `users/${user}/In/In2`), 1);
     btn.style.backgroundColor = "rgb(41, 63, 255)";
     btn.innerText = "ON 2";
   } else {
-    set(ref(db, "In/In2"), 0);
+    set(ref(db, `users/${user}/In/In2`), 0);
     btn.style.backgroundColor = "rgb(255, 152, 152)";
     btn.innerText = "OFF 2";
   }
@@ -1038,9 +1056,6 @@ document.getElementById("addblock").onclick = function () {
     }
   };
 };
-document.getElementById("chatbot").onclick = function () {
-  alert("Tính năng Chat Bot AI đang được phát triển!");
-};
 
 let live1 = false;
 document.getElementById("live").onclick = function () {
@@ -1087,8 +1102,8 @@ document.getElementById("Warnbtn1").onclick = function () {
   let humiCB = document.getElementById("WarnInfoHumi1").value;
   tempCB = Number(tempCB);
   humiCB = Number(humiCB);
-  set(ref(db, "CBNDBME"), tempCB);
-  set(ref(db, "CBDABME"), humiCB);
+  set(ref(db, `users/${user}/bme280/CBNDBME280`), tempCB);
+  set(ref(db, `users/${user}/bme280/CBDABME280`), humiCB);
   alert(
     `Bạn đã cài đặt thành công ngưỡng:
 Nhiệt độ: ${tempCB}
@@ -1102,8 +1117,8 @@ document.getElementById("Warnbtn2").onclick = function () {
   let humiCB = document.getElementById("WarnInfoHumi2").value;
   tempCB = Number(tempCB);
   humiCB = Number(humiCB);
-  set(ref(db, "CBNDDht11"), tempCB);
-  set(ref(db, "CBDADht11"), humiCB);
+  set(ref(db, `users/${user}/dht11/CBNDDht11`), tempCB);
+  set(ref(db, `users/${user}/dht11/CBDADht11`), humiCB);
   alert(
     `Bạn đã cài đặt thành công ngưỡng:
 Nhiệt độ: ${tempCB}

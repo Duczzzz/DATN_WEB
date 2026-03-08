@@ -192,10 +192,9 @@ body::before {
 }
 
 .menu {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(92, 92, 255, 0.7);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
@@ -248,12 +247,12 @@ body::before {
 }
 
 .menu a:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 174, 174, 0.15);
   transform: translateY(-2px);
 }
 
 .menu a:active {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 178, 178, 0.25);
   transform: translateY(0);
 }
 

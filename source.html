@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuke DashBoard</title>
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/home.css" />
+    <style>
+      .box {
+        margin: 40px auto;
+        padding: 20px;
+        max-width: fit-content;
+        height: auto;
+        background-color: whitesmoke;
+      }
+      pre {
+        margin-top: 20px;
+        display: block;
+        line-height: 1.6;
+        font-size: 20px;
+        font-weight: bold;
+        color: #f2f8ff;
+        background: #131b27;
+        padding: 10px 14px;
+        border-radius: 10px;
+        width: fit-content;
+      }
+      .blockbtn {
+        margin: 0 auto;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 1;
+      }
+      .btnFunc {
+        font-size: 16px;
+        width: fit-content;
+        background: white;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="head">NUKE DASHBOARD</h1>
+    <div class="menu">
+      <ul>
+        <li><a href="home.html">Trang chủ</a></li>
+        <li><a href="source.html">Code test</a></li>
+        <li><a href="cambien.html">Cảm biến</a></li>
+        <li><a href="lienhe.html">Liên hệ</a></li>
+      </ul>
+    </div>
+    <div class="blockbtn">
+      <button class="btnFunc" id="bme280">Source BME280</button>
+      <button class="btnFunc" id="dht11">Source DHT11</button>
+      <button class="btnFunc" id="control">Source Control</button>
+      <button class="btnFunc" id="button">Source Button</button>
+    </div>
+    <div class="container"></div>
+    <script type="module" src="js/source.js"></script>
+  </body>
+</html>
