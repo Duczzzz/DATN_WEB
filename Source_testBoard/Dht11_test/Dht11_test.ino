@@ -1,4 +1,4 @@
-// Đây là source test các nút bấm trên board do Nuke Dashboard phát triển
+// Đây là source test cảm biến DHT11 trên board do Nuke Dashboard phát triển
 // Để có thể sử dụng source code này bạn cần cài danh sách các thư viện sau: 
 // + thư viện Adafruit NeoPixel by Adafruit
 // + thư viện DHT sensor libraray by Adafruit 
