@@ -166,11 +166,11 @@ void setup() {
   Firebase.reconnectWiFi(true);
   fbdo.setBSSLBufferSize(512, 512);
   Firebase.begin(&config, &auth);
-  if(Firebase.getInt(fbdo, "/users/duc/In/In2")) {
+  if(Firebase.getInt(fbdo, "/users/{user}/In/In2")) {
     state = fbdo.intData();
   }
-  Firebase.setInt(fbdo,"users/duc/Out/Out1",stateled);
-  if(!Firebase.beginStream(fbdo, "/users/duc/In/In2"))
+  Firebase.setInt(fbdo,"users/{user}/Out/Out1",stateled);
+  if(!Firebase.beginStream(fbdo, "/users/{user}/In/In2"))
     Serial.printf("stream data begin error, %s\n\n", fbdo.errorReason().c_str());
   led.setPixelColor(0, led.Color(255, 0, 255));
   led.show();
@@ -183,7 +183,7 @@ void loop() {
     Serial.printf("Stream data begin error: %s\n", fbdo.errorReason().c_str());
   }
   if (fbdo.streamAvailable()) {
-    if(Firebase.getInt(fbdo, "/users/duc/In/In2")) {
+    if(Firebase.getInt(fbdo, "/users/{user}/In/In2")) {
       state = fbdo.intData();
     }
   }
@@ -214,6 +214,6 @@ void loop() {
   }
   if(stateled != laststateled) {
     laststateled = stateled;
-    Firebase.setInt(fbdo,"users/duc/Out/Out2",stateled);
+    Firebase.setInt(fbdo,"users/{user}/Out/Out2",stateled);
   }
 }
