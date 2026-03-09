@@ -41,6 +41,32 @@
         background: white;
         font-weight: bold;
       }
+      #warn {
+        width: fit-content;
+        background-color: #f2f8ff;
+        color: red;
+        font-size: 16px;
+        font-weight: bold;
+        margin: 10px auto;
+        padding: 10px;
+      }
+      @media (max-width: 1024px) {
+        .box {
+          margin: 40px auto;
+          margin-left: 200px;
+        }
+        pre {
+          font-size: 14px;
+        }
+      }
+      @media (max-width: 736px) {
+        .box {
+          max-width: fit-content;
+        }
+        pre {
+          font-size: 12px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -59,6 +85,11 @@
       <button class="btnFunc" id="control">Source Control</button>
       <button class="btnFunc" id="button">Source Button</button>
     </div>
+    <h1 id="warn">
+      *Lưu ý: Source code ở dưới dành riêng cho board do Nuke DashBoard phát
+      triển. <br />Nếu bạn sử dụng board của bạn để test thì vui lòng sửa code
+      cấu hình theo board của bạn.
+    </h1>
     <div class="container"></div>
     <script type="module" src="js/source.js"></script>
   </body>
