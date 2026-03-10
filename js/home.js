@@ -1,6 +1,24 @@
 let count = Number(localStorage.getItem("cardCount")) || 4;
 const user = localStorage.getItem("username");
+const sc = document.querySelector(".supercontainer");
 
+function enableHorizontalScroll() {
+  if (window.innerWidth <= 1024) {
+    sc.addEventListener("wheel", scrollHandler, { passive: false });
+  } else {
+    sc.removeEventListener("wheel", scrollHandler);
+  }
+}
+
+function scrollHandler(e) {
+  if (e.deltaY !== 0) {
+    e.preventDefault();
+    sc.scrollLeft += e.deltaY;
+  }
+}
+
+enableHorizontalScroll();
+window.addEventListener("resize", enableHorizontalScroll);
 // if (user == null) {
 //   alert("vui lòng đăng nhập");
 //   window.location.href = "index.html";
@@ -388,7 +406,11 @@ window.onload = () => {
   );
   cards.forEach((card) => {
     let box = document.createElement("div");
-    box.className = "cb box box" + card.id;
+    if (card.type === "Sensor") {
+      box.className = "cb box box" + card.id;
+    } else {
+      box.className = "box box" + card.id;
+    }
     document.querySelector(".container").appendChild(box);
     if (card.type == "Sensor") {
       var nodeId = editor.addNode(
