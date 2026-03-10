@@ -280,7 +280,38 @@ body::before {
   height: fit-content;
   width: fit-content;
 }
+.cb {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: auto auto auto;
+  gap: 10px;
+}
+.content {
+  grid-column: 1;
+  grid-row: 1;
+}
 
+.card-chart {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.swBTN {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.txt-hd {
+  grid-column: 1 / span 2;
+  grid-row: 3;
+}
+form {
+  width: 220px;
+}
 .box::before {
   content: "";
   position: absolute;
@@ -320,10 +351,14 @@ body::before {
 }
 
 .box2 {
+  display: flex;
+  flex-direction: row;
   background: linear-gradient(135deg, rgba(255, 244, 230), rgba(255, 216, 155));
 }
 
 .box3 {
+  display: flex;
+  flex-direction: row;
   background: linear-gradient(135deg, rgba(224, 247, 255), rgba(167, 216, 240));
 }
 
@@ -364,25 +399,22 @@ footer {
   font-weight: 500;
 }
 .box h2 {
-  font-size: 16px;
+  width: 230px;
+  font-weight: 600;
+  font-size: 14px;
   color: var(--color-text-gray);
   margin: 5px 0;
-  padding: 18px 20px;
+  padding: 10px;
   background: rgba(255, 255, 255, 0.9);
   border-radius: var(--border-radius-md);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   transition: all var(--transition-fast);
   border-left: 4px solid transparent;
   box-shadow: var(--shadow-sm);
 }
-
-.box h2:hover {
-  transform: translateX(5px);
-  background: rgba(255, 255, 255, 1);
-  border-left-color: #667eea;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.content {
+  width: fit-content;
+  height: fit-content;
+  padding: 5px;
 }
 
 .box h2 span {
@@ -391,8 +423,8 @@ footer {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 22px;
-  padding: 5px;
+  font-size: 20px;
+  padding: 10px;
 }
 
 .card-chart {
@@ -423,6 +455,7 @@ footer {
   top: 70px;
   gap: 10px;
   z-index: 1000;
+  width: fit-content;
 }
 .btnFunc {
   pointer-events: auto;
@@ -437,9 +470,11 @@ footer {
 .btn1,
 .btn2,
 .btn3,
-.btn4 {
+.btn4,
+.btn5 {
   display: flex;
   flex-direction: row;
+  width: fit-content;
 }
 .tooltip {
   color: #000000;
@@ -454,19 +489,20 @@ footer {
   pointer-events: none;
   transition: 0.2s ease;
 }
-.btn4:hover .tooltip {
+.btn1:hover .tooltip,
+.btn2:hover .tooltip,
+.btn3:hover .tooltip,
+.btn4:hover .tooltip,
+.btn5:hover .tooltip {
   opacity: 1;
 }
-.btn3:hover .tooltip {
-  opacity: 1;
-}
-.btn2:hover .tooltip {
-  opacity: 1;
-}
-.btn1:hover .tooltip {
-  opacity: 1;
+.btnFunc i {
+  transition: transform 0.3s ease;
 }
 
+.btnFunc:hover i {
+  transform: rotate(15deg);
+}
 .button_group {
   width: fit-content;
   display: grid;
@@ -670,38 +706,38 @@ form button:hover {
     max-width: 650px;
   }
   .container {
-    gap: 50px;
+    gap: 30px;
     max-width: 1800px;
   }
 }
 
 @media (max-width: 1024px) {
+  .blockbtn {
+    top: 100px;
+  }
+  .menu {
+    width: 1024px;
+  }
   .supercontainer {
-    max-width: 900px;
+    max-width: fit-content;
   }
   .container {
-    max-width: 800px;
-    gap: 70px;
-    width: fit-content;
+    gap: 40px;
+    width: 800px;
   }
   form {
     padding: 18px;
     margin: 12px;
   }
-  .box {
-    max-width: 400px;
-  }
   form label {
     font-size: 13px;
   }
-
   form input[type="text"],
   form input[type="number"],
   form select {
     padding: 10px 12px;
     font-size: 13px;
   }
-
   .flow {
     width: 800px;
   }
@@ -1056,6 +1092,16 @@ form button:hover {
 
 /* end chatbot */
 
+/*list menu*/
+.list {
+  width: 200px;
+  margin-left: 10px;
+  background-color: white;
+  color: black;
+  border-radius: 10px;
+  padding: 10px;
+}
+/*end list menu*/
 @keyframes gradient {
   0%,
   100% {

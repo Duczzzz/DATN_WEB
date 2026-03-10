@@ -272,8 +272,10 @@ onValue(ref(db, `users/${user}/dht11`), (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
 
-  const temp = data.Temp;
-  const humi = data.Humi;
+  let temp = data.Temp;
+  let humi = data.Humi;
+  temp = temp.toFixed(1);
+  humi = humi.toFixed(1);
   const time = new Date().toLocaleTimeString();
 
   document.getElementById("nhietdo").innerText = temp + " °C";
@@ -291,8 +293,10 @@ onValue(ref(db, `users/${user}/dht11`), (snapshot) => {
 onValue(ref(db, `users/${user}/bme280`), (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
-  const temp = data.Temp;
-  const humi = data.Humi;
+  let temp = data.Temp;
+  let humi = data.Humi;
+  temp = temp.toFixed(1);
+  humi = humi.toFixed(1);
   const time = new Date().toLocaleTimeString();
   document.getElementById("nhietdoBME280").innerText = temp + " °C";
   document.getElementById("doamBME280").innerText = humi + " %";
@@ -384,7 +388,7 @@ window.onload = () => {
   );
   cards.forEach((card) => {
     let box = document.createElement("div");
-    box.className = "box box" + card.id;
+    box.className = "cb box box" + card.id;
     document.querySelector(".container").appendChild(box);
     if (card.type == "Sensor") {
       var nodeId = editor.addNode(
@@ -408,6 +412,7 @@ window.onload = () => {
       //<h2>Nhiệt độ hiện tại: <span id="txt-${card.id}">-- °C</span></h2>
       //<h2>Độ ẩm hiện tại: <span id="txt2-${card.id}">-- %</span></h2>
       box.innerHTML = `
+        <div class="content">
         <h1 class="heading">${card.name}</h1>
         <h2>ID card: ${card.id}</h2>
         <h2>Loại card: ${card.type}</h2>
@@ -454,6 +459,7 @@ window.onload = () => {
             </form>
             `
         }
+        </div>
         ${
           card.chartType !== "none"
             ? `<div class="card-chart">
@@ -1367,3 +1373,42 @@ document.getElementById("sendChat").onclick = function () {
     chatNor(msgu);
   }
 };
+document.getElementById("menu").onclick = function () {
+  document.querySelector("#tipmenu").style.display = "none";
+  document.querySelector(".list").style.display = "block";
+};
+document.getElementById("closeMenu").onclick = function () {
+  document.querySelector(".list").style.display = "none";
+};
+document.addEventListener("change", function (e) {
+  console.log(e.target.id);
+  console.log(e.target.checked);
+  if (e.target.id === "all") {
+    if (e.target.checked) {
+      document.querySelector(".container").style.display = "block";
+    } else {
+      document.querySelector(".container").style.display = "none";
+    }
+  }
+  if (e.target.id === "1") {
+    if (e.target.checked) {
+      document.querySelector(".box1").style.display = "block";
+    } else {
+      document.querySelector(".box1").style.display = "none";
+    }
+  }
+  if (e.target.id === "2") {
+    if (e.target.checked) {
+      document.querySelector(".box2").style.display = "block";
+    } else {
+      document.querySelector(".box2").style.display = "none";
+    }
+  }
+  if (e.target.id === "3") {
+    if (e.target.checked) {
+      document.querySelector(".box3").style.display = "block";
+    } else {
+      document.querySelector(".box3").style.display = "none";
+    }
+  }
+});
