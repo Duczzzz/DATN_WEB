@@ -1068,8 +1068,7 @@ form button:hover {
 
 /*list menu*/
 .list {
-  width: 260px;
-  background-color: white;
+  background-color: rgb(139, 218, 255);
   color: black;
   border-radius: 10px;
   padding: 10px;
@@ -1077,6 +1076,8 @@ form button:hover {
   font-size: 16px;
   display: flex;
   margin-left: 60px;
+  font-weight: 600;
+  width: fit-content;
 }
 #closeMenu {
   width: 20px;

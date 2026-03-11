@@ -8,9 +8,8 @@
     <link rel="stylesheet" href="css/home.css" />
     <style>
       .box {
-        margin: 40px auto;
+        margin: 0px 200px;
         padding: 20px;
-        max-width: fit-content;
         height: auto;
         background-color: whitesmoke;
       }
@@ -66,6 +65,12 @@
         }
         pre {
           font-size: 12px;
+        }
+      }
+      @media (min-width: 1080px) {
+        .box {
+          width: fit-content !important;
+          max-width: none !important;
         }
       }
     </style>
