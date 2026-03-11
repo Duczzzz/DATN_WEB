@@ -109,13 +109,14 @@ document.getElementById("submit").addEventListener("click", function () {
   var email = document.getElementById("email").value;
   var phone = document.getElementById("phone").value;
   var userOtp = document.getElementById("OTP").value;
-
+  var date = document.getElementById("date").value;
   var usernameError = document.getElementById("error-user");
   var passwordError = document.getElementById("error-password");
   var confirmPasswordError = document.getElementById("error-confirm-password");
   var emailError = document.getElementById("error-email");
   var phoneError = document.getElementById("error-phone");
   var otpError = document.getElementById("error-otp");
+  var dateError = document.getElementById("error-date");
   if (!username) {
     usernameError.style.display = "block";
   } else {
@@ -151,7 +152,6 @@ document.getElementById("submit").addEventListener("click", function () {
     phoneError.style.display = "block";
     phoneError.textContent = "* Vui lòng nhập số điện thoại";
   } else {
-    console.log(validatepone(phone));
     if (!validatepone(phone)) {
       phoneError.textContent = "* Số điện thoại không hợp lệ";
       phoneError.style.display = "block";
@@ -159,6 +159,12 @@ document.getElementById("submit").addEventListener("click", function () {
     } else {
       phoneError.style.display = "none";
     }
+  }
+  if (!date) {
+    dateError.style.display = "block";
+    dateError.textContent = "* Vui lòng nhập ngày tháng năm sinh";
+  } else {
+    dateError.style.display = "none";
   }
   if (password !== confirmPassword) {
     document.getElementById("password").value = "";
@@ -184,6 +190,7 @@ document.getElementById("submit").addEventListener("click", function () {
       email &&
       phone &&
       validateEmail(email) &&
+      date &&
       password === confirmPassword
     ) {
       let params = {
@@ -200,6 +207,7 @@ document.getElementById("submit").addEventListener("click", function () {
             email: email,
             phone: phone,
             password: password,
+            date: date,
           }).then(() => {
             window.location.href = "index.html";
           });
