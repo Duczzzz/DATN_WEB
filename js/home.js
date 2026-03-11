@@ -1,24 +1,6 @@
 let count = Number(localStorage.getItem("cardCount")) || 4;
 const user = localStorage.getItem("username");
 const sc = document.querySelector(".supercontainer");
-
-function enableHorizontalScroll() {
-  if (window.innerWidth <= 1024) {
-    sc.addEventListener("wheel", scrollHandler, { passive: false });
-  } else {
-    sc.removeEventListener("wheel", scrollHandler);
-  }
-}
-
-function scrollHandler(e) {
-  if (e.deltaY !== 0) {
-    e.preventDefault();
-    sc.scrollLeft += e.deltaY;
-  }
-}
-
-enableHorizontalScroll();
-window.addEventListener("resize", enableHorizontalScroll);
 // if (user == null) {
 //   alert("vui lòng đăng nhập");
 //   window.location.href = "index.html";
@@ -412,6 +394,19 @@ window.onload = () => {
       box.className = "box box" + card.id;
     }
     document.querySelector(".container").appendChild(box);
+    let name = document.createElement("input");
+    name.type = "checkbox";
+    if (card.type == "Sensor") {
+      name.id = "cb-box-" + card.id;
+    } else {
+      name.id = "box-" + card.id;
+    }
+    name.checked = true;
+    let label = document.createElement("label");
+    label.htmlFor = card.id;
+    label.innerText = " " + card.name;
+    let br = document.createElement("br");
+    document.querySelector(".list").append(br, name, label, br);
     if (card.type == "Sensor") {
       var nodeId = editor.addNode(
         card.type,
@@ -1403,34 +1398,42 @@ document.getElementById("closeMenu").onclick = function () {
   document.querySelector(".list").style.display = "none";
 };
 document.addEventListener("change", function (e) {
-  console.log(e.target.id);
-  console.log(e.target.checked);
-  if (e.target.id === "all") {
-    if (e.target.checked) {
-      document.querySelector(".container").style.display = "block";
-    } else {
-      document.querySelector(".container").style.display = "none";
-    }
-  }
+  const parts = e.target.id.split("-");
   if (e.target.id === "1") {
     if (e.target.checked) {
-      document.querySelector(".box1").style.display = "block";
+      document.querySelector(".box1").style.display = "flex";
     } else {
       document.querySelector(".box1").style.display = "none";
     }
   }
+
   if (e.target.id === "2") {
     if (e.target.checked) {
-      document.querySelector(".box2").style.display = "block";
+      document.querySelector(".box2").style.display = "flex";
     } else {
       document.querySelector(".box2").style.display = "none";
     }
   }
+
   if (e.target.id === "3") {
     if (e.target.checked) {
-      document.querySelector(".box3").style.display = "block";
+      document.querySelector(".box3").style.display = "flex";
     } else {
       document.querySelector(".box3").style.display = "none";
+    }
+  }
+  console.log(parts);
+  if (parts[0] === "cb") {
+    if (e.target.checked) {
+      document.querySelector("." + parts[1] + parts[2]).style.display = "grid";
+    } else {
+      document.querySelector("." + parts[1] + parts[2]).style.display = "none";
+    }
+  } else {
+    if (e.target.checked) {
+      document.querySelector("." + parts[0] + parts[1]).style.display = "flex";
+    } else {
+      document.querySelector("." + parts[0] + parts[1]).style.display = "none";
     }
   }
 });
