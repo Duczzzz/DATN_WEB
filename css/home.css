@@ -465,8 +465,7 @@ footer {
 .btn1,
 .btn2,
 .btn3,
-.btn4,
-.btn5 {
+.btn4 {
   display: flex;
   flex-direction: row;
   width: fit-content;
@@ -487,8 +486,7 @@ footer {
 .btn1:hover .tooltip,
 .btn2:hover .tooltip,
 .btn3:hover .tooltip,
-.btn4:hover .tooltip,
-.btn5:hover .tooltip {
+.btn4:hover .tooltip {
   opacity: 1;
 }
 .btnFunc i {

@@ -6,13 +6,26 @@
     <title>Nuke DashBoard</title>
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/home.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
     <style>
-      .box {
+      .container {
         margin: 0 auto;
+      }
+      .box {
+        width: fit-content;
         padding: 10px 20px;
       }
       p {
         padding: 10px 20px;
+      }
+      #sub {
+        margin-top: 20px;
+      }
+      #email {
+        font-weight: 700;
       }
     </style>
   </head>
@@ -22,43 +35,68 @@
       <ul>
         <li><a href="home.html">Trang chủ</a></li>
         <li><a href="source.html">Code test</a></li>
-        <li><a href="cambien.html">Cảm biến</a></li>
-        <li><a href="lienhe.html">Liên hệ</a></li>
+        <li><a href="cambien.html">Bảng điều khiển</a></li>
+        <li><a id="logout">Đăng xuất</a></li>
       </ul>
     </div>
     <h1 class="title">
       Xin chào, chúc bạn <span id="name">------</span> có một ngày mới tốt lành
     </h1>
-    <div class="box">
-      <section class="intro">
-        <h1 class="heading">Giới thiệu đề tài Kit STEM</h1>
-        <p>
-          Đề tài <strong>Kit STEM</strong> được thực hiện với mục tiêu nghiên
-          cứu, thiết kế và xây dựng một <strong>nền tảng IoT</strong> phục vụ
-          cho học tập và thực hành trong lĩnh vực STEM (Science, Technology,
-          Engineering, Mathematics).
-        </p>
+    <div class="container">
+      <div class="box" id="main">
+        <section class="intro">
+          <h1 class="heading">Giới thiệu đề tài Kit STEM</h1>
+          <p>
+            Đề tài <strong>Kit STEM</strong> được thực hiện với mục tiêu nghiên
+            cứu, thiết kế và xây dựng một <strong>nền tảng IoT</strong> phục vụ
+            cho học tập và thực hành trong lĩnh vực STEM (Science, Technology,
+            Engineering, Mathematics).
+          </p>
 
-        <p>
-          Dự án hướng đến việc kết nối giữa <strong>phần cứng</strong> (vi điều
-          khiển, cảm biến) và <strong>phần mềm</strong> (website, cơ sở dữ liệu,
-          xử lý dữ liệu thời gian thực), giúp người học dễ dàng tiếp cận và làm
-          chủ các công nghệ hiện đại.
-        </p>
+          <p>
+            Dự án hướng đến việc kết nối giữa <strong>phần cứng</strong> (vi
+            điều khiển, cảm biến) và <strong>phần mềm</strong> (website, cơ sở
+            dữ liệu, xử lý dữ liệu thời gian thực), giúp người học dễ dàng tiếp
+            cận và làm chủ các công nghệ hiện đại.
+          </p>
 
-        <p>
-          Thông qua Kit STEM, người dùng có thể theo dõi, điều khiển và quản lý
-          các thiết bị IoT trực quan trên nền tảng web, đồng thời hiểu rõ hơn về
-          cách hệ thống IoT hoạt động từ tầng thiết bị đến tầng ứng dụng.
-        </p>
+          <p>
+            Thông qua Kit STEM, người dùng có thể theo dõi, điều khiển và quản
+            lý các thiết bị IoT trực quan trên nền tảng web, đồng thời hiểu rõ
+            hơn về cách hệ thống IoT hoạt động từ tầng thiết bị đến tầng ứng
+            dụng.
+          </p>
 
-        <p>
-          Website của đề tài sẽ liên tục được
-          <strong>cập nhật và mở rộng các tính năng mới</strong> trong thời gian
-          tới, nhằm nâng cao trải nghiệm người dùng và đáp ứng tốt hơn nhu cầu
-          học tập, nghiên cứu.
-        </p>
-      </section>
+          <p>
+            Website của đề tài sẽ liên tục được
+            <strong>cập nhật và mở rộng các tính năng mới</strong> trong thời
+            gian tới, nhằm nâng cao trải nghiệm người dùng và đáp ứng tốt hơn
+            nhu cầu học tập, nghiên cứu.
+          </p>
+        </section>
+      </div>
+      <div class="box" id="sub">
+        <section class="intro">
+          <h1 class="heading">Thông tin liên lạc</h1>
+          <p>
+            - Liên hệ với chúng tôi qua email:
+            <span id="email"> ducpt423ac@gmail.com </span>
+          </p>
+          <p>- Các thành viên trong dự án:</p>
+          <p>+ Nguyễn Thế Lương</p>
+          <p>+ Phạm Minh Đức</p>
+          <div class="social">
+            <a href="https://www.facebook.com/duczzzz12/" target="_blank"
+              ><i id="fb" class="fa-brands fa-facebook-f"></i
+            ></a>
+            <a href="https://www.instagram.com/nguoilo.1/" target="_blank"
+              ><i id="ig" class="fa-brands fa-instagram"></i
+            ></a>
+            <a href="#"><i id="ln" class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#"><i id="git" class="fa-brands fa-github"></i></a>
+          </div>
+        </section>
+      </div>
     </div>
     <script>
       const user = localStorage.getItem("username");

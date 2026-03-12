@@ -52,7 +52,8 @@
       @media (max-width: 1024px) {
         .box {
           margin: 40px auto;
-          margin-left: 200px;
+          margin-left: 100px;
+          width: fit-content;
         }
         pre {
           font-size: 14px;
@@ -81,8 +82,8 @@
       <ul>
         <li><a href="home.html">Trang chủ</a></li>
         <li><a href="source.html">Code test</a></li>
-        <li><a href="cambien.html">Cảm biến</a></li>
-        <li><a href="lienhe.html">Liên hệ</a></li>
+        <li><a href="cambien.html">Bảng điều khiển</a></li>
+        <li><a id="logout">Đăng xuất</a></li>
       </ul>
     </div>
     <div class="blockbtn">
@@ -97,6 +98,14 @@
       cấu hình theo board của bạn.
     </h1>
     <div class="container"></div>
+    <script>
+      document.getElementById("logout").onclick = function () {
+        let user = localStorage.getItem("username");
+        user = "";
+        localStorage.setItem("username", user);
+        window.location.href = "index.html";
+      };
+    </script>
     <script type="module" src="js/source.js"></script>
   </body>
 </html>

@@ -1,6 +1,9 @@
 let count = Number(localStorage.getItem("cardCount")) || 4;
 const user = localStorage.getItem("username");
-const sc = document.querySelector(".supercontainer");
+if (user == "") {
+  alert("vui lòng đăng nhập để sử dụng hệ thống");
+  window.location.href = "index.html";
+}
 // if (user == null) {
 //   alert("vui lòng đăng nhập");
 //   window.location.href = "index.html";
@@ -1367,6 +1370,9 @@ document.addEventListener("change", function (e) {
 });
 
 document.getElementById("logout").onclick = function () {
+  let user = localStorage.getItem("username");
+  user = "";
+  localStorage.setItem("username", user);
   window.location.href = "index.html";
 };
 
