@@ -165,7 +165,7 @@ void loop() {
   }
   if(hum != lasthum) {
     lasthum = hum;
-    Firebase.setFloat(fbdo,"/users/duc/dht11/Humi",hum);  
+    Firebase.setFloat(fbdo,"/users/{user}/dht11/Humi",hum);  
   }
   delay(1000);
 }
