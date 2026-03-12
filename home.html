@@ -101,6 +101,12 @@
     <script>
       const user = localStorage.getItem("username");
       document.getElementById("name").innerText = user;
+      document.getElementById("logout").onclick = function () {
+        let user = localStorage.getItem("username");
+        user = "";
+        localStorage.setItem("username", user);
+        window.location.href = "index.html";
+      };
     </script>
   </body>
 </html>
