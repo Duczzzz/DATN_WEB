@@ -33,7 +33,9 @@
     <h1 class="head">NUKE DASHBOARD</h1>
     <div class="menu">
       <ul>
-        <li><a href="home.html">Trang chủ</a></li>
+        <li>
+          <a href="home.html" style="background-color: brown">Trang chủ</a>
+        </li>
         <li><a href="source.html">Code test</a></li>
         <li><a href="cambien.html">Bảng điều khiển</a></li>
         <li><a id="logout">Đăng xuất</a></li>
@@ -102,6 +104,7 @@
       const user = localStorage.getItem("username");
       document.getElementById("name").innerText = user;
       document.getElementById("logout").onclick = function () {
+        localStorage.removeItem("cards");
         let user = localStorage.getItem("username");
         user = "";
         localStorage.setItem("username", user);
