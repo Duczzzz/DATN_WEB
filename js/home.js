@@ -991,6 +991,7 @@ document.getElementById("addblock").onclick = function () {
     }, 300);
   }
   box.querySelector("#getInfor").onclick = function () {
+    e.preventDefault();
     const selectChart = box.querySelector("#chartType").value;
     const selectCard = box.querySelector("#cardType").value;
     const selectPin = box.querySelector("#selectPin").value;
@@ -1010,13 +1011,18 @@ document.getElementById("addblock").onclick = function () {
     if (selectCard == "Sensor") {
       if (selectChart == "mixchart") {
         if (labelchart2 == "") {
-          alert("vui lòng bổ sung nhãn 2 cho biểu đồ,vui lòng tạo lại card");
+          alert("vui lòng bổ sung nhãn 2 cho biểu đồ");
+          return;
+        }
+        if (labelchart == "") {
+          alert("vui lòng bổ sung nhãn 1 cho biểu đồ");
           return;
         }
       } else {
         if (labelchart == "") {
-          alert("vui lòng bổ sung nhãn cho biểu đồ,vui lòng tạo lại card");
+          alert("vui lòng bổ sung nhãn 1 cho biểu đồ");
           return;
+          }
         }
       }
       alert(
