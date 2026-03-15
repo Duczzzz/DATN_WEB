@@ -1,5 +1,6 @@
 let count = Number(localStorage.getItem("cardCount")) || 4;
 const user = localStorage.getItem("username");
+const charts = {};
 if (user == "") {
   alert("vui lòng đăng nhập để sử dụng hệ thống");
   window.location.href = "index.html";
@@ -842,7 +843,6 @@ window.onload = () => {
   });
 };
 
-const charts = {};
 document.getElementById("addblock").onclick = function () {
   let box = document.createElement("div");
   count++;
@@ -990,7 +990,7 @@ document.getElementById("addblock").onclick = function () {
       location.reload();
     }, 300);
   }
-  box.querySelector("#getInfor").onclick = function () {
+  box.querySelector("#getInfor").onclick = function (e) {
     e.preventDefault();
     const selectChart = box.querySelector("#chartType").value;
     const selectCard = box.querySelector("#cardType").value;
@@ -1022,7 +1022,6 @@ document.getElementById("addblock").onclick = function () {
         if (labelchart == "") {
           alert("vui lòng bổ sung nhãn 1 cho biểu đồ");
           return;
-          }
         }
       }
       alert(
@@ -1078,6 +1077,7 @@ document.getElementById("addblock").onclick = function () {
           pin2: selectPin2,
           chartType: null,
         });
+      }
       saved = 1;
     }
     if (saved == 1) {
