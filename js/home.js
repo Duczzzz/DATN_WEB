@@ -1078,7 +1078,6 @@ document.getElementById("addblock").onclick = function () {
           pin2: selectPin2,
           chartType: null,
         });
-      }
       saved = 1;
     }
     if (saved == 1) {
