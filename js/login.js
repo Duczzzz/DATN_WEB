@@ -4,6 +4,7 @@ import {
   ref,
   get,
   child,
+  set,
 } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 const firebaseConfig = {
   apiKey: "AIzaSyBliSd_F2NAl02D4FzMdtY0szkhpHdMf8c",
@@ -27,7 +28,6 @@ $(document).ready(function () {
     input.attr("type", input.attr("type") === "password" ? "text" : "password");
   });
 });
-
 document.getElementById("submit").onclick = function () {
   const username = document.getElementById("user").value.trim();
   const password = document.getElementById("pass").value.trim();
@@ -44,7 +44,12 @@ document.getElementById("submit").onclick = function () {
       }
       if (snapshot.val().password === password) {
         localStorage.setItem("username", username);
+        const time = new Date().toLocaleTimeString();
+        let infor = {
+          time: time,
+        };
         alert("Đăng nhập thành công");
+        set(ref(db, `users/${username}/login`), infor);
         window.location.href = "home.html";
       } else {
         alert("Sai mật khẩu");

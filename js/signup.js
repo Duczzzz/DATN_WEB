@@ -19,6 +19,10 @@ const firebaseConfig = {
   appId: "1:599011961788:web:008c324dbfc6b3cf6699b9",
 };
 
+function vaildname(username) {
+  const isValid = /^[a-zA-Z0-9]+$/g.test(username);
+  return isValid;
+}
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
@@ -57,7 +61,6 @@ function myTimer(dem) {
     document.getElementById("sendOTP").textContent = `Gửi mã OTP`;
     clearTimer();
   }
-  console.log(dem);
 }
 function clearTimer() {
   clearInterval(myInterval);
@@ -121,12 +124,19 @@ document.getElementById("submit").addEventListener("click", function () {
     usernameError.style.display = "block";
   } else {
     usernameError.style.display = "none";
-    get(ref(db, `users/${username}`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        usernameError.textContent = "* Tài khoản đã tồn tại";
-        usernameError.style.display = "block";
-      }
-    });
+    if (vaildname(username)) {
+      get(ref(db, `users/${username}`)).then((snapshot) => {
+        if (snapshot.exists()) {
+          usernameError.textContent = "* Tài khoản đã tồn tại";
+          usernameError.style.display = "block";
+        }
+      });
+    } else {
+      usernameError.style.display = "block";
+      usernameError.textContent =
+        "Vui lòng nhập tên khác không chứa tiếng việt và dấu cách";
+      return;
+    }
   }
   if (!password) {
     passwordError.style.display = "block";
@@ -213,6 +223,7 @@ document.getElementById("submit").addEventListener("click", function () {
           });
         },
         function (error) {
+          alert("Lỗi khi gửi email xác thức đi, vui lòng liên hệ với admin");
           console.log("FAILED...", error);
         },
       );

@@ -3,25 +3,6 @@ let count = Number(localStorage.getItem("cardCount")) || 4;
 const user = localStorage.getItem("username");
 let x = 0;
 let y = 0;
-// if (user == "") {
-//   alert("vui lòng đăng nhập để sử dụng hệ thống");
-//   window.location.href = "index.html";
-// }
-// if (user == null) {
-//   alert("vui lòng đăng nhập");
-//   window.location.href = "index.html";
-// }
-
-// window.addEventListener("beforeunload", () => {
-//   localStorage.removeItem("username");
-//   console.log("Tab đã đóng");
-// });
-
-// document.addEventListener("visibilitychange", () => {
-//   if (document.visibilityState === "hidden") {
-//     localStorage.removeItem("username");
-//   }
-// });
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import {
@@ -32,6 +13,7 @@ import {
   set,
   onValue,
   remove,
+  onDisconnect,
 } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 const firebaseConfig = {
   apiKey: "AIzaSyBliSd_F2NAl02D4FzMdtY0szkhpHdMf8c",
@@ -44,6 +26,11 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const time = new Date().toLocaleTimeString();
+const userRef = ref(db, `users/${user}/logout`);
+onDisconnect(userRef).set({
+  time: time,
+});
 
 window.scrollTo({
   top: 0,
