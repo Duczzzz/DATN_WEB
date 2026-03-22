@@ -82,7 +82,6 @@ document.getElementById("sendOTP").addEventListener("click", function () {
     } else {
       myInterval = setInterval(() => myTimer(dem++), 1000);
       otp = createOTP();
-      console.log("Generated OTP:", otp);
     }
   }
   let params = {
@@ -223,7 +222,6 @@ document.getElementById("submit").addEventListener("click", function () {
           });
         },
         function (error) {
-          alert("Lỗi khi gửi email xác thức đi, vui lòng liên hệ với admin");
           console.log("FAILED...", error);
         },
       );

@@ -37,10 +37,6 @@ window.scrollTo({
   behavior: "smooth",
 });
 
-// const source = await fetch(
-//   "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/js/home.js",
-// ).then((r) => r.text());
-
 async function loadhdsd() {
   const hdsdRaw = await fetch(
     "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/hdsd.txt",
@@ -83,7 +79,13 @@ async function initchat() {
 }
 initchat();
 async function chatNor(msgu) {
-  const hdsd = await loadhdsd();
+  const boxes = document.querySelectorAll(".box");
+  console.log(boxes);
+  const cardNames = Array.from(boxes).map((box) => {
+    const title = box.querySelector(".heading");
+    return title ? title.innerText : "Sơ đồ kết nối của board";
+  });
+  console.log(cardNames);
   const response = await fetch(
     "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
     {
@@ -95,6 +97,10 @@ async function chatNor(msgu) {
           {
             role: "system",
             content: `
+          - Tôi đang có những card sau: ${cardNames}
+          - Nếu yêu cầu hướng dẫn sử dụng các card (DHT11, BME280, Điều khiển In Out1) hãy chỉ họ nhấn vào nút code test trên thanh công cụ và đừng phản hồi gì thêm.
+          - Khi tôi hỏi bạn phải liệt kê tất cả các card đang có hiện tại ở trên và thêm gợi ý sử dụng cho người dùng
+          - Thêm cuối dòng là Bạn cần giúp đỡ gì không hãy để tôi giúp bạn. Chỉ cần bạn nói hướng dẫn cho tôi card có id số mấy và là loại card gì ? Tôi sẽ giúp bạn.
           Bạn là trợ lý ảo cho nền tảng của tôi. Hãy trả lời cho người dùng ngắn gọn nhất có thể bằng tiếng việt.
           `,
           },
@@ -132,12 +138,12 @@ async function chat(msgu) {
           QUY TẮC:
           - CHỈ được trả lời dựa trên HƯỚNG DẪN SỬ DỤNG bên dưới.
           - Tôi có user là ${user} bạn hãy thay vào "{user}" trong vào đường dẫn database trong hướng dẫn sử dụng (bắt buộc).
+          - Nếu yêu cầu hướng dẫn sử dụng các card (DHT11, BME280, Điều khiển In Out1) hãy chỉ họ nhấn vào nút code test trên thanh công cụ và đừng phản hồi gì thêm.
           - KHÔNG suy đoán.
           - KHÔNG bổ sung kiến thức bên ngoài.
           - Nếu không tìm thấy thông tin, trả lời đúng duy nhất:
           "Không tìm thấy thông tin trong hướng dẫn sử dụng"
           - Nếu người dùng không yêu cầu cách tải và lấy về dữ liệu thì không trả lời.
-
           ĐỊNH DẠNG TRẢ LỜI (bắt buộc):
           ===Đường dẫn database===
           <ghi đúng nội dung tìm thấy>
@@ -1466,7 +1472,6 @@ document.addEventListener("change", function (e) {
       document.querySelector(".box3").style.display = "none";
     }
   }
-  console.log(parts);
   if (parts[0] === "cb") {
     if (e.target.checked) {
       document.querySelector("." + parts[1] + parts[2]).style.display = "grid";

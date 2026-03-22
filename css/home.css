@@ -1004,7 +1004,7 @@ form button:hover {
 }
 
 .msg {
-  max-width: 78%;
+  max-width: fit-content;
   padding: 10px 14px;
   margin-bottom: 10px;
   border-radius: 14px;
@@ -1013,11 +1013,14 @@ form button:hover {
 }
 
 .msg.bot {
+  max-width: 80%;
   background: #3a3a55;
   align-self: flex-start;
+  padding: 10px;
 }
 
 .msg.user {
+  max-width: 60%;
   background: #4f8cff;
   align-self: flex-end;
   margin-left: auto;
