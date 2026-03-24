@@ -80,12 +80,10 @@ async function initchat() {
 initchat();
 async function chatNor(msgu) {
   const boxes = document.querySelectorAll(".box");
-  console.log(boxes);
   const cardNames = Array.from(boxes).map((box) => {
     const title = box.querySelector(".heading");
     return title ? title.innerText : "Sơ đồ kết nối của board";
   });
-  console.log(cardNames);
   const response = await fetch(
     "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
     {
@@ -948,6 +946,7 @@ document.getElementById("addblock").onclick = function () {
         </select>
       </div>
       <br>
+      <button type="submit" id="cancelgetInfor">Hủy</button>
       <button type="submit" id="getInfor">Xác nhận</button>
     </form>
   `;
@@ -965,10 +964,15 @@ document.getElementById("addblock").onclick = function () {
       selectChart.style.display = "block";
       selectPin.style.display = "block";
       SelectMuchPin.style.display = "none";
+      const option = new Option(" I2C");
+      select.add(option);
     } else {
       selectChart.style.display = "none";
       selectPin.style.display = "block";
       SelectMuchPin.style.display = "block";
+      [...select.options].forEach((option) => {
+        if (option.value == "I2C") option.remove();
+      });
     }
   });
   chartType.addEventListener("change", () => {
@@ -986,16 +990,11 @@ document.getElementById("addblock").onclick = function () {
     }
   });
   document.querySelector(".container").appendChild(box);
-  window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: "smooth",
-  });
   const select = document.getElementById("selectPin");
   const select2 = document.getElementById("selectPin2");
   const cards = JSON.parse(localStorage.getItem("cards")) || [];
   const usedPins = new Set();
   cards.forEach((card) => {
-    console.log(card.pin1, card.pin2);
     if (card.pin1 != null) usedPins.add(card.pin1);
     if (card.pin2 != null) usedPins.add(card.pin2);
   });
@@ -1014,6 +1013,13 @@ document.getElementById("addblock").onclick = function () {
       location.reload();
     }, 300);
   }
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "smooth",
+  });
+  box.querySelector("#cancelgetInfor").onclick = function (e) {
+    box.remove();
+  };
   box.querySelector("#getInfor").onclick = function (e) {
     e.preventDefault();
     const selectChart = box.querySelector("#chartType").value;
@@ -1211,7 +1217,6 @@ document.getElementById("removeblock").onclick = function () {
     option.value = card.id;
     option.textContent = `Card ${card.id} - ${card.name}`;
     select.appendChild(option);
-    console.log(option.text);
   });
   box.querySelector("#cancelDelete").onclick = () => {
     box.remove();
@@ -1303,6 +1308,7 @@ onValue(ref(db, path), (snapshot) => {
   Object.entries(inData).forEach(([key, val]) => {
     const parts = key.split("-");
     const stt = document.getElementById(`status-${parts[1]}-${parts[2]}`);
+    if (stt == undefined) return;
     const card = cards.find((c) => c.id === Number(parts[1]));
     if (!card) return;
     if (card.id === Number(parts[1])) {
@@ -1347,6 +1353,7 @@ onValue(ref(db, `users/${user}/Card`), (snapshot) => {
     const parts = key.split("-");
     const cardId = parts[1];
     const time = new Date().toLocaleTimeString();
+    if (charts[cardId] == undefined) return;
     charts[cardId].data.labels.push(time);
     if (parts[2] == "CB1" || parts[2] == "CB2") return;
     if (parts[2] == "1") {
