@@ -1,6 +1,9 @@
 const charts = {};
 let count = Number(localStorage.getItem("cardCount")) || 4;
 const user = localStorage.getItem("username");
+if (user == null) {
+  window.location.ref = "index.html";
+}
 let x = 0;
 let y = 0;
 
@@ -95,11 +98,16 @@ async function chatNor(msgu) {
           {
             role: "system",
             content: `
+          - Bạn là trợ lý ảo cho nền tảng NukeDashBoard.
+          QUY TẮC:
+          - Bắt buộc phải xưng tôi.
           - Tôi đang có những card sau: ${cardNames}
-          - Nếu yêu cầu hướng dẫn sử dụng các card (DHT11, BME280, Điều khiển In Out1) hãy chỉ họ nhấn vào nút code test trên thanh công cụ và đừng phản hồi gì thêm.
-          - Khi tôi hỏi bạn phải liệt kê tất cả các card đang có hiện tại ở trên và thêm gợi ý sử dụng cho người dùng
-          - Thêm cuối dòng là Bạn cần giúp đỡ gì không hãy để tôi giúp bạn. Chỉ cần bạn nói hướng dẫn cho tôi card có id số mấy và là loại card gì ? Tôi sẽ giúp bạn.
-          Bạn là trợ lý ảo cho nền tảng của tôi. Hãy trả lời cho người dùng ngắn gọn nhất có thể bằng tiếng việt.
+          - Nếu yêu cầu hướng dẫn sử dụng các card (DHT11, BME280, Điều khiển In Out1) hãy chỉ họ nhấn vào nút code test trên thanh công cụ và bạn đừng phản hồi gì thêm.
+          - Khi tôi hỏi bạn phải liệt kê tất cả các card đang có hiện tại ở trên và thêm gợi ý sử dụng cho người dùng.
+          - Thêm cuối dòng là Bạn cần giúp đỡ gì không hãy để tôi giúp bạn. Chỉ cần bạn nói hướng dẫn cho tôi card có id số mấy và là loại card gì, có bao nhiêu kênh ? Tôi sẽ giúp bạn.
+          - Hãy trả lời cho người dùng ngắn gọn nhất có thể bằng tiếng việt.
+          ĐỊNH DẠNG TRẢ LỜI (bắt buộc):
+          <ghi đúng nội dung tìm thấy>
           `,
           },
           {
@@ -166,7 +174,7 @@ async function chat(msgu) {
   );
   const data = await response.json();
   let box = document.createElement("div");
-  box.className = "msg bot";
+  box.className = "msg bothd";
   box.innerText = `${data.choices[0].message.content}
   `;
   document.querySelector("#chatBody").appendChild(box);
@@ -370,15 +378,10 @@ async function loadData() {
       console.log("Không có dữ liệu");
       return;
     }
-
     const data = snapshot.val();
-    console.log("đang chạy");
-
     localStorage.removeItem("cards");
-
     Object.entries(data).forEach(([key, card]) => {
       localStorage.setItem("cardCount", key);
-
       var infor = {
         id: card.id,
         name: card.name,
@@ -389,7 +392,6 @@ async function loadData() {
         label: card.label,
         label2: card.label2,
       };
-
       saveCardToLocal(infor);
     });
   } catch (err) {
@@ -1441,7 +1443,7 @@ document.getElementById("sendChat").onclick = function () {
   `;
   document.querySelector("#chatBody").appendChild(box);
   document.querySelector("#chatInput").value = "";
-  if (msgu.includes("id") || msgu.includes("hướng dẫn")) {
+  if (msgu.includes("id") && msgu.includes("card") && msgu.includes("kênh")) {
     chat(msgu);
   } else {
     chatNor(msgu);
