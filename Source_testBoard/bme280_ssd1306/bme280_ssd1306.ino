@@ -18,7 +18,7 @@
 #include <WiFi.h>
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_GFX.h>
-#include <Adafruit_SH110X.h>
+#include <Adafruit_SSD1306.h>
 
 const char* ssid = "DUC";
 const char* pass = "14042004";
@@ -29,11 +29,14 @@ Adafruit_NeoPixel led(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 #define LED 2
 
-// #define i2c_Address 0x3c
-// #define SCREEN_WIDTH 128
-// #define SCREEN_HEIGHT 64
-// #define OLED_RESET -1
-// Adafruit_SH1106G display = Adafruit_SH1106G(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+TwoWire I2C_BME = TwoWire(0);
+TwoWire I2C_OLED = TwoWire(1);
+
+#define i2c_Address 0x3c
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+Adafruit_SSD1306 display = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &I2C_OLED, OLED_RESET);
 
 #define DATABASE_URL "https://doantn-885dc-default-rtdb.firebaseio.com/"
 #define DATABASE_SECRET "rPb2lv5DjHze997hD9pxnzTzWJsir4wwdP1poStt"
@@ -47,51 +50,61 @@ float temp,hum,CBND,CBDA,lastemp,lasthum;
 int demwf = 0;
 
 void setup() {
-  // Wire.begin(12,13);
-  // display.begin(i2c_Address, true);
-  // display.clearDisplay();
-  // display.setTextSize(1);
-  // display.setTextColor(SH110X_WHITE);
-  // display.setCursor(0, 0);
-  // display.printf("He thong dang \nkhoi dong...");
-  // display.display();
-  // delay(1000);
+  I2C_BME.begin(8,18); // Nếu bạn sử dụng ESP32 Dev Kit Module thì hãy comment dòng code này lại
+  I2C_OLED.begin(13,12);
+  led.begin();
+  led.setBrightness(50);
+  led.setPixelColor(0, led.Color(255, 0, 255));
+  led.show();  
+  if (!display.begin(SSD1306_SWITCHCAPVCC, i2c_Address)) {
+    led.setPixelColor(0, led.Color(255, 0, 0));
+    led.show();
+    Serial.println("OLED fail!");
+    while (1);
+  }
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
+  display.printf("He thong dang \nkhoi dong...");
+  display.display();
+  delay(1000);
   pinMode(LED,OUTPUT);
   digitalWrite(LED,0);
   Serial.begin(115200);
   Serial.println("He thong dang khoi dong...");
-  led.begin();
-  led.setBrightness(50);
-  led.setPixelColor(0, led.Color(255, 0, 255));
-  led.show();
-  Wire.begin(8,18); // Nếu bạn sử dụng ESP32 Dev Kit Module thì hãy comment dòng code này lại
-  if (!bme.begin(0x76)) {
-    Serial.println("Không tìm thấy BME280!"); 
+  display.display();
+  if (!bme.begin(0x76,&I2C_BME)) {
+    display.clearDisplay();
+    Serial.println("Không tìm thấy BME280!");
+    display.setCursor(0, 0);
+    display.printf("Khong tim thay BME280!");
+    display.display();
     led.setPixelColor(0, led.Color(255, 0, 0));
     led.show();
     while (1);
   }
   lasthum = bme.readHumidity();
   lastemp = bme.readTemperature();
-  // display.clearDisplay();
+  display.clearDisplay();
   WiFi.begin(ssid,pass);
   while (WiFi.status() != WL_CONNECTED) {
     led.setPixelColor(0, led.Color(255, 0, 255));
     led.show();
     Serial.println("dang khoi dong WiFi...");
-    // display.setCursor(0,0);
-    // display.print("Conecting WiFi");
+    display.setCursor(0,0);
+    display.print("Conecting WiFi");
     if(demwf < 80) {
-      // display.setCursor(demwf,10);
-      // display.print(".");
-      // Serial0.println(".");
+      display.setCursor(demwf,10);
+      display.print(".");
+      Serial0.println(".");
     }
     else if(demwf > 80) {
-      // display.clearDisplay();
+      display.clearDisplay();
       demwf = 0;
     }
     demwf+=5;
-    // display.display();
+    display.display();
     digitalWrite(LED,1);
     delay(300);
   }
@@ -104,14 +117,13 @@ void setup() {
   Firebase.begin(&config, &auth);
   Firebase.setFloat(fbdo,"/users/duc/bme280/Temp",lastemp);
   Firebase.setFloat(fbdo,"/users/duc/bme280/Humi",lasthum);  
-  // display.clearDisplay();
-  // display.setTextSize(1);
-  // display.setTextColor(SH110X_WHITE);
-  // display.setCursor(0, 30);
-  // display.println("XIN CHAO CAC BAN");
-  // display.display();
-  // delay(300);
-  // display.clearDisplay();
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(0, 30);
+  display.println("XIN CHAO CAC BAN");
+  display.display();
+  delay(300);
+  display.clearDisplay();
   led.setPixelColor(0, led.Color(0, 255, 0));
   led.show();
 }
@@ -133,38 +145,39 @@ void loop() {
   //     Serial.printf("CBND update: %.2f\n", CBDA);
   //   }
   // }
+  display.clearDisplay();
   if(Firebase.getFloat(fbdo,"/users/duc/bme280/CBNDBME280")) CBND = fbdo.floatData();
   if(Firebase.getFloat(fbdo,"/users/duc/bme280/CBDABME280")) CBDA = fbdo.floatData();
   hum = bme.readHumidity();
   temp = bme.readTemperature();
-  Serial.printf("BME280: Nhiệt độ: %f, Độ ẩm: %f\n",temp,hum);
-  // display.clearDisplay();
-  // display.setTextSize(1);
-  // display.setCursor(20, 0);
-  // display.print("CAM BIEN DHT11");
-  // display.setCursor(0, 10);
-  // display.printf("Nhiet do: %.2f",temp);
-  // display.setTextSize(1);
-  // display.setCursor(0, 20);
-  // display.printf("Do am: %.2f",hum);
-  // display.setCursor(0, 30);
-  // display.print("CANH BAO: ");
-  // display.println(CBND);
+  // Serial.printf("BME280: Nhiệt độ: %f, Độ ẩm: %f\n",temp,hum);
+  display.setTextSize(1);
+  display.setCursor(20, 0);
+  display.print("CAM BIEN BME280");
+  display.setCursor(0, 15);
+  display.printf("Nhiet do: %.2f",temp);
+  display.setTextSize(1);
+  display.setCursor(0, 25);
+  display.printf("Do am: %.2f",hum);
+  display.setCursor(0, 35);
+  display.printf("CANH BAO ND: %.2f",CBND);
+  display.setCursor(0, 45);
+  display.printf("CANH BAO DA: %.2f",CBDA);
   if(temp > CBND || hum > CBDA) {
     led.setPixelColor(0, led.Color(255, 0, 0));
     led.show();
     Firebase.setInt(fbdo,"/users/duc/bme280/ledbme280",1);
-    // display.setTextSize(1);
-    // display.setCursor(0, 40);
-    // display.print("Da bat den canh bao");
+    display.setTextSize(1);
+    display.setCursor(0, 55);
+    display.print("Da bat den canh bao");
   }
   else {
     led.setPixelColor(0, led.Color(0, 255, 0));
     led.show();
     Firebase.setInt(fbdo,"/users/duc/bme280/ledbme280",0);
-    // display.setTextSize(1);
-    // display.setCursor(0, 40);
-    // display.print("Da tat den canh bao");
+    display.setTextSize(1);
+    display.setCursor(0, 55);
+    display.print("Da tat den canh bao");
   }
   if(temp != lastemp) {
     lastemp = temp;
@@ -172,7 +185,8 @@ void loop() {
   }
   if(hum != lasthum) {
     lasthum = hum;
-    Firebase.setFloat(fbdo,"/users/duc/bme280/Humi",hum);  
+    Firebase.setFloat(fbdo,"/users/duc/bme280/Humi",hum);
   }
+  display.display();
   delay(1000);
 }
