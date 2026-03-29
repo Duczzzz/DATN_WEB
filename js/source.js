@@ -7,11 +7,30 @@ const btn1 =
   "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/Source_testBoard/Test_button/Test_button.ino";
 const control =
   "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/refs/heads/main/Source_testBoard/control_test/control_test.ino";
+const hdsdBME280 =
+  "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/baigiang/Bai1.pdf";
+
 async function downbox(link) {
   const hdsdRaw = await fetch(link).then((r) => r.text());
   return hdsdRaw.replaceAll("{user}", user);
 }
-
+function download(link, filename) {
+  const a = document.createElement("a");
+  a.setAttribute("href", link);
+  a.style.display = "none";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+// async function download(link, filename) {
+//   const http = require("https");
+//   const fs = require("fs");
+//   const file = fs.createWriteStream(filename);
+//   http.get(link, function (response) {
+//     response.pipe(file);
+//   });
+//   alert("Đang tải xuống, vui lòng chờ...");
+// }
 const sourceBME = await downbox(bme280);
 const sourceDHT11 = await downbox(dht11);
 const sourcebtn = await downbox(btn1);
@@ -20,7 +39,17 @@ const sourcecontrol = await downbox(control);
 function load(source, title, Count) {
   let h1 = document.createElement("h1");
   h1.className = "heading";
-  h1.innerText = `Source Code ${title}`;
+  h1.innerText = `Source Code ${title} `;
+
+  let btncp = document.createElement("button");
+  btncp.className = "copy-btn";
+  btncp.id = "copy-btn" + title;
+  btncp.innerHTML = `<i class="fa-solid fa-copy"></i> Sao chép code`;
+
+  let btndl = document.createElement("button");
+  btndl.className = "download-btn";
+  btndl.innerHTML = `<i class="fa-solid fa-download"></i> Tải xuống bài giảng hướng dẫn`;
+  btndl.id = "download-btn" + title;
 
   let box = document.createElement("div");
   box.className = "box box" + Count;
@@ -30,6 +59,8 @@ function load(source, title, Count) {
   pre.innerText = source;
 
   box.appendChild(h1);
+  box.appendChild(btncp);
+  box.appendChild(btndl);
   box.appendChild(pre);
 
   document.querySelector(".container").append(box);
@@ -85,4 +116,50 @@ document.getElementById("button").onclick = function () {
   document.getElementById("bme280").style.background = "white";
   document.getElementById("control").style.background = "white";
   document.getElementById("button").style.background = "red";
+};
+document.getElementById("copy-btnBME280").onclick = function () {
+  navigator.clipboard.writeText(sourceBME);
+  document.getElementById("copy-btnBME280").innerHTML =
+    `<i class="fa-solid fa-check"></i> Đã sao chép`;
+  setTimeout(() => {
+    document.getElementById("copy-btnBME280").innerHTML =
+      `<i class="fa-solid fa-copy"></i> Sao chép code`;
+  }, 2000);
+};
+document.getElementById("copy-btnDHT11").onclick = function () {
+  navigator.clipboard.writeText(sourceDHT11);
+  document.getElementById("copy-btnDHT11").innerHTML =
+    `<i class="fa-solid fa-check"></i> Đã sao chép`;
+  setTimeout(() => {
+    document.getElementById("copy-btnDHT11").innerHTML =
+      `<i class="fa-solid fa-copy"></i> Sao chép code`;
+  }, 2000);
+};
+document.getElementById("copy-btnBUTTON").onclick = function () {
+  navigator.clipboard.writeText(sourcebtn);
+  document.getElementById("copy-btnBUTTON").innerHTML =
+    `<i class="fa-solid fa-check"></i> Đã sao chép`;
+  setTimeout(() => {
+    document.getElementById("copy-btnBUTTON").innerHTML =
+      `<i class="fa-solid fa-copy"></i> Sao chép code`;
+  }, 2000);
+};
+document.getElementById("copy-btnCONTROL").onclick = function () {
+  navigator.clipboard.writeText(sourcecontrol);
+  document.getElementById("copy-btnCONTROL").innerHTML =
+    `<i class="fa-solid fa-check"></i> Đã sao chép`;
+  setTimeout(() => {
+    document.getElementById("copy-btnCONTROL").innerHTML =
+      `<i class="fa-solid fa-copy"></i> Sao chép code`;
+  }, 2000);
+};
+
+document.getElementById("download-btnBME280").onclick = async function () {
+  download(hdsdBME280);
+  document.getElementById("download-btnBME280").innerHTML =
+    `<i class="fa-solid fa-check"></i> Đã tải xuống`;
+  setTimeout(() => {
+    document.getElementById("download-btnBME280").innerHTML =
+      `<i class="fa-solid fa-download"></i> Tải xuống bài giảng hướng dẫn`;
+  }, 1000);
 };
