@@ -41,29 +41,33 @@
         <div class="btn1">
           <button class="btnFunc" id="addblock">
             <i class="fa-solid fa-plus"></i>
+            <span class="blockbtn_name">Tạo Card</span>
           </button>
-          <span class="tooltip">Thêm Card</span>
         </div>
         <div class="btn2">
           <button class="btnFunc" id="removeblock">
-            <i class="fa-solid fa-trash-can"></i>
+            <i class="fa-solid fa-trash-can"></i
+            ><span class="blockbtn_name">Xóa Card</span>
           </button>
-          <span class="tooltip">Xóa Card</span>
         </div>
         <div class="btn3">
           <button class="btnFunc" id="chat">
-            <i class="fa-solid fa-comment-dots"></i>
+            <i class="fa-solid fa-comment-dots"></i
+            ><span class="blockbtn_name">Chat bot</span>
           </button>
-          <span class="tooltip">Chat bot</span>
         </div>
         <div class="btn4">
           <button class="btnFunc" id="menu">
             <i class="fa-solid fa-bars"></i>
+            <span class="blockbtn_name">Menu</span>
           </button>
           <span class="tooltip" id="tipmenu">Menu</span>
           <div class="list" style="display: none">
             <label for="all">Lựa chọn card hiển thị</label>
             <button id="closeMenu">✖</button>
+            <br />
+            <input type="checkbox" id="0" checked="true" /> Card Điều khiển theo
+            thời gian
             <br />
             <input type="checkbox" id="1" checked="true" /> Card Điều khiển In
             Out1
@@ -106,6 +110,18 @@
           </div>
           <div id="drawflow" class="drawflow"></div>
           <footer>Chú thích: 🟡: Input ⚪: Output</footer>
+        </div>
+        <div class="tc box box0">
+          <h1 class="heading">Điều khiển theo thời gian</h1>
+          <h2>Trạng thái động cơ: <span id="motorStatus">Đang tắt</span></h2>
+          <form class="form-time">
+            <label for="time1">Bật đèn vào lúc:</label>
+            <input type="time" id="time1" name="time1" />
+            <br />
+            <label for="time2">Tắt đèn vào lúc:</label>
+            <input type="time" id="time2" name="time2" />
+            <button type="button" id="setTime">Cài đặt</button>
+          </form>
         </div>
         <div class="box box1">
           <h1 class="heading">Điều khiển In Out1</h1>

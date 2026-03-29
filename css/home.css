@@ -3,7 +3,6 @@
   padding: 0;
   box-sizing: border-box;
 }
-
 :root {
   --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --gradient-text: linear-gradient(135deg, #ff6b9d, #c084fc, #60a5fa, #34d399);
@@ -341,23 +340,27 @@ form {
 .box:nth-child(4) {
   animation-delay: 0.4s;
 }
-
+.box0 {
+  width: fit-content;
+  height: fit-content;
+  background: linear-gradient(135deg, rgba(255, 238, 248), rgb(189, 255, 224));
+}
 .box1 {
   width: fit-content;
   height: fit-content;
-  background: linear-gradient(135deg, rgba(255, 238, 248), rgba(224, 195, 252));
+  background: linear-gradient(135deg, rgb(255, 255, 255), rgb(238, 220, 255));
 }
 
 .box2 {
   display: flex;
   flex-direction: row;
-  background: linear-gradient(135deg, rgba(255, 244, 230), rgba(255, 216, 155));
+  background: linear-gradient(135deg, rgb(255, 253, 250), rgb(255, 227, 182));
 }
 
 .box3 {
   display: flex;
   flex-direction: row;
-  background: linear-gradient(135deg, rgba(224, 247, 255), rgba(167, 216, 240));
+  background: linear-gradient(135deg, rgb(227, 248, 255), rgb(211, 240, 255));
 }
 
 .box4 {
@@ -368,13 +371,13 @@ form {
   align-items: center;
   width: 900px;
   height: fit-content;
-  background: linear-gradient(135deg, rgba(232, 245, 233), rgb(178, 254, 255));
+  background: linear-gradient(135deg, rgb(255, 255, 255), rgb(215, 254, 255));
   padding: 20px;
   border-radius: 20px;
 }
 #drawflow {
   width: 840px;
-  height: 700px;
+  height: 400px;
   padding: 5px;
 }
 .drawflow-node {
@@ -453,14 +456,13 @@ footer {
   top: 70px;
   gap: 10px;
   z-index: 1000;
-  width: fit-content;
 }
 .btnFunc {
   pointer-events: auto;
   border-radius: 10px;
   padding: 10px;
   font-size: 20px;
-  background: linear-gradient(90deg, #acd1ff, #8bffd4);
+  background: linear-gradient(90deg, #d9eaff, #8bbdff);
   cursor: pointer;
   border: none;
   transition: all var(--transition-fast);
@@ -470,27 +472,13 @@ footer {
 .btn3,
 .btn4 {
   display: flex;
-  flex-direction: row;
-  width: fit-content;
+  flex-wrap: wrap;
+  width: 110px;
 }
-.tooltip {
-  color: #000000;
-  margin: 10px;
-  background: #c0d5ff;
-  color: #111;
-  padding: 6px 12px;
-  border-radius: 12px;
+.blockbtn_name {
   font-size: 14px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.2s ease;
-}
-.btn1:hover .tooltip,
-.btn2:hover .tooltip,
-.btn3:hover .tooltip,
-.btn4:hover .tooltip {
-  opacity: 1;
+  font-weight: 500;
+  color: rgb(0, 0, 0);
 }
 .btnFunc i {
   transition: transform 0.3s ease;
@@ -697,7 +685,6 @@ form button:hover {
   .card-chart canvas {
     min-height: 450px;
   }
-
   .box {
     max-width: 650px;
   }
@@ -1097,6 +1084,13 @@ form button:hover {
   background-color: red;
 }
 /*end list menu*/
+.tc {
+  width: fit-content;
+  align-items: center;
+}
+.form-time {
+  font-size: 30px;
+}
 @keyframes gradient {
   0%,
   100% {

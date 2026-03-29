@@ -381,7 +381,52 @@ document.getElementById("btn-inout2").onclick = function () {
     btn.innerText = "OFF 2";
   }
 };
-
+onValue(ref(db, `users/${user}/Out`), (snapshot) => {
+  const btn1 = document.getElementById("btn-inout1");
+  const btn2 = document.getElementById("btn-inout2");
+  const data = snapshot.val();
+  if (data.Out1 == 1) {
+    set(ref(db, `users/${user}/In/In1`), 1);
+    btn1.innerText = "ON 1";
+    btn1.style.backgroundColor = "rgb(41, 63, 255)";
+  }
+  if (data.Out1 == 0) {
+    set(ref(db, `users/${user}/In/In1`), 0);
+    btn1.innerText = "OFF 1";
+    btn1.style.backgroundColor = "rgb(255, 152, 152)";
+  }
+  if (data.Out2 == 1) {
+    set(ref(db, `users/${user}/In/In2`), 1);
+    btn2.innerText = "ON 2";
+    btn2.style.backgroundColor = "rgb(41, 63, 255)";
+  }
+  if (data.Out2 == 0) {
+    set(ref(db, `users/${user}/In/In2`), 0);
+    btn2.innerText = "OFF 2";
+    btn2.style.backgroundColor = "rgb(255, 152, 152)";
+  }
+});
+onValue(ref(db, `users/${user}/Card/timeControl`), (snapshot) => {
+  const data = snapshot.val();
+  var status = data.statusMotor;
+  if (status == 1) {
+    document.getElementById("motorStatus").innerText = "Đang bật";
+  } else {
+    document.getElementById("motorStatus").innerText = "Đang tắt";
+  }
+});
+document.getElementById("setTime").onclick = function () {
+  var timestart = document.getElementById("time1").value;
+  var timeend = document.getElementById("time2").value;
+  timestart = timestart.split(":");
+  timeend = timeend.split(":");
+  set(ref(db, `users/${user}/Card/timeControl`), {
+    hourstart: Number(timestart[0]),
+    hourend: Number(timeend[0]),
+    minutestart: Number(timestart[1]),
+    minuteend: Number(timeend[1]),
+  });
+};
 function saveCardToLocal(cardData) {
   let cards = JSON.parse(localStorage.getItem("cards")) || [];
   cards.push(cardData);
@@ -883,6 +928,7 @@ window.onload = async () => {
       }
     }
   });
+  listenFirebase();
 };
 document.getElementById("addblock").onclick = function () {
   let box = document.createElement("div");
@@ -1315,28 +1361,63 @@ document.addEventListener("click", (e) => {
     }
   });
 });
-
-const path = `users/${user}/Out`;
-onValue(ref(db, path), (snapshot) => {
-  const inData = snapshot.val();
-  if (!inData) return;
-  const cards = JSON.parse(localStorage.getItem("cards")) || [];
-  if (cards.length === 0) {
-    return;
-  }
-  Object.entries(inData).forEach(([key, val]) => {
-    const parts = key.split("-");
-    const stt = document.getElementById(`status-${parts[1]}-${parts[2]}`);
-    if (stt == undefined) return;
-    const card = cards.find((c) => c.id === Number(parts[1]));
-    if (!card) return;
-    if (card.id === Number(parts[1])) {
-      const pin = parts[2] === "1" ? card.pin1 : card.pin2;
-      const state = val === 1 ? "Đang bật" : "Đang tắt";
-      stt.innerText = `OUT ${pin} ${state}`;
+function listenFirebase() {
+  // Update dữ liệu cho card điều khiển In Out
+  const path = `users/${user}/Out`;
+  onValue(ref(db, path), (snapshot) => {
+    const inData = snapshot.val();
+    if (!inData) return;
+    const cards = JSON.parse(localStorage.getItem("cards")) || [];
+    if (cards.length === 0) {
+      return;
     }
+    Object.entries(inData).forEach(async ([key, val]) => {
+      const parts = key.split("-");
+      const stt = document.getElementById(`status-${parts[1]}-${parts[2]}`);
+      const btn = document.getElementById(`btnin-${parts[1]}-${parts[2]}`);
+      if (!stt) return;
+      const card = cards.find((c) => c.id === Number(parts[1]));
+      if (!card) return;
+      if (card.id === Number(parts[1])) {
+        const pin = parts[2] === "1" ? card.pin1 : card.pin2;
+        const state = val === 1 ? "Đang bật" : "Đang tắt";
+        stt.innerText = `OUT ${pin} ${state}`;
+        if (val === 1) {
+          set(ref(db, `users/${user}/In/In-${parts[1]}-${parts[2]}`), 1);
+          btn.style.backgroundColor = "rgb(41, 63, 255)";
+          btn.innerText = `ON ${pin}`;
+        } else {
+          set(ref(db, `users/${user}/In/In-${parts[1]}-${parts[2]}`), 0);
+          btn.style.backgroundColor = "rgb(255, 152, 152)";
+          btn.innerText = `OFF ${pin}`;
+        }
+      }
+    });
   });
-});
+  // update dữ liệu cho card cảm biến
+  onValue(ref(db, `users/${user}/Card`), (snapshot) => {
+    const cards = JSON.parse(localStorage.getItem("cards")) || [];
+    if (cards.length === 0) {
+      return;
+    }
+    const Data = snapshot.val();
+    if (!Data) return;
+    Object.entries(Data).forEach(([key, val]) => {
+      const parts = key.split("-");
+      const cardId = parts[1];
+      const time = new Date().toLocaleTimeString();
+      if (charts[cardId] == undefined) return;
+      charts[cardId].data.labels.push(time);
+      if (parts[2] == "CB1" || parts[2] == "CB2") return;
+      if (parts[2] == "1") {
+        charts[cardId].data.datasets[0].data.push(val);
+      } else {
+        charts[cardId].data.datasets[1].data.push(val);
+      }
+      charts[cardId].update("none");
+    });
+  });
+}
 
 let live3 = false;
 document.addEventListener("click", (e) => {
@@ -1359,29 +1440,6 @@ document.addEventListener("click", (e) => {
     ele.style.backgroundColor = "rgb(255, 215, 215)";
   }
   charts[cardId].update("none");
-});
-
-onValue(ref(db, `users/${user}/Card`), (snapshot) => {
-  const cards = JSON.parse(localStorage.getItem("cards")) || [];
-  if (cards.length === 0) {
-    return;
-  }
-  const Data = snapshot.val();
-  if (!Data) return;
-  Object.entries(Data).forEach(([key, val]) => {
-    const parts = key.split("-");
-    const cardId = parts[1];
-    const time = new Date().toLocaleTimeString();
-    if (charts[cardId] == undefined) return;
-    charts[cardId].data.labels.push(time);
-    if (parts[2] == "CB1" || parts[2] == "CB2") return;
-    if (parts[2] == "1") {
-      charts[cardId].data.datasets[0].data.push(val);
-    } else {
-      charts[cardId].data.datasets[1].data.push(val);
-    }
-    charts[cardId].update("none");
-  });
 });
 
 document.addEventListener("click", (e) => {
@@ -1475,30 +1533,32 @@ document.getElementById("closeMenu").onclick = function () {
 };
 document.addEventListener("change", function (e) {
   const parts = e.target.id.split("-");
+  if (parts[0] === "SW") return;
   if (e.target.id === "1") {
     if (e.target.checked) {
       document.querySelector(".box1").style.display = "flex";
     } else {
       document.querySelector(".box1").style.display = "none";
     }
-  }
-
-  if (e.target.id === "2") {
+  } else if (e.target.id === "2") {
     if (e.target.checked) {
       document.querySelector(".box2").style.display = "flex";
     } else {
       document.querySelector(".box2").style.display = "none";
     }
-  }
-
-  if (e.target.id === "3") {
+  } else if (e.target.id === "3") {
     if (e.target.checked) {
       document.querySelector(".box3").style.display = "flex";
     } else {
       document.querySelector(".box3").style.display = "none";
     }
-  }
-  if (parts[0] === "cb") {
+  } else if (e.target.id === "0") {
+    if (e.target.checked) {
+      document.querySelector(".box0").style.display = "flex";
+    } else {
+      document.querySelector(".box0").style.display = "none";
+    }
+  } else if (parts[0] === "cb") {
     if (e.target.checked) {
       document.querySelector("." + parts[1] + parts[2]).style.display = "grid";
     } else {
