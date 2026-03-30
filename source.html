@@ -36,13 +36,15 @@
         flex-direction: row;
         justify-content: center;
         cursor: pointer;
-        z-index: 1;
+        z-index: 9999;
       }
       .btnFunc {
         font-size: 16px;
         width: fit-content;
         background: white;
         font-weight: bold;
+        border: rgb(180, 217, 255) 5px solid;
+        border-radius: 20px;
       }
       #warn {
         width: fit-content;
@@ -125,6 +127,7 @@
       <button class="btnFunc" id="control">Source Control</button>
       <button class="btnFunc" id="button">Source Button</button>
       <button class="btnFunc" id="timecontrol">Source Time Control</button>
+      <button class="btnFunc" id="userbuild">Source User Build</button>
     </div>
     <h1 id="warn">
       *Lưu ý: Source code ở dưới dành riêng cho board do Nuke DashBoard phát

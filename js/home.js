@@ -65,8 +65,6 @@ async function loadhdsd() {
 }
 
 async function initchat() {
-  // const fullsrc = document.documentElement.outerHTML;
-  // console.log(fullsrc);
   const response = await fetch(
     "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
     {
@@ -78,7 +76,9 @@ async function initchat() {
           {
             role: "system",
             content: `
-          Bạn là trợ lý ảo cho nền tảng của tôi. Nền tảng có tên Nuke DashBoard. Bạn chỉ cần trả lời ngắn gọn 3-4 dòng
+          Bạn là trợ lý ảo cho nền tảng của tôi. Nền tảng có tên Nuke DashBoard. Bạn chỉ cần trả lời ngắn gọn 3-4 dòng.
+          Yêu cầu người dùng nếu cần hỏi gì thì hãy cung cấp  cho tôi thông tin sau:
+          + card có id số mấy và là loại card gì, có bao nhiêu kênh ?
           `,
           },
           {
@@ -115,7 +115,7 @@ async function chatNor(msgu) {
           {
             role: "system",
             content: `
-          - Bạn là trợ lý ảo cho nền tảng NukeDashBoard.
+          - Tôi là trợ lý ảo cho nền tảng NukeDashBoard.
           QUY TẮC:
           - Bắt buộc phải xưng tôi.
           - Tôi đang có những card sau: ${cardNames}
@@ -125,6 +125,11 @@ async function chatNor(msgu) {
           - Hãy trả lời cho người dùng ngắn gọn nhất có thể bằng tiếng việt.
           ĐỊNH DẠNG TRẢ LỜI (bắt buộc):
           <ghi đúng nội dung tìm thấy>
+          - Các card đang có mặt trên hệ thống:
+          +
+          + 
+          + 
+          +
           `,
           },
           {
@@ -168,6 +173,8 @@ async function chat(msgu) {
           "Không tìm thấy thông tin trong hướng dẫn sử dụng"
           - Nếu người dùng không yêu cầu cách tải và lấy về dữ liệu thì không trả lời.
           ĐỊNH DẠNG TRẢ LỜI (bắt buộc):
+          - Xin mời bạn chuyển đến trang code test và chọn userbuild để có thể code theo nhu cầu của bạn với đường dẫn database và hướng dẫn bên dưới.
+          - Đoạn tin nhắn này sẽ không được lưu lại nên bạn vui lòng sao chép lại nếu cần thiết.
           ===Đường dẫn database===
           <ghi đúng nội dung tìm thấy>
 
@@ -929,6 +936,7 @@ window.onload = async () => {
     }
   });
   listenFirebase();
+  updateChatip();
 };
 document.getElementById("addblock").onclick = function () {
   let box = document.createElement("div");
@@ -1503,13 +1511,56 @@ document.getElementById("logout").onclick = function () {
     return;
   }
 };
-
 document.getElementById("chat").onclick = function () {
   document.querySelector(".chat").style.display = "block";
 };
 document.getElementById("closeChat").onclick = function () {
   document.querySelector(".chat").style.display = "none";
 };
+function updateChatip() {
+  const cards = JSON.parse(localStorage.getItem("cards")) || [];
+  cards.forEach((card) => {
+    let kenh;
+    const box = document.createElement("div");
+    box.className = "msg tip";
+    if (card.type == "Sensor") {
+      if (card.label2 == "") {
+        kenh = "1";
+      } else {
+        kenh = "2";
+      }
+    } else {
+      if (card.pin2 == null) {
+        kenh = "1";
+      } else {
+        kenh = "2";
+      }
+    }
+    box.innerHTML = `
+      <button class="tip-btn" id="tipchat-${card.id}">
+        <i class="fa-solid fa-lightbulb hint-icon"></i>
+        Hướng dẫn sử dụng card ${card.id}
+        <span class="txthint hint-text-${card.id}" style="display: none;">
+          Tôi muốn bạn hướng dẫn sử dụng card ${card.type} 
+          có id là ${card.id} 
+          có ${kenh} kênh
+        </span>
+      </button>
+    `;
+    document.querySelector(".chat-tip").appendChild(box);
+  });
+}
+document.addEventListener("click", function (e) {
+  const btn = e.target.closest(".tip-btn");
+  if (!btn) return;
+  const msgu = btn.querySelector("span").innerText;
+  let box = document.createElement("div");
+  box.className = "msg user";
+  box.innerText = `${msgu}
+  `;
+  document.querySelector("#chatBody").appendChild(box);
+  chat(msgu);
+});
 document.getElementById("sendChat").onclick = function () {
   const msgu = document.querySelector("#chatInput").value;
   let box = document.createElement("div");

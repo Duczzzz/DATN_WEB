@@ -273,7 +273,7 @@ body::before {
   border-radius: var(--border-radius-xl);
   box-shadow: var(--shadow-lg);
   transition: all var(--transition-normal);
-  border: 1px solid rgba(255, 255, 255);
+  border: 5px double rgb(57, 176, 255);
   position: relative;
   animation: fadeInUp 0.6s ease-out backwards;
   height: fit-content;
@@ -1061,10 +1061,67 @@ form button:hover {
   background: #4f8cff;
   border-radius: 10px;
 }
+.chat-tip {
+  display: flex;
+  gap: 8px;
 
-/* end chatbot */
+  overflow-x: auto;
+  overflow-y: hidden;
 
-/*list menu*/
+  padding: 6px 8px;
+  margin-bottom: 8px;
+
+  background: #1e1e2e;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  scroll-behavior: smooth;
+}
+
+.chat-tip::-webkit-scrollbar {
+  height: 6px;
+}
+.chat-tip::-webkit-scrollbar-thumb {
+  background: #4f8cff;
+  border-radius: 10px;
+}
+
+.msg.tip {
+  flex: 0 0 auto; /* 🔥 không bị co */
+  padding: 0;
+}
+
+.tip-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 12px;
+  border-radius: 999px;
+
+  background: #2f2f46; /* đồng bộ theme */
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 500;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+
+  white-space: nowrap; /* 🔥 trải ngang */
+
+  transition: all 0.25s ease;
+}
+
+.tip-btn:hover {
+  background: #4f8cff;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.tip-btn i {
+  color: #facc15;
+  font-size: 14px;
+}
+
 .list {
   background-color: rgb(139, 218, 255);
   color: black;
