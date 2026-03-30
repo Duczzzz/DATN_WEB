@@ -17,8 +17,8 @@
 #include <Adafruit_SSD1306.h>
 #include <time.h>
 
-const char* ssid = "DUC";
-const char* pass = "14042004";
+const char* ssid = ".......";
+const char* pass = ".......";
 
 #define LED_PIN   9
 #define LED_COUNT 1
@@ -123,10 +123,10 @@ void loop() {
     currentHour = timeinfo.tm_hour;
     currentMin  = timeinfo.tm_min;
   }
-  if (Firebase.getInt(fbdo, "/users/duc/Card/timeControl/hourstart")) hoursta = fbdo.intData();
-  if (Firebase.getInt(fbdo, "/users/duc/Card/timeControl/minutestart")) minsta = fbdo.intData();
-  if (Firebase.getInt(fbdo, "/users/duc/Card/timeControl/hourend")) hoursto = fbdo.intData();
-  if (Firebase.getInt(fbdo, "/users/duc/Card/timeControl/minuteend")) minsto = fbdo.intData();
+  if (Firebase.getInt(fbdo, "/users/{user}/Card/timeControl/hourstart")) hoursta = fbdo.intData();
+  if (Firebase.getInt(fbdo, "/users/{user}/Card/timeControl/minutestart")) minsta = fbdo.intData();
+  if (Firebase.getInt(fbdo, "/users/{user}/Card/timeControl/hourend")) hoursto = fbdo.intData();
+  if (Firebase.getInt(fbdo, "/users/{user}/Card/timeControl/minuteend")) minsto = fbdo.intData();
   display.clearDisplay();
   display.setCursor(20, 0);
   display.print("Time control");
@@ -153,7 +153,7 @@ void loop() {
   display.printf("Dong co: %s",state ? "On":"Off");
   if (state != ledstate) {
     ledstate = state;
-    Firebase.setInt(fbdo, "/users/duc/Card/timeControl/statusMotor",state);
+    Firebase.setInt(fbdo, "/users/{user}/Card/timeControl/statusMotor",state);
   }
   display.display();
   delay(1000);
