@@ -115,8 +115,8 @@ void setup() {
   Firebase.reconnectWiFi(true);
   fbdo.setBSSLBufferSize(512, 512);
   Firebase.begin(&config, &auth);
-  Firebase.setFloat(fbdo,"/users/duc/bme280/Temp",lastemp);
-  Firebase.setFloat(fbdo,"/users/duc/bme280/Humi",lasthum);  
+  Firebase.setFloat(fbdo,"/users/{user}/bme280/Temp",lastemp);
+  Firebase.setFloat(fbdo,"/users/{user}/bme280/Humi",lasthum);  
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0, 30);
@@ -146,8 +146,8 @@ void loop() {
   //   }
   // }
   display.clearDisplay();
-  if(Firebase.getFloat(fbdo,"/users/duc/bme280/CBNDBME280")) CBND = fbdo.floatData();
-  if(Firebase.getFloat(fbdo,"/users/duc/bme280/CBDABME280")) CBDA = fbdo.floatData();
+  if(Firebase.getFloat(fbdo,"/users/{user}/bme280/CBNDBME280")) CBND = fbdo.floatData();
+  if(Firebase.getFloat(fbdo,"/users/{user}/bme280/CBDABME280")) CBDA = fbdo.floatData();
   hum = bme.readHumidity();
   temp = bme.readTemperature();
   // Serial.printf("BME280: Nhiệt độ: %f, Độ ẩm: %f\n",temp,hum);
@@ -166,7 +166,7 @@ void loop() {
   if(temp > CBND || hum > CBDA) {
     led.setPixelColor(0, led.Color(255, 0, 0));
     led.show();
-    Firebase.setInt(fbdo,"/users/duc/bme280/ledbme280",1);
+    Firebase.setInt(fbdo,"/users/{user}/bme280/ledbme280",1);
     display.setTextSize(1);
     display.setCursor(0, 55);
     display.print("Da bat den canh bao");
@@ -174,18 +174,18 @@ void loop() {
   else {
     led.setPixelColor(0, led.Color(0, 255, 0));
     led.show();
-    Firebase.setInt(fbdo,"/users/duc/bme280/ledbme280",0);
+    Firebase.setInt(fbdo,"/users/{user}/bme280/ledbme280",0);
     display.setTextSize(1);
     display.setCursor(0, 55);
     display.print("Da tat den canh bao");
   }
   if(temp != lastemp) {
     lastemp = temp;
-    Firebase.setFloat(fbdo,"/users/duc/bme280/Temp",temp);
+    Firebase.setFloat(fbdo,"/users/{user}/bme280/Temp",temp);
   }
   if(hum != lasthum) {
     lasthum = hum;
-    Firebase.setFloat(fbdo,"/users/duc/bme280/Humi",hum);
+    Firebase.setFloat(fbdo,"/users/{user}/bme280/Humi",hum);
   }
   display.display();
   delay(1000);
