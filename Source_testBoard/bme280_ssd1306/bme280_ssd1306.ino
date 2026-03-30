@@ -20,8 +20,8 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-const char* ssid = "DUC";
-const char* pass = "14042004";
+const char* ssid = "........";
+const char* pass = "........";
 
 #define LED_PIN   9
 #define LED_COUNT 1
