@@ -13,6 +13,8 @@ const userbuild =
   "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/refs/heads/main/Source_testBoard/Userbuild/Userbuild.ino";
 const hdsdBME280 =
   "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/baigiang/Bai1.pdf";
+const hdsdDHT11 =
+  "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/baigiang/Bai2.pdf";
 async function downbox(link) {
   const hdsdRaw = await fetch(link).then((r) => r.text());
   return hdsdRaw.replaceAll("{user}", user);
@@ -231,7 +233,13 @@ document.getElementById("download-btnBME280").onclick = async function () {
   }, 1000);
 };
 document.getElementById("download-btnDHT11").onclick = async function () {
-  alert("Chức năng đang được cập nhật, vui lòng quay lại sau!");
+  download(hdsdDHT11);
+  document.getElementById("download-btnDHT11").innerHTML =
+    `<i class="fa-solid fa-check"></i> Đã tải xuống`;
+  setTimeout(() => {
+    document.getElementById("download-btnDHT11").innerHTML =
+      `<i class="fa-solid fa-download"></i> Tải xuống bài giảng hướng dẫn`;
+  }, 1000);
 };
 document.getElementById("download-btnBUTTON").onclick = async function () {
   alert("Chức năng đang được cập nhật, vui lòng quay lại sau!");
