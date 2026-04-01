@@ -11,11 +11,15 @@
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/home.css" />
     <style>
+      .heading {
+        color: var(--neon-cyan);
+      }
+      .sc {
+        margin: 0 auto;
+      }
       .box {
-        margin: 0px 200px;
         padding: 20px;
         height: auto;
-        background-color: whitesmoke;
       }
       pre {
         margin-top: 20px;
@@ -23,24 +27,24 @@
         line-height: 1.6;
         font-size: 20px;
         font-weight: bold;
-        color: #f2f8ff;
+        color: var(--neon-cyan);
         background: #131b27;
         padding: 10px 14px;
         border-radius: 10px;
         width: fit-content;
       }
       .blockbtn {
+        width: fit-content;
         margin: 0 auto;
         margin-top: 10px;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: center;
         cursor: pointer;
-        z-index: 9999;
       }
       .btnFunc {
-        font-size: 16px;
-        width: fit-content;
+        font-size: 12px;
+        width: 200px;
         background: white;
         font-weight: bold;
         border: rgb(180, 217, 255) 5px solid;
@@ -115,26 +119,29 @@
       <ul>
         <li><a href="home.html">Trang chủ</a></li>
         <li>
-          <a href="source.html" style="background-color: brown">Code test</a>
+          <a href="source.html" style="background-color: #005229">Code test</a>
         </li>
         <li><a href="cambien.html">Bảng điều khiển</a></li>
         <li><a id="logout">Đăng xuất</a></li>
       </ul>
     </div>
-    <div class="blockbtn">
-      <button class="btnFunc" id="bme280">Source BME280</button>
-      <button class="btnFunc" id="dht11">Source DHT11</button>
-      <button class="btnFunc" id="control">Source Control</button>
-      <button class="btnFunc" id="button">Source Button</button>
-      <button class="btnFunc" id="timecontrol">Source Time Control</button>
-      <button class="btnFunc" id="userbuild">Source User Build</button>
+    <div class="supercontainer">
+      <div class="blockbtn">
+        <button class="btnFunc" id="bme280">Source BME280</button>
+        <button class="btnFunc" id="dht11">Source DHT11</button>
+        <button class="btnFunc" id="control">Source Control</button>
+        <button class="btnFunc" id="button">Source Button</button>
+        <button class="btnFunc" id="timecontrol">Source Time Control</button>
+        <button class="btnFunc" id="userbuild">Source User Build</button>
+      </div>
+      <div class="sc container">
+        <h1 id="warn">
+          *Lưu ý: Source code ở dưới dành riêng cho board do Nuke DashBoard phát
+          triển. <br />Nếu bạn sử dụng board của bạn để test thì vui lòng sửa
+          code cấu hình theo board của bạn.
+        </h1>
+      </div>
     </div>
-    <h1 id="warn">
-      *Lưu ý: Source code ở dưới dành riêng cho board do Nuke DashBoard phát
-      triển. <br />Nếu bạn sử dụng board của bạn để test thì vui lòng sửa code
-      cấu hình theo board của bạn.
-    </h1>
-    <div class="container"></div>
     <script>
       document.getElementById("logout").onclick = function () {
         let text = "Bạn có muốn đăng xuất ?";

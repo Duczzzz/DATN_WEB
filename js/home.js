@@ -413,8 +413,15 @@ onValue(ref(db, `users/${user}/Out`), (snapshot) => {
     btn2.style.backgroundColor = "rgb(255, 152, 152)";
   }
 });
+function formatTime(hour, minute) {
+  return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
+}
 onValue(ref(db, `users/${user}/Card/timeControl`), (snapshot) => {
   const data = snapshot.val();
+  let timestart = formatTime(data.hourstart, data.minutestart);
+  let timeend = formatTime(data.hourend, data.minuteend);
+  document.getElementById("time1").value = timestart;
+  document.getElementById("time2").value = timeend;
   var status = data.statusMotor;
   if (status == 1) {
     document.getElementById("motorStatus").innerText = "Đang bật";
@@ -442,7 +449,6 @@ function saveCardToLocal(cardData) {
 async function loadData() {
   try {
     const snapshot = await get(ref(db, `users/${user}/storage`));
-
     if (!snapshot.exists()) {
       console.log("Không có dữ liệu");
       return;
@@ -1229,12 +1235,12 @@ document.getElementById("live2").onclick = function () {
     zoomOpt.zoom.pinch.enabled = false;
     zoomOpt.pan.enabled = false;
     mixedChart.resetZoom();
-    ele.style.backgroundColor = "rgb(255, 0, 0)";
+    ele.style.backgroundColor = "rgba(255, 78, 78, 0.68)";
   } else {
     zoomOpt.zoom.wheel.enabled = true;
     zoomOpt.zoom.pinch.enabled = true;
     zoomOpt.pan.enabled = true;
-    ele.style.backgroundColor = "rgb(255, 215, 215)";
+    ele.style.backgroundColor = "rgba(255, 255, 255, 0.45)";
   }
   mixedChart.update("none");
 };
@@ -1576,7 +1582,6 @@ document.getElementById("sendChat").onclick = function () {
   }
 };
 document.getElementById("menu").onclick = function () {
-  document.querySelector("#tipmenu").style.display = "none";
   document.querySelector(".list").style.display = "block";
 };
 document.getElementById("closeMenu").onclick = function () {
@@ -1585,7 +1590,14 @@ document.getElementById("closeMenu").onclick = function () {
 document.addEventListener("change", function (e) {
   const parts = e.target.id.split("-");
   if (parts[0] === "SW") return;
-  if (e.target.id === "1") {
+
+  if (e.target.id === "-1") {
+    if (e.target.checked) {
+      document.querySelector(".flow").style.display = "flex";
+    } else {
+      document.querySelector(".flow").style.display = "none";
+    }
+  } else if (e.target.id === "1") {
     if (e.target.checked) {
       document.querySelector(".box1").style.display = "flex";
     } else {
