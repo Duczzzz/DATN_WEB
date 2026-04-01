@@ -671,7 +671,9 @@ form select {
     border-color var(--t-fast),
     box-shadow var(--t-fast);
 }
-
+input[type="time"] {
+  background: rgba(122, 175, 255, 0.7) !important;
+}
 form input[type="text"]:focus,
 form input[type="number"]:focus,
 form input[type="time"]:focus,
