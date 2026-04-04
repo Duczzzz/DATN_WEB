@@ -495,7 +495,6 @@ async function loadData() {
   try {
     const snapshot = await get(ref(db, `users/${user}/storage`));
     if (!snapshot.exists()) {
-      console.log("Không có dữ liệu");
       return;
     }
     const data = snapshot.val();
@@ -888,7 +887,7 @@ window.onload = async () => {
           });
         }
       }
-    } else {
+    } else if (card.type == "control") {
       var nodeId = editor.addNode(
         card.type,
         1,
@@ -1002,11 +1001,99 @@ window.onload = async () => {
           </div>
           `;
       }
+    } else if (card.type == "timecontrol") {
+      var nodeId = editor.addNode(
+        card.type,
+        1,
+        0,
+        650,
+        x,
+        "hi",
+        { card },
+        `<div>Cardname:${card.name}</div>
+      <br>
+      <div>GPIO${card.pin1}</div>`,
+      );
+      editor.addConnection(espId, nodeId, "output_1", "input_1");
+      x = x + 120;
+      if (x > maxHeight) {
+        drawflow.style.height = x + "px";
+      }
+      const cardRefco = ref(db, `users/${user}/Card`);
+      get(cardRefco).then((snapshot) => {
+        if (!snapshot.hasChild(`Data-${card.id}-Warnled`)) {
+          set(ref(db, `users/${user}/Card/Data-${card.id}-Warnled`), 0);
+        }
+      });
+      box.innerHTML = `
+          <h1 class="heading">${card.name}</h1>
+          <h2>ID card: ${card.id}</h2>
+          <h2>Loại card: ${card.type}</h2>
+          <h2>Chân kết nối: GPIO${card.pin1}</h2>
+          <h2>Trạng thái động cơ: <span id="Warnled-${card.id}">Đang tắt</span></h2>
+          <form class="form-time">
+            <label for="time1-${card.id}">Bật đèn vào lúc:</label>
+            <input type="time" id="time1-${card.id}" name="time1-${card.id}" />
+            <br />
+            <label for="time2-${card.id}">Tắt đèn vào lúc:</label>
+            <input type="time" id="time2-${card.id}" name="time2-${card.id}" />
+            <button type="button" id="setTime-${card.id}">Cài đặt</button>
+          </form>
+          <div class="swBTN">
+            <p>Hướng dẫn sử dụng</p>
+            <label class="switch">
+              <input type="checkbox" id="SW-${card.id}"/>
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="txt-hd">
+            <p id="txt-${card.id}" style="display:none;line-height:1.6;">
+            Để có thể sử dụng được card:${card.name}
+            <br>Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
+            <br>- Đường dẫn database:
+            <br><span class="ref-dtb">users/${user}/Out/Out-${card.id}-1</span>
+            <br>- Để cài đặt giá trị:
+            <br><span class="ref-dtb">setInt(fbdo,"users/${user}/Out/Out-${card.id}-1",#gia_tri)</span>
+            <br>- Để tải về giá trị:
+            <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1")</span>
+            <br>* Chú ý:
+            <br>- Dữ liệu tải về từ database là <span class="ref-dtb">json</span> nên phải chuyển đổi sang<span class="ref-dtb">Integer</span>hoặc<span class="ref-dtb">Float</span>để sử dụng
+            <br>- Ví dụ:
+            <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1");</span>
+            <br><span class="ref-dtb">int out1=fbdo.intData();</span>
+            </p>
+          </div>
+          `;
     }
   });
   listenFirebase();
   updateChatip();
 };
+document.addEventListener("click", (e) => {
+  const btn = e.target.id;
+  const parts = btn.split("-");
+  if (parts[0] != "setTime") return;
+  let timestart = document.getElementById(`time1-${parts[1]}`).value;
+  let timeend = document.getElementById(`time2-${parts[1]}`).value;
+  timestart = timestart.split(":");
+  timeend = timeend.split(":");
+  set(
+    ref(db, `users/${user}/Card/Data-hoursta-${parts[1]}`),
+    Number(timestart[0]),
+  );
+  set(
+    ref(db, `users/${user}/Card/Data-minsta-${parts[1]}`),
+    Number(timestart[1]),
+  );
+  set(
+    ref(db, `users/${user}/Card/Data-hoursto-${parts[1]}`),
+    Number(timeend[0]),
+  );
+  set(
+    ref(db, `users/${user}/Card/Data-minsto-${parts[1]}`),
+    Number(timeend[1]),
+  );
+});
 document.getElementById("addblock").onclick = function () {
   let box = document.createElement("div");
   count++;
@@ -1021,6 +1108,7 @@ document.getElementById("addblock").onclick = function () {
         <option value="" selected disabled>-- Chọn loại card --</option>
         <option value="Sensor">Cảm biến</option>
         <option value="control">Điều khiển In Out</option>
+        <option value="timecontrol">Điều khiển theo thời gian</option>
       </select>
       <br>
       <div class="chartSelect" style="display:none;">
@@ -1108,10 +1196,15 @@ document.getElementById("addblock").onclick = function () {
       SelectMuchPin.style.display = "none";
       const option = new Option(" I2C");
       select.add(option);
-    } else {
+    } else if (cardTypeSelect.value === "control") {
       selectChart.style.display = "none";
       selectPin.style.display = "block";
       SelectMuchPin.style.display = "block";
+    } else {
+      selectChart.style.display = "none";
+      selectPin2.style.display = "none";
+      selectPin.style.display = "block";
+      SelectMuchPin.style.display = "none";
       [...select.options].forEach((option) => {
         if (option.value == "I2C") option.remove();
       });
@@ -1170,8 +1263,6 @@ document.getElementById("addblock").onclick = function () {
     let cardName = box.querySelector("#cardName").value;
     const labelchart = box.querySelector("#labelchart").value;
     const labelchart2 = box.querySelector("#labelchart2").value;
-    const errorchartSelect = box.querySelector("#error-chartSelect");
-    const errorselectPin2 = box.querySelector("#error-selectPin2");
     var saved = 0;
     if (cardName == "") {
       cardName = "test" + count;
@@ -1214,7 +1305,6 @@ document.getElementById("addblock").onclick = function () {
         label: labelchart,
         label2: labelchart2,
       };
-      saveCardToLocal(infor);
       set(ref(db, `users/${user}/storage/${count}`), infor);
       saved = 1;
     } else if (selectCard == "control") {
@@ -1233,7 +1323,6 @@ document.getElementById("addblock").onclick = function () {
           pin2: null,
           chartType: null,
         };
-        saveCardToLocal(infor);
         set(ref(db, `users/${user}/storage/${count}`), infor);
       } else {
         const selectPin2 = box.querySelector("#selectPin2").value;
@@ -1241,12 +1330,6 @@ document.getElementById("addblock").onclick = function () {
           alert("vui lòng thay đổi chân GPIO");
           return;
         }
-        alert(
-          `Bạn đã chọn:
-      Card: ${selectCard}
-      OUT1: ${selectPin}
-      OUT2: ${selectPin2}`,
-        );
         let infor = {
           id: count,
           name: cardName,
@@ -1255,9 +1338,19 @@ document.getElementById("addblock").onclick = function () {
           pin2: selectPin2,
           chartType: null,
         };
-        saveCardToLocal(infor);
         set(ref(db, `users/${user}/storage/${count}`), infor);
       }
+      saved = 1;
+    } else if (selectCard == "timecontrol") {
+      let infor = {
+        id: count,
+        name: cardName,
+        type: selectCard,
+        pin1: selectPin,
+        pin2: null,
+        chartType: null,
+      };
+      set(ref(db, `users/${user}/storage/${count}`), infor);
       saved = 1;
     }
     if (saved == 1) {
@@ -1375,8 +1468,15 @@ document.getElementById("removeblock").onclick = function () {
     remove(ref(db, `users/${user}/storage/${cardToDelete.id}`));
     if (cardToDelete.chartType == null) {
       if (cardToDelete.pin2 == null) {
-        remove(ref(db, `users/${user}/Out/Out-${selectedId}-1`));
-        remove(ref(db, `users/${user}/In/In-${selectedId}-1`));
+        if (cardToDelete.type == "timecontrol") {
+          remove(ref(db, `users/${user}/Card/Data-hoursta-${selectedId}`));
+          remove(ref(db, `users/${user}/Card/Data-minsta-${selectedId}`));
+          remove(ref(db, `users/${user}/Card/Data-hoursto-${selectedId}`));
+          remove(ref(db, `users/${user}/Card/Data-minsto-${selectedId}`));
+        } else {
+          remove(ref(db, `users/${user}/Out/Out-${selectedId}-1`));
+          remove(ref(db, `users/${user}/In/In-${selectedId}-1`));
+        }
       } else {
         remove(ref(db, `users/${user}/Out/Out-${selectedId}-1`));
         remove(ref(db, `users/${user}/Out/Out-${selectedId}-2`));
@@ -1502,6 +1602,30 @@ function listenFirebase() {
         charts[cardId].data.datasets[1].data.push(val);
       }
       charts[cardId].update("none");
+    });
+  });
+  //Update dữ liệu card timecontrol
+  const path1 = `users/${user}/Card`;
+  onValue(ref(db, path1), (snapshot) => {
+    const Data = snapshot.val();
+    if (!Data) return;
+    const cards = JSON.parse(localStorage.getItem("cards")) || [];
+    if (cards.length === 0) {
+      return;
+    }
+    let hoursta, hoursto, minsta, minsto;
+    Object.entries(Data).forEach(async ([key, val]) => {
+      const parts = key.split("-");
+      if (parts[1] == "hoursta") hoursta = val;
+      if (parts[1] == "hoursto") hoursto = val;
+      if (parts[1] == "minsta") minsta = val;
+      if (parts[1] == "minsto") minsto = val;
+      if (parts[1] !== "minsto") return;
+      if ([hoursta, hoursto, minsta, minsto].some((v) => v == null)) return;
+      let timestart = formatTime(hoursta, minsta);
+      let timeend = formatTime(hoursto, minsto);
+      document.getElementById(`time1-${parts[2]}`).value = timestart;
+      document.getElementById(`time2-${parts[2]}`).value = timeend;
     });
   });
 }
