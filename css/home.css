@@ -103,7 +103,7 @@ body::after {
 }
 
 .head {
-  padding: 28px 20px 20px;
+  padding: 10px 20px;
   text-align: center;
   font-family: "Orbitron", monospace;
   font-size: clamp(32px, 5vw, 58px);
@@ -112,13 +112,13 @@ body::after {
   text-transform: uppercase;
   background: var(--grad-header);
   background-size: 300% 300%;
-  animation: gradShift 6s ease infinite;
+  animation: gradShift 2s ease infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.3));
+  filter: drop-shadow(0 0 30px rgba(0, 213, 255, 0.3));
 }
 
 .menu {
@@ -151,7 +151,7 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 18px 30px;
+  padding: 14px;
   color: var(--text-secondary);
   text-decoration: none;
   font-family: "JetBrains Mono", monospace;
@@ -194,7 +194,7 @@ body::after {
   display: flex;
   flex-direction: row;
   min-height: 100vh;
-  padding: 20px;
+  padding: 10px;
   position: relative;
   z-index: 1;
 }
@@ -202,7 +202,7 @@ body::after {
 .container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 10px;
   height: auto;
   width: fit-content;
   padding: 0px 10px;
@@ -238,7 +238,11 @@ body::after {
   box-shadow: var(--glow-sm);
   backdrop-filter: blur(12px);
 }
-
+#ping {
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 800;
+}
 .btnFunc i {
   font-size: 15px;
   color: var(--neon-cyan);
@@ -456,7 +460,7 @@ body::after {
   font-size: 14px;
   color: var(--text-label);
   margin: 4px 0;
-  padding: 10px 14px;
+  padding: 10px;
   background: rgba(0, 30, 60, 0.6);
   border-radius: var(--r-md);
   border-left: 3px solid var(--border-glow);
@@ -466,7 +470,6 @@ body::after {
     background var(--t-fast);
   letter-spacing: 0.3px;
 }
-
 .box h2:hover {
   background: rgba(0, 212, 255, 0.06);
   border-left-color: var(--neon-cyan);
@@ -474,18 +477,18 @@ body::after {
 
 .box h2 span {
   font-family: "JetBrains Mono", monospace;
-  font-weight: 600;
-  font-size: 18px;
+  font-weight: 800;
+  font-size: 16px;
   background: var(--grad-cyan-blue);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  padding: 5px 8px;
+  padding: 5px 10px;
 }
 
 .content {
   width: fit-content;
-  height: fit-content;
+  height: auto;
   padding: 5px;
 }
 
@@ -497,7 +500,7 @@ body::after {
   display: grid;
   grid-template-columns: 1fr 2fr;
   grid-template-rows: auto auto auto;
-  gap: 12px;
+  gap: 5px;
 }
 
 .cb .content {
@@ -626,7 +629,7 @@ input:checked + .slider::before {
 }
 
 .ref-dtb {
-  color: var(--neon-cyan);
+  color: var(--neon-yellow);
   font-family: "JetBrains Mono", monospace;
   font-size: 13px;
   word-break: break-all;
@@ -635,7 +638,7 @@ input:checked + .slider::before {
 form {
   width: 200px;
   background: rgba(4, 15, 35, 0.8);
-  padding: 20px;
+  padding: 5px 20px;
   border-radius: var(--r-lg);
   border: 1px solid var(--border-dim);
   box-shadow: var(--glow-sm);
@@ -674,6 +677,10 @@ form select {
 input[type="time"] {
   background: rgba(122, 175, 255, 0.7) !important;
 }
+form input[type="number"] {
+  font-size: 16px !important;
+  padding: 5px 10px !important;
+}
 form input[type="text"]:focus,
 form input[type="number"]:focus,
 form input[type="time"]:focus,
@@ -682,6 +689,9 @@ form select:focus {
   border-color: var(--neon-cyan);
   box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.12);
   background: rgba(0, 30, 70, 0.8);
+}
+.warn {
+  padding: 5px !important;
 }
 
 form input[type="number"] {
@@ -845,7 +855,7 @@ form button:active {
   right: 30px;
   bottom: 30px;
   width: 700px;
-  height: 500px;
+  height: 575px;
   z-index: 9999;
   pointer-events: auto;
 }
@@ -1215,7 +1225,7 @@ footer {
     max-width: 650px;
   }
   .container {
-    gap: 28px;
+    gap: 14px;
     max-width: 1800px;
   }
 }

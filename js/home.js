@@ -6,6 +6,45 @@ if (user == null) {
 }
 let x = 0;
 let y = 0;
+async function getPing(url) {
+  const start = performance.now();
+  try {
+    await fetch(url, { cache: "no-store" });
+    const end = performance.now();
+    return Math.round(end - start);
+  } catch {
+    return null;
+  }
+}
+
+async function pingMultiple() {
+  const urls = [
+    "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
+    "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js",
+  ];
+
+  for (const url of urls) {
+    const ping = await getPing(url);
+    return ping;
+  }
+}
+async function showPing() {
+  const ping = await pingMultiple();
+  const pingstt = document.getElementById("ping");
+  if (ping !== null) {
+    if (ping < 100) {
+      pingstt.style.color = "#00ff88";
+    } else if (ping < 200 || ping > 100) {
+      pingstt.style.color = "#ff6600";
+    } else {
+      pingstt.style.color = "#ff0000";
+    }
+    pingstt.innerText = ping + "ms";
+  } else {
+    pingstt.innerText = "lỗi kết nối";
+  }
+}
+setInterval(showPing, 2000);
 import devtools from "https://cdn.jsdelivr.net/npm/devtools-detect@4.0.2/index.js";
 const userControl = ["admin", "duc", "luong"];
 function checkUser() {
@@ -122,7 +161,6 @@ async function chatNor(msgu) {
           - Nếu yêu cầu hướng dẫn sử dụng các card (DHT11, BME280, Điều khiển In Out1) hãy chỉ họ nhấn vào nút code test trên thanh công cụ và bạn đừng phản hồi gì thêm.
           - Khi tôi hỏi bạn phải liệt kê tất cả các card đang có hiện tại ở trên và thêm gợi ý sử dụng cho người dùng.
           - Thêm cuối dòng là Bạn cần giúp đỡ gì không hãy để tôi giúp bạn. Chỉ cần bạn nói hướng dẫn cho tôi card có id số mấy và là loại card gì, có bao nhiêu kênh ? Tôi sẽ giúp bạn.
-          - Hãy trả lời cho người dùng ngắn gọn nhất có thể bằng tiếng việt.
           ĐỊNH DẠNG TRẢ LỜI (bắt buộc):
           <ghi đúng nội dung tìm thấy>
           - Các card đang có mặt trên hệ thống:
@@ -137,7 +175,7 @@ async function chatNor(msgu) {
             content: msgu,
           },
         ],
-        temperature: 0,
+        temperature: 1,
         stream: false,
       }),
     },
@@ -171,7 +209,7 @@ async function chat(msgu) {
           - KHÔNG bổ sung kiến thức bên ngoài.
           - Nếu không tìm thấy thông tin, trả lời đúng duy nhất:
           "Không tìm thấy thông tin trong hướng dẫn sử dụng"
-          - Nếu người dùng không yêu cầu cách tải và lấy về dữ liệu thì không trả lời.
+          - Bắt buộc luôn luôn đính kèm theo chú ý và ví dụ trong file có ghi.
           ĐỊNH DẠNG TRẢ LỜI (bắt buộc):
           - Xin mời bạn chuyển đến trang code test và chọn userbuild để có thể code theo nhu cầu của bạn với đường dẫn database và hướng dẫn bên dưới.
           - Đoạn tin nhắn này sẽ không được lưu lại nên bạn vui lòng sao chép lại nếu cần thiết.
@@ -300,9 +338,13 @@ const mixedChart2 = new Chart(ctx2, {
 onValue(ref(db, `users/${user}/dht11`), (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
-
+  const tempCB = data.CBNDDht11;
+  const doamCB = data.CBDADht11;
+  document.getElementById("WarnInfoTemp2").value = tempCB;
+  document.getElementById("WarnInfoHumi2").value = doamCB;
   let temp = data.Temp;
   let humi = data.Humi;
+  if (temp == null || humi == null) return;
   temp = temp.toFixed(1);
   humi = humi.toFixed(1);
   const time = new Date().toLocaleTimeString();
@@ -324,6 +366,10 @@ onValue(ref(db, `users/${user}/bme280`), (snapshot) => {
   if (!data) return;
   let temp = data.Temp;
   let humi = data.Humi;
+  const tempCB = data.CBNDBME280;
+  const doamCB = data.CBDABME280;
+  document.getElementById("WarnInfoTemp1").value = tempCB;
+  document.getElementById("WarnInfoHumi1").value = doamCB;
   temp = temp.toFixed(1);
   humi = humi.toFixed(1);
   const time = new Date().toLocaleTimeString();
@@ -363,7 +409,6 @@ onValue(ref(db, `users/${user}/dht11/leddht11`), (snapshot) => {
     document.getElementById("warnLedDht11").innerText = "Đang bật";
   } else document.getElementById("warnLedDht11").innerText = "Đang tắt";
 });
-
 document.getElementById("btn-inout1").onclick = function () {
   const btn = document.getElementById("btn-inout1");
   if (btn.style.backgroundColor == "rgb(255, 152, 152)") {
@@ -530,22 +575,22 @@ window.onload = async () => {
         document.querySelector("#drawflow").offsetHeight = Number(y);
       }
       const cardRef = ref(db, `users/${user}/Card`);
-      //<h2>Nhiệt độ hiện tại: <span id="txt-${card.id}">-- °C</span></h2>
-      //<h2>Độ ẩm hiện tại: <span id="txt2-${card.id}">-- %</span></h2>
       box.innerHTML = `
         <div class="content">
         <h1 class="heading">${card.name}</h1>
         <h2>ID card: ${card.id}</h2>
-        <h2>Loại card: ${card.type}</h2>
-        <h2>Chân kết nối: GPIO${card.pin1}</h2>
-        <h2>Loại biểu đồ: ${card.chartType}</h2>
+        <h2>Loại card: ${card.type}</>
+        <h2>Chân kết nối: GPIO${card.pin1}</>
+        <h2>Loại biểu đồ: ${card.chartType}</>
         ${
           card.chartType == "line" || card.chartType == "bar"
             ? `
+            <h2>${card.label}:<span id="value1-${card.id}">...</span></h2>
+            <h2>Trạng thái đèn cảnh báo: <span id="Warnled-${card.id}">...</span></h2>
             <form>
-              <label for="temp${card.id}">Ngưỡng cho ${card.label}</label>
+              <label for="channel1-${card.id}-CB1">Ngưỡng cho ${card.label}</label>
               <input
-                id="temp${card.id}"
+                id="channel1-${card.id}-CB1"
                 type="number"
                 step="0.1"
                 min="0"
@@ -556,10 +601,13 @@ window.onload = async () => {
             </form>
             `
             : `
-            <form>
-              <label for="temp${card.id}">Ngưỡng cho ${card.label}</label>
+            <h2>${card.label}:<span id="value1-${card.id}">...</span></h2>
+            <h2>${card.label2}:<span id="value2-${card.id}">...</span></h2>
+            <h2>Trạng thái đèn cảnh báo: <span id="Warnled-${card.id}">...</span></h2>
+            <form class"warn_cb">
+              <label for="channel1-${card.id}-CB1">Ngưỡng cho ${card.label}</label>
               <input
-                id="temp${card.id}"
+                id="channel1-${card.id}-CB1"
                 type="number"
                 step="0.1"
                 min="0"
@@ -567,9 +615,9 @@ window.onload = async () => {
                 placeholder="Nhập giá trị"
               />
               <br />
-              <label for="hum${card.id}">Ngưỡng cho ${card.label2}</label>
+              <label for="channel2-${card.id}-CB2">Ngưỡng cho ${card.label2}</label>
               <input
-                id="hum${card.id}"
+                id="channel2-${card.id}-CB2"
                 type="number"
                 step="0.1"
                 min="0"
@@ -607,17 +655,18 @@ window.onload = async () => {
                   Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
                   <br> - Đường dẫn database:
                   <span class="ref-dtb">"users/${user}/Card/Data-${card.id}-1"</span>
-                  <br> - Cài đặt giá trị:
+                  <br> - Cài đặt giá trị kênh thông tin 1:
                   <span class="ref-dtb">
-                    setFloat(fbdo,"users/${user}/Card/Data-${card.id}-1", #giá_trị)
+                    Firebase.setFloat(fbdo,"users/${user}/Card/Data-${card.id}-1", #giá_trị)
                   </span>
-                  <br> - Tải về giá trị ngưỡng nhiệt độ:
+                  <br>
+                    - Cài đặt giá trị cho đèn cảnh báo:
                   <span class="ref-dtb">
-                    getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1")
+                    Firebase.setInt(fbdo,"users/${user}/Card/Data-${card.id}-Warnled",#giá_trị)
                   </span>
-                  <br> - Tải về giá trị ngưỡng độ ẩm:
+                  <br> - Tải về giá trị ngưỡng cảnh báo kênh 1:
                   <span class="ref-dtb">
-                    getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB2")
+                    Firebase.getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1")
                   </span>
                   <br> * Chú ý:
                   <br> - Dữ liệu tải về từ database là json nên phải chuyển đổi sang Interge hoặc Float để sử dụng
@@ -650,12 +699,17 @@ window.onload = async () => {
                   setFloat(fbdo,"users/${user}/Card/Data-${card.id}-2", #giá_trị)
                 </span>
                 <br />
-                - Tải về giá trị ngưỡng nhiệt độ: <br />
+                    - Cài đặt giá trị cho đèn cảnh báo:
+                  <span class="ref-dtb">
+                    setInt(fbdo,"users/${user}/Card/Data-${card.id}-Warnled",#giá_trị)
+                  </span> 
+                  <br>
+                - Tải về giá trị ngưỡng cảnh báo kênh 1: <br />
                 <span class="ref-dtb">
                   getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1")
                 </span>
                 <br />
-                - Tải về giá trị ngưỡng độ ẩm: <br />
+                - Tải về giá trị ngưỡng cảnh báo kênh 2: <br />
                 <span class="ref-dtb">
                   getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB2")
                 </span>
@@ -681,6 +735,9 @@ window.onload = async () => {
           get(cardRef).then((snapshot) => {
             if (!snapshot.hasChild(`Data-${card.id}-1`)) {
               set(ref(db, `users/${user}/Card/Data-${card.id}-1`), 0);
+            }
+            if (!snapshot.hasChild(`Data-${card.id}-Warnled`)) {
+              set(ref(db, `users/${user}/Card/Data-${card.id}-Warnled`), 0);
             }
           });
           charts[card.id] = new Chart(ctxNew, {
@@ -728,6 +785,9 @@ window.onload = async () => {
             if (!snapshot.hasChild(`Data-${card.id}-1`)) {
               set(ref(db, `users/${user}/Card/Data-${card.id}-1`), 0);
             }
+            if (!snapshot.hasChild(`Data-${card.id}-Warnled`)) {
+              set(ref(db, `users/${user}/Card/Data-${card.id}-Warnled`), 0);
+            }
           });
           charts[card.id] = new Chart(ctxNew, {
             data: {
@@ -773,6 +833,9 @@ window.onload = async () => {
           get(cardRef).then((snapshot) => {
             if (!snapshot.hasChild(`Data-${card.id}-1`)) {
               set(ref(db, `users/${user}/Card/Data-${card.id}-1`), 0);
+            }
+            if (!snapshot.hasChild(`Data-${card.id}-Warnled`)) {
+              set(ref(db, `users/${user}/Card/Data-${card.id}-Warnled`), 0);
             }
             if (!snapshot.hasChild(`Data-${card.id}-2`)) {
               set(ref(db, `users/${user}/Card/Data-${card.id}-2`), 0);
@@ -891,7 +954,7 @@ window.onload = async () => {
               <br>- Tải về giá trị kênh 2:
               <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-2")</span>
               <br>* Chú ý:
-              <br>- Dữ liệu tải về từ database là<span class="ref-dtb">JSON</span>nên cần chuyển sang<span class="ref-dtb">int</span>hoặc<span class="ref-dtb">float</span>để sử dụng
+              <br>- Dữ liệu tải về từ database là <span class="ref-dtb"> JSON </span> nên cần chuyển sang<span class="ref-dtb">int</span>hoặc<span class="ref-dtb">float</span>để sử dụng
               <br>- Ví dụ:
               <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-2");</span>
               <br><span class="ref-dtb">int out2=fbdo.intData();</span>
@@ -931,7 +994,7 @@ window.onload = async () => {
             <br>- Để tải về giá trị:
             <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1")</span>
             <br>* Chú ý:
-            <br>- Dữ liệu tải về từ database là<span class="ref-dtb">json</span>nên phải chuyển đổi sang<span class="ref-dtb">Integer</span>hoặc<span class="ref-dtb">Float</span>để sử dụng
+            <br>- Dữ liệu tải về từ database là <span class="ref-dtb">json</span> nên phải chuyển đổi sang<span class="ref-dtb">Integer</span>hoặc<span class="ref-dtb">Float</span>để sử dụng
             <br>- Ví dụ:
             <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1");</span>
             <br><span class="ref-dtb">int out1=fbdo.intData();</span>
@@ -1330,7 +1393,6 @@ document.getElementById("removeblock").onclick = function () {
       remove(ref(db, `users/${user}/Card/Data-${selectedId}-CB1`));
     }
     const newCards = cards.filter((card) => card.id !== selectedId);
-    alert("Đã xóa card: " + selectedId);
     localStorage.setItem("cards", JSON.stringify(newCards));
     location.reload();
   };
@@ -1420,12 +1482,23 @@ function listenFirebase() {
       const parts = key.split("-");
       const cardId = parts[1];
       const time = new Date().toLocaleTimeString();
-      if (charts[cardId] == undefined) return;
+      if (charts[cardId] === undefined) return;
       charts[cardId].data.labels.push(time);
-      if (parts[2] == "CB1" || parts[2] == "CB2") return;
-      if (parts[2] == "1") {
+      if (parts[2] == "CB1") {
+        document.getElementById(`channel1-${cardId}-CB1`).value = val;
+      } else if (parts[2] == "CB2") {
+        document.getElementById(`channel2-${cardId}-CB2`).value = val;
+      } else if (parts[2] == "Warnled") {
+        const stt = document.getElementById(`Warnled-${cardId}`);
+        const state = val === 1 ? "Đang bật" : "Đang tắt";
+        stt.innerText = `${state}`;
+      } else if (parts[2] == "1") {
+        const cb1 = document.getElementById(`value1-${cardId}`);
+        cb1.innerText = val;
         charts[cardId].data.datasets[0].data.push(val);
       } else {
+        const cb2 = document.getElementById(`value2-${cardId}`);
+        cb2.innerText = val;
         charts[cardId].data.datasets[1].data.push(val);
       }
       charts[cardId].update("none");
@@ -1455,7 +1528,7 @@ document.addEventListener("click", (e) => {
   }
   charts[cardId].update("none");
 });
-
+// update dữ liệu ngưỡng
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("button");
   if (!btn) return;
@@ -1464,28 +1537,28 @@ document.addEventListener("click", (e) => {
   if (parts[0] != "Warnbtn") {
     return;
   } else {
-    let tempCB = document.getElementById(`temp${cardId}`);
-    let humiCB = document.getElementById(`hum${cardId}`);
+    let value1 = document.getElementById(`channel1-${cardId}-CB1`);
+    let value2 = document.getElementById(`channel2-${cardId}-CB2`);
 
-    if (humiCB == null) {
-      tempCB = Number(tempCB.value);
-      set(ref(db, `users/${user}/Card/Data-${cardId}-CB1`), tempCB);
+    if (value2 == null) {
+      value1 = Number(value1.value);
+      set(ref(db, `users/${user}/Card/Data-${cardId}-CB1`), value1);
       alert(
         `
-      Bạn đã cài đặt thành công ngưỡng cho ${cardId}:
-      Giá trị ngưỡng: ${tempCB}
+      Bạn đã cài đặt thành công ngưỡng cho card ${cardId}:
+      Giá trị ngưỡng: ${value1}
       `,
       );
     } else {
-      tempCB = Number(tempCB.value);
-      humiCB = Number(humiCB.value);
-      set(ref(db, `users/${user}/Card/Data-${cardId}-CB1`), tempCB);
-      set(ref(db, `users/${user}/Card/Data-${cardId}-CB2`), humiCB);
+      value1 = Number(value1.value);
+      value2 = Number(value2.value);
+      set(ref(db, `users/${user}/Card/Data-${cardId}-CB1`), value1);
+      set(ref(db, `users/${user}/Card/Data-${cardId}-CB2`), value2);
       alert(
         `
-      Bạn đã cài đặt thành công:
-      giá trị ngưỡng 1: ${tempCB}
-      giá trị ngưỡng 2: ${humiCB}
+      Bạn đã cài đặt thành công ngưỡng cho card ${cardId}:
+      giá trị ngưỡng 1: ${value1}
+      giá trị ngưỡng 2: ${value2}
       `,
       );
     }
@@ -1589,8 +1662,8 @@ document.getElementById("closeMenu").onclick = function () {
 };
 document.addEventListener("change", function (e) {
   const parts = e.target.id.split("-");
-  if (parts[0] === "SW") return;
-
+  if (parts[0] === "SW" || parts[0] === "channel1" || parts[0] === "channel2")
+    return;
   if (e.target.id === "-1") {
     if (e.target.checked) {
       document.querySelector(".flow").style.display = "flex";

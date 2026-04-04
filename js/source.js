@@ -79,174 +79,108 @@ load(sourcecontrol, "CONTROL", 4);
 load(sourcetimecontrol, "TIMECONTROL", 5);
 load(sourceuserbuild, "USERBUILD", 6);
 
-document.getElementById("BME280").style.display = "block";
-document.getElementById("DHT11").style.display = "none";
-document.getElementById("BUTTON").style.display = "none";
-document.getElementById("CONTROL").style.display = "none";
-document.getElementById("TIMECONTROL").style.display = "none";
-document.getElementById("USERBUILD").style.display = "none";
-document.getElementById("bme280").style.background = "red";
+const tabs = [
+  "bme280",
+  "dht11",
+  "control",
+  "button",
+  "userbuild",
+  "timecontrol",
+];
+const panels = [
+  "BME280",
+  "DHT11",
+  "CONTROL",
+  "BUTTON",
+  "USERBUILD",
+  "TIMECONTROL",
+];
 
-document.getElementById("bme280").onclick = function () {
-  document.getElementById("BME280").style.display = "block";
-  document.getElementById("DHT11").style.display = "none";
-  document.getElementById("BUTTON").style.display = "none";
-  document.getElementById("CONTROL").style.display = "none";
-  document.getElementById("TIMECONTROL").style.display = "none";
-  document.getElementById("USERBUILD").style.display = "none";
-
-  document.getElementById("bme280").style.background = "red";
-  document.getElementById("control").style.background = "white";
-  document.getElementById("button").style.background = "white";
-  document.getElementById("dht11").style.background = "white";
-  document.getElementById("timecontrol").style.background = "white";
-  document.getElementById("userbuild").style.background = "white";
+const NEON_COLORS = {
+  bme280: "#00fff7",
+  dht11: "#ff00ff",
+  control: "#00ff88",
+  button: "#ff6600",
+  userbuild: "#bf00ff",
+  timecontrol: "#ffee00",
 };
-document.getElementById("dht11").onclick = function () {
-  document.getElementById("BME280").style.display = "none";
-  document.getElementById("DHT11").style.display = "block";
-  document.getElementById("BUTTON").style.display = "none";
-  document.getElementById("CONTROL").style.display = "none";
-  document.getElementById("TIMECONTROL").style.display = "none";
-  document.getElementById("USERBUILD").style.display = "none";
 
-  document.getElementById("dht11").style.background = "red";
-  document.getElementById("bme280").style.background = "white";
-  document.getElementById("control").style.background = "white";
-  document.getElementById("button").style.background = "white";
-  document.getElementById("timecontrol").style.background = "white";
-  document.getElementById("userbuild").style.background = "white";
-};
-document.getElementById("control").onclick = function () {
-  document.getElementById("BME280").style.display = "none";
-  document.getElementById("DHT11").style.display = "none";
-  document.getElementById("BUTTON").style.display = "none";
-  document.getElementById("CONTROL").style.display = "block";
-  document.getElementById("TIMECONTROL").style.display = "none";
-  document.getElementById("USERBUILD").style.display = "none";
+function switchTab(activeTab) {
+  tabs.forEach((tab) => {
+    const isActive = tab === activeTab;
+    const panelId = panels[tabs.indexOf(tab)];
 
-  document.getElementById("dht11").style.background = "white";
-  document.getElementById("bme280").style.background = "white";
-  document.getElementById("control").style.background = "red";
-  document.getElementById("button").style.background = "white";
-  document.getElementById("timecontrol").style.background = "white";
-  document.getElementById("userbuild").style.background = "white";
-};
-document.getElementById("button").onclick = function () {
-  document.getElementById("BME280").style.display = "none";
-  document.getElementById("DHT11").style.display = "none";
-  document.getElementById("BUTTON").style.display = "block";
-  document.getElementById("CONTROL").style.display = "none";
-  document.getElementById("TIMECONTROL").style.display = "none";
-  document.getElementById("USERBUILD").style.display = "none";
+    document.getElementById(panelId).style.display = isActive
+      ? "block"
+      : "none";
 
-  document.getElementById("dht11").style.background = "white";
-  document.getElementById("bme280").style.background = "white";
-  document.getElementById("control").style.background = "white";
-  document.getElementById("timecontrol").style.background = "white";
-  document.getElementById("userbuild").style.background = "white";
-  document.getElementById("button").style.background = "red";
-};
-document.getElementById("userbuild").onclick = function () {
-  document.getElementById("BME280").style.display = "none";
-  document.getElementById("DHT11").style.display = "none";
-  document.getElementById("BUTTON").style.display = "none";
-  document.getElementById("CONTROL").style.display = "none";
-  document.getElementById("TIMECONTROL").style.display = "none";
-  document.getElementById("USERBUILD").style.display = "block";
+    const btn = document.getElementById(tab);
+    if (isActive) {
+      btn.style.background = NEON_COLORS[tab];
+      btn.style.color = "#000";
+      btn.style.boxShadow = `0 0 10px ${NEON_COLORS[tab]}, 0 0 20px ${NEON_COLORS[tab]}`;
+    } else {
+      btn.style.background = "transparent";
+      btn.style.color = "#ccc";
+      btn.style.boxShadow = "none";
+    }
+  });
+}
 
-  document.getElementById("dht11").style.background = "white";
-  document.getElementById("bme280").style.background = "white";
-  document.getElementById("control").style.background = "white";
-  document.getElementById("button").style.background = "white";
-  document.getElementById("timecontrol").style.background = "white";
-  document.getElementById("userbuild").style.background = "red";
-};
-document.getElementById("timecontrol").onclick = function () {
-  document.getElementById("BME280").style.display = "none";
-  document.getElementById("DHT11").style.display = "none";
-  document.getElementById("BUTTON").style.display = "none";
-  document.getElementById("CONTROL").style.display = "none";
-  document.getElementById("USERBUILD").style.display = "none";
-  document.getElementById("TIMECONTROL").style.display = "block";
+tabs.forEach((tab) => {
+  document.getElementById(tab).onclick = () => switchTab(tab);
+});
 
-  document.getElementById("dht11").style.background = "white";
-  document.getElementById("bme280").style.background = "white";
-  document.getElementById("control").style.background = "white";
-  document.getElementById("button").style.background = "white";
-  document.getElementById("userbuild").style.background = "white";
-  document.getElementById("timecontrol").style.background = "red";
-};
-document.getElementById("copy-btnBME280").onclick = function () {
-  navigator.clipboard.writeText(sourceBME);
-  document.getElementById("copy-btnBME280").innerHTML =
+switchTab("bme280");
+document.addEventListener("click", (e) => {
+  const btn = e.target.id;
+  const parts = btn.split("-");
+  if (parts[0] != "copy") return;
+  if (btn == "copy-btnBME280") {
+    navigator.clipboard.writeText(sourceBME);
+  } else if (btn == "copy-btnDHT11") {
+    navigator.clipboard.writeText(sourceDHT11);
+  } else if (btn == "copy-btnCONTROL") {
+    navigator.clipboard.writeText(sourcecontrol);
+  } else if (btn == "copy-btnTIMECONTROL") {
+    navigator.clipboard.writeText(sourcetimecontrol);
+  } else if (btn == "copy-btnUSERBUILD") {
+    navigator.clipboard.writeText(sourceuserbuild);
+  } else if (btn == "copy-btnBUTTON") {
+    navigator.clipboard.writeText(sourcebtn);
+  }
+  document.getElementById(btn).innerHTML =
     `<i class="fa-solid fa-check"></i> Đã sao chép`;
   setTimeout(() => {
-    document.getElementById("copy-btnBME280").innerHTML =
-      `<i class="fa-solid fa-copy"></i> Sao chép code`;
+    document.getElementById().innerHTML = `<i class="fa-solid fa-copy"></i> Sao chép code`;
   }, 2000);
-};
-document.getElementById("copy-btnDHT11").onclick = function () {
-  navigator.clipboard.writeText(sourceDHT11);
-  document.getElementById("copy-btnDHT11").innerHTML =
-    `<i class="fa-solid fa-check"></i> Đã sao chép`;
-  setTimeout(() => {
-    document.getElementById("copy-btnDHT11").innerHTML =
-      `<i class="fa-solid fa-copy"></i> Sao chép code`;
-  }, 2000);
-};
-document.getElementById("copy-btnBUTTON").onclick = function () {
-  navigator.clipboard.writeText(sourcebtn);
-  document.getElementById("copy-btnBUTTON").innerHTML =
-    `<i class="fa-solid fa-check"></i> Đã sao chép`;
-  setTimeout(() => {
-    document.getElementById("copy-btnBUTTON").innerHTML =
-      `<i class="fa-solid fa-copy"></i> Sao chép code`;
-  }, 2000);
-};
-document.getElementById("copy-btnCONTROL").onclick = function () {
-  navigator.clipboard.writeText(sourcecontrol);
-  document.getElementById("copy-btnCONTROL").innerHTML =
-    `<i class="fa-solid fa-check"></i> Đã sao chép`;
-  setTimeout(() => {
-    document.getElementById("copy-btnCONTROL").innerHTML =
-      `<i class="fa-solid fa-copy"></i> Sao chép code`;
-  }, 2000);
-};
-document.getElementById("copy-btnTIMECONTROL").onclick = function () {
-  navigator.clipboard.writeText(sourcetimecontrol);
-  document.getElementById("copy-btnTIMECONTROL").innerHTML =
-    `<i class="fa-solid fa-check"></i> Đã sao chép`;
-  setTimeout(() => {
-    document.getElementById("copy-btnTIMECONTROL").innerHTML =
-      `<i class="fa-solid fa-copy"></i> Sao chép code`;
-  }, 2000);
-};
+});
+document.addEventListener("click", (e) => {
+  const btn = e.target.id;
+  const parts = btn.split("-");
+  if (parts[0] != "download") return;
+  if (btn == "download-btnBME280") {
+    download(hdsdBME280);
+  } else if (btn == "download-btnDHT11") {
+    download(hdsdDHT11);
+  } else if (btn == "download-btnBUTTON") {
+    alert("tính năng đang phát triển");
+    return;
+  } else if (btn == "download-btnCONTROL") {
+    alert("tính năng đang phát triển");
+    return;
+  } else if (btn == "download-btnTIMECONTROL") {
+    alert("tính năng đang phát triển");
+    return;
+  } else if (btn == "download-btnUSERBUILD") {
+    alert("tính năng đang phát triển");
+    return;
+  }
 
-document.getElementById("download-btnBME280").onclick = async function () {
-  download(hdsdBME280);
-  document.getElementById("download-btnBME280").innerHTML =
+  document.getElementById(btn).innerHTML =
     `<i class="fa-solid fa-check"></i> Đã tải xuống`;
   setTimeout(() => {
-    document.getElementById("download-btnBME280").innerHTML =
+    document.getElementById("btn").innerHTML =
       `<i class="fa-solid fa-download"></i> Tải xuống bài giảng hướng dẫn`;
   }, 1000);
-};
-document.getElementById("download-btnDHT11").onclick = async function () {
-  download(hdsdDHT11);
-  document.getElementById("download-btnDHT11").innerHTML =
-    `<i class="fa-solid fa-check"></i> Đã tải xuống`;
-  setTimeout(() => {
-    document.getElementById("download-btnDHT11").innerHTML =
-      `<i class="fa-solid fa-download"></i> Tải xuống bài giảng hướng dẫn`;
-  }, 1000);
-};
-document.getElementById("download-btnBUTTON").onclick = async function () {
-  alert("Chức năng đang được cập nhật, vui lòng quay lại sau!");
-};
-document.getElementById("download-btnCONTROL").onclick = async function () {
-  alert("Chức năng đang được cập nhật, vui lòng quay lại sau!");
-};
-document.getElementById("download-btnTIMECONTROL").onclick = async function () {
-  alert("Chức năng đang được cập nhật, vui lòng quay lại sau!");
-};
+});
