@@ -334,7 +334,17 @@ const mixedChart2 = new Chart(ctx2, {
     },
   },
 });
-
+function showAllDHT11() {
+  mixedChart.data.labels = fullData2.labels;
+  mixedChart.data.datasets[0].data = fullData2.temp;
+  mixedChart.data.datasets[1].data = fullData2.humi;
+  mixedChart.update();
+}
+let fullData = {
+  labels: [],
+  temp: [],
+  humi: [],
+};
 onValue(ref(db, `users/${user}/dht11`), (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
@@ -355,12 +365,31 @@ onValue(ref(db, `users/${user}/dht11`), (snapshot) => {
   mixedChart.data.labels.push(time);
   mixedChart.data.datasets[0].data.push(temp);
   mixedChart.data.datasets[1].data.push(humi);
-
+  const maxPoints1 = 10;
+  fullData.labels.push(time);
+  fullData.temp.push(temp);
+  fullData.humi.push(humi);
+  mixedChart.data.labels = fullData2.labels.slice(-maxPoints1);
+  mixedChart.data.datasets[0].data = fullData2.temp.slice(-maxPoints1);
+  mixedChart.data.datasets[1].data = fullData2.humi.slice(-maxPoints1);
   if (live2) {
     mixedChart.resetZoom();
+  } else {
+    showAllDHT11();
   }
   mixedChart.update();
 });
+function showAllBME280() {
+  mixedChart2.data.labels = fullData2.labels;
+  mixedChart2.data.datasets[0].data = fullData2.temp;
+  mixedChart2.data.datasets[1].data = fullData2.humi;
+  mixedChart2.update();
+}
+let fullData2 = {
+  labels: [],
+  temp: [],
+  humi: [],
+};
 onValue(ref(db, `users/${user}/bme280`), (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
@@ -378,8 +407,17 @@ onValue(ref(db, `users/${user}/bme280`), (snapshot) => {
   mixedChart2.data.labels.push(time);
   mixedChart2.data.datasets[0].data.push(temp);
   mixedChart2.data.datasets[1].data.push(humi);
+  const maxPoints = 10;
+  fullData2.labels.push(time);
+  fullData2.temp.push(temp);
+  fullData2.humi.push(humi);
+  mixedChart2.data.labels = fullData2.labels.slice(-maxPoints);
+  mixedChart2.data.datasets[0].data = fullData2.temp.slice(-maxPoints);
+  mixedChart2.data.datasets[1].data = fullData2.humi.slice(-maxPoints);
   if (live1) {
     mixedChart2.resetZoom();
+  } else {
+    showAllBME280();
   }
   mixedChart2.update();
 });
@@ -532,7 +570,7 @@ window.onload = async () => {
     200,
     "node",
     {},
-    `<div>Core ESP32</div>`,
+    `<div>Lõi ESP32</div>`,
   );
   cards.forEach((card) => {
     let box = document.createElement("div");
@@ -564,7 +602,7 @@ window.onload = async () => {
         y,
         "hi",
         { card },
-        `<div>Cardname:${card.name}</div>
+        `<div>Tên card:${card.name}</div>
       <br>
       <div>GPIO${card.pin1}</div>`,
       );
@@ -896,7 +934,7 @@ window.onload = async () => {
         x,
         "hi",
         { card },
-        `<div>Cardname:${card.name}</div>
+        `<div>Tên card:${card.name}</div>
       <br>
       <div>GPIO${card.pin1}</div>
       <br>
@@ -1010,7 +1048,7 @@ window.onload = async () => {
         x,
         "hi",
         { card },
-        `<div>Cardname:${card.name}</div>
+        `<div>Tên card:${card.name}</div>
       <br>
       <div>GPIO${card.pin1}</div>`,
       );
@@ -1098,10 +1136,10 @@ document.getElementById("addblock").onclick = function () {
   let box = document.createElement("div");
   count++;
   localStorage.setItem("cardCount", count);
-  box.className = "box box" + count;
+  box.className = "tc box box" + count;
   box.innerHTML = `
     <h2>Thêm card mới</h2>
-    <form>
+    <form class="tcForm">
       <input type="text" placeholder="Nhập tên card" id = "cardName"><br>
       <label for="cardType">Lựa chọn loại card</label>
       <select id="cardType">
@@ -1110,7 +1148,6 @@ document.getElementById("addblock").onclick = function () {
         <option value="control">Điều khiển In Out</option>
         <option value="timecontrol">Điều khiển theo thời gian</option>
       </select>
-      <br>
       <div class="chartSelect" style="display:none;">
         <label for="chartType">Lựa chọn loại biểu đồ</label>
         <select id="chartType">
@@ -1124,7 +1161,6 @@ document.getElementById("addblock").onclick = function () {
         <input type="text" placeholder="Nhập nhãn biểu đồ" id = "labelchart"><br>
         <input type="text" placeholder="Nhập nhãn 2 biểu đồ" id = "labelchart2" style="display:none;"><br>
       </div>
-      <br>
       <div class="SelectMuchPin" style="display:none;">
         <label for="Manypin">Lựa chọn số ngõ ra muốn điều khiển</label>
         <select id="Manypin">
@@ -1132,8 +1168,6 @@ document.getElementById("addblock").onclick = function () {
           <option value="2">2</option>
         </select>
       </div>
-      <br>
-      <br>
       <div class="PinSelect" style="display:none;">
         <label for="selectPin">Lựa chọn chân kết nối</label>
         <select id="selectPin">
@@ -1154,7 +1188,6 @@ document.getElementById("addblock").onclick = function () {
           <option value="33">GPIO33</option>
         </select>
       </div>
-      <br>
       <div class="Pin2Select" style="display:none;">
         <label for="selectPin2">Lựa chọn chân kết nối2</label>
         <select id="selectPin2">
@@ -1175,7 +1208,6 @@ document.getElementById("addblock").onclick = function () {
           <option value="33">GPIO33</option>
         </select>
       </div>
-      <br>
       <button type="submit" id="cancelgetInfor">Hủy</button>
       <button type="submit" id="getInfor">Xác nhận</button>
     </form>
@@ -1435,7 +1467,7 @@ document.getElementById("removeblock").onclick = function () {
   let box = document.createElement("div");
   box.className = "delete";
   box.innerHTML = `
-    <form>
+    <form class = "deletbox">
       <label for="chooseCard">Lựa chọn card cần xóa</label>
       <select id="chooseCard"></select>
       <br><br>

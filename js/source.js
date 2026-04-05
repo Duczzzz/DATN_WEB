@@ -15,6 +15,12 @@ const hdsdBME280 =
   "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/baigiang/Bai1.pdf";
 const hdsdDHT11 =
   "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/baigiang/Bai2.pdf";
+const hdsdControl =
+  "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/baigiang/Bai3.pdf";
+const hdsdButton =
+  "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/baigiang/Bai4.pdf";
+const hdsdTimecontrol =
+  "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/baigiang/Bai5.pdf";
 async function downbox(link) {
   const hdsdRaw = await fetch(link).then((r) => r.text());
   return hdsdRaw.replaceAll("{user}", user);
@@ -27,15 +33,6 @@ function download(link) {
   a.click();
   document.body.removeChild(a);
 }
-// async function download(link, filename) {
-//   const http = require("https");
-//   const fs = require("fs");
-//   const file = fs.createWriteStream(filename);
-//   http.get(link, function (response) {
-//     response.pipe(file);
-//   });
-//   alert("Đang tải xuống, vui lòng chờ...");
-// }
 const sourceBME = await downbox(bme280);
 const sourceDHT11 = await downbox(dht11);
 const sourcebtn = await downbox(btn1);
@@ -164,14 +161,11 @@ document.addEventListener("click", (e) => {
   } else if (btn == "download-btnDHT11") {
     download(hdsdDHT11);
   } else if (btn == "download-btnBUTTON") {
-    alert("tính năng đang phát triển");
-    return;
+    download(hdsdButton);
   } else if (btn == "download-btnCONTROL") {
-    alert("tính năng đang phát triển");
-    return;
+    download(hdsdControl);
   } else if (btn == "download-btnTIMECONTROL") {
-    alert("tính năng đang phát triển");
-    return;
+    download(hdsdTimecontrol);
   } else if (btn == "download-btnUSERBUILD") {
     alert("tính năng đang phát triển");
     return;

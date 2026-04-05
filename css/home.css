@@ -205,7 +205,8 @@ body::after {
   gap: 10px;
   height: auto;
   width: fit-content;
-  padding: 0px 10px;
+  padding: 0px 5px;
+  margin: 0 10px;
 }
 
 .blockbtn {
@@ -709,7 +710,17 @@ form select option {
   background: var(--bg-deep);
   color: var(--text-primary);
 }
-
+.tc {
+  width: fit-content;
+  height: fit-content;
+}
+.tcForm {
+  height: auto;
+  width: 300px;
+}
+.deletbox {
+  width: fit-content;
+}
 form button {
   width: 100%;
   padding: 12px 18px;
@@ -1125,7 +1136,7 @@ form button:active {
   text-align: center;
   width: 300px;
   height: auto;
-  margin: 0 auto;
+  margin: 10px auto;
   position: fixed;
   z-index: 9999;
   border-radius: var(--r-xl);
