@@ -51,4 +51,18 @@ Firebase.getFloat(fbdo,"users/{user}/Card/Data-${card.id}-CB1")
 •	Firebase.getFloat(fbdo,"users/{user}/Card/Data-${card.id}-CB1");
 •	float tempCB = fbdo.floatData();
 
-
+Hướng dẫn sử dụng cho loại card timecontrol:
+Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới:
+- Để tải về giá trị giờ bật:
+Firebase.getInt(fbdo,"users/${user}/Card/Data-hoursta-${card.id}")
+- Để tải về giá trị giờ tắt:
+Firebase.getInt(fbdo,"users/${user}/Card/Data-hoursto-${card.id}")
+- Để tải về giá trị phút bật:
+Firebase.getInt(fbdo,"users/${user}/Card/Data-minsta-${card.id}")
+- Để tải về giá trị phút tắt:
+Firebase.getInt(fbdo,"users/${user}/Card/Data-minsto-${card.id}")
+* Chú ý:
+Dữ liệu tải về từ database là JSON, vì vậy cần chuyển đổi sang kiểu Integer để sử dụng.
+- Ví dụ:
+Firebase.getInt(fbdo,"users/${user}/Card/Data-hoursta-${card.id}");
+int hoursta = fbdo.intData();
