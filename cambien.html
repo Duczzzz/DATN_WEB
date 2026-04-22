@@ -66,6 +66,9 @@
             <label for="all">Lựa chọn card hiển thị</label>
             <button id="closeMenu">✖</button>
             <br />
+            <input type="checkbox" id="-2" checked="true" /> Card Điều khiển
+            servo
+            <br />
             <input type="checkbox" id="-1" checked="true" /> Sơ đồ luồng hệ
             thống
             <br />
@@ -210,6 +213,22 @@
               <img src="img/stream.png" alt="lỗi tải ảnh" />
             </button>
             <canvas id="ChartBME280"></canvas>
+          </div>
+        </div>
+        <div class="box box4">
+          <div class="content">
+            <h1 class="heading">Điều khiển servo</h1>
+          </div>
+          <div class="slidecontainer">
+            <h2>góc: <span id="angleservo"></span></h2>
+            <input
+              type="range"
+              min="0"
+              max="180"
+              value="0"
+              class="slider2"
+              id="servo0"
+            />
           </div>
         </div>
       </div>

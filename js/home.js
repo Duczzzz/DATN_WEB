@@ -1,5 +1,4 @@
 const charts = {};
-let count = Number(localStorage.getItem("cardCount")) || 4;
 const user = localStorage.getItem("username");
 if (user == null) {
   window.location.ref = "index.html";
@@ -41,10 +40,11 @@ async function showPing() {
     }
     pingstt.innerText = ping + "ms";
   } else {
+    pingstt.style.fontSize = "12px";
     pingstt.innerText = "lỗi kết nối";
   }
 }
-setInterval(showPing, 2000);
+// setInterval(showPing, 2000);
 import devtools from "https://cdn.jsdelivr.net/npm/devtools-detect@4.0.2/index.js";
 const userControl = ["admin", "duc", "luong"];
 function checkUser() {
@@ -555,9 +555,15 @@ async function loadData() {
     alert("có lỗi xảy ra khi đồng bộ dữ liệu, vui lòng làm mới lại trang");
   }
 }
+let load = false;
+let count = 0;
 window.onload = async () => {
   await loadData();
   const cards = JSON.parse(localStorage.getItem("cards")) || [];
+  if (cards.length === 0) {
+    localStorage.setItem("cardCount", "5");
+  }
+  count = Number(localStorage.getItem("cardCount")) || 5;
   var drawflowContainer = document.getElementById("drawflow");
   var editor = new Drawflow(drawflowContainer);
   const maxHeight = document.querySelector("#drawflow").offsetHeight;
@@ -585,7 +591,7 @@ window.onload = async () => {
     if (card.type == "Sensor") {
       name.id = "cb-box-" + card.id;
     } else {
-      name.id = "box-" + card.id;
+      name.id = "ct-box-" + card.id;
     }
     name.checked = true;
     let label = document.createElement("label");
@@ -709,7 +715,7 @@ window.onload = async () => {
                   <br> - Dữ liệu tải về từ database là json nên phải chuyển đổi sang Interge hoặc Float để sử dụng
                   <br> - Ví dụ:
                   <br> + <span class="ref-dtb">
-                    getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1");
+                    Firebase.getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1");
                   </span>
                   <br> + <span class="ref-dtb">
                     float tempCB = fbdo.floatData();
@@ -728,34 +734,34 @@ window.onload = async () => {
                 <span class="ref-dtb">"users/${user}/Card/Data-${card.id}-2"</span> <br />
                 - Cài đặt giá trị kênh 1: <br />
                 <span class="ref-dtb">
-                  setFloat(fbdo,"users/${user}/Card/Data-${card.id}-1", #giá_trị)
+                  Firebase.setFloat(fbdo,"users/${user}/Card/Data-${card.id}-1", #giá_trị)
                 </span>
                 <br />
                 - Cài đặt giá trị kênh 2: <br />
                 <span class="ref-dtb">
-                  setFloat(fbdo,"users/${user}/Card/Data-${card.id}-2", #giá_trị)
+                  Firebase.setFloat(fbdo,"users/${user}/Card/Data-${card.id}-2", #giá_trị)
                 </span>
                 <br />
                     - Cài đặt giá trị cho đèn cảnh báo:
                   <span class="ref-dtb">
-                    setInt(fbdo,"users/${user}/Card/Data-${card.id}-Warnled",#giá_trị)
+                    Firebase.setInt(fbdo,"users/${user}/Card/Data-${card.id}-Warnled",#giá_trị)
                   </span> 
                   <br>
                 - Tải về giá trị ngưỡng cảnh báo kênh 1: <br />
                 <span class="ref-dtb">
-                  getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1")
+                  Firebase.getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1")
                 </span>
                 <br />
                 - Tải về giá trị ngưỡng cảnh báo kênh 2: <br />
                 <span class="ref-dtb">
-                  getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB2")
+                  Firebase.getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB2")
                 </span>
                 <br />
                 * Chú ý: <br />
                 - Dữ liệu tải về từ database là json nên phải chuyển đổi sang Integer hoặc Float để sử dụng <br />
                 - Ví dụ: <br />
                 <span class="ref-dtb">
-                  getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1");
+                  Firebase.getFloat(fbdo,"users/${user}/Card/Data-${card.id}-CB1");
                 </span>
                 <br />
                 <span class="ref-dtb">
@@ -981,19 +987,19 @@ window.onload = async () => {
               <br>- Đường dẫn database kênh 1:
               <br><span class="ref-dtb">users/${user}/Out/Out-${card.id}-1</span>
               <br>- Cài đặt giá trị kênh 1:
-              <br><span class="ref-dtb">setInt(fbdo,"users/${user}/Out/Out-${card.id}-1",#gia_tri)</span>
+              <br><span class="ref-dtb">Firebase.setInt(fbdo,"users/${user}/Out/Out-${card.id}-1",#gia_tri)</span>
               <br>- Tải về giá trị kênh 1:
-              <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1")</span>
+              <br><span class="ref-dtb">Firebase.getInt(fbdo,"users/${user}/Out/Out-${card.id}-1")</span>
               <br>- Đường dẫn database kênh 2:
               <br><span class="ref-dtb">users/${user}/Out/Out-${card.id}-2</span>
               <br>- Cài đặt giá trị kênh 2:
-              <br><span class="ref-dtb">setInt(fbdo,"users/${user}/Out/Out-${card.id}-2",#gia_tri)</span>
+              <br><span class="ref-dtb">Firebase.setInt(fbdo,"users/${user}/Out/Out-${card.id}-2",#gia_tri)</span>
               <br>- Tải về giá trị kênh 2:
-              <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-2")</span>
+              <br><span class="ref-dtb">Firebase.getInt(fbdo,"users/${user}/Out/Out-${card.id}-2")</span>
               <br>* Chú ý:
               <br>- Dữ liệu tải về từ database là <span class="ref-dtb"> JSON </span> nên cần chuyển sang<span class="ref-dtb">int</span>hoặc<span class="ref-dtb">float</span>để sử dụng
               <br>- Ví dụ:
-              <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-2");</span>
+              <br><span class="ref-dtb">Firebase.getInt(fbdo,"users/${user}/Out/Out-${card.id}-2");</span>
               <br><span class="ref-dtb">int out2=fbdo.intData();</span>
             </p>
           </div>
@@ -1027,13 +1033,13 @@ window.onload = async () => {
             <br>- Đường dẫn database:
             <br><span class="ref-dtb">users/${user}/Out/Out-${card.id}-1</span>
             <br>- Để cài đặt giá trị:
-            <br><span class="ref-dtb">setInt(fbdo,"users/${user}/Out/Out-${card.id}-1",#gia_tri)</span>
+            <br><span class="ref-dtb">Firebase.setInt(fbdo,"users/${user}/Out/Out-${card.id}-1",#gia_tri)</span>
             <br>- Để tải về giá trị:
-            <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1")</span>
+            <br><span class="ref-dtb">Firebase.getInt(fbdo,"users/${user}/Out/Out-${card.id}-1")</span>
             <br>* Chú ý:
             <br>- Dữ liệu tải về từ database là <span class="ref-dtb">json</span> nên phải chuyển đổi sang<span class="ref-dtb">Integer</span>hoặc<span class="ref-dtb">Float</span>để sử dụng
             <br>- Ví dụ:
-            <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1");</span>
+            <br><span class="ref-dtb">Firebase.getInt(fbdo,"users/${user}/Out/Out-${card.id}-1");</span>
             <br><span class="ref-dtb">int out1=fbdo.intData();</span>
             </p>
           </div>
@@ -1062,6 +1068,18 @@ window.onload = async () => {
         if (!snapshot.hasChild(`Data-${card.id}-Warnled`)) {
           set(ref(db, `users/${user}/Card/Data-${card.id}-Warnled`), 0);
         }
+        if (!snapshot.hasChild(`Data-hoursta-${card.id}`)) {
+          set(ref(db, `users/${user}/Card/Data-hoursta-${card.id}`), 0);
+        }
+        if (!snapshot.hasChild(`Data-hoursto-${card.id}`)) {
+          set(ref(db, `users/${user}/Card/Data-hoursto-${card.id}`), 0);
+        }
+        if (!snapshot.hasChild(`Data-minsta-${card.id}`)) {
+          set(ref(db, `users/${user}/Card/Data-minsta-${card.id}`), 0);
+        }
+        if (!snapshot.hasChild(`Data-minsto-${card.id}`)) {
+          set(ref(db, `users/${user}/Card/Data-minsto-${card.id}`), 0);
+        }
       });
       box.innerHTML = `
           <h1 class="heading">${card.name}</h1>
@@ -1088,17 +1106,19 @@ window.onload = async () => {
             <p id="txt-${card.id}" style="display:none;line-height:1.6;">
             Để có thể sử dụng được card:${card.name}
             <br>Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
-            <br>- Đường dẫn database:
-            <br><span class="ref-dtb">users/${user}/Out/Out-${card.id}-1</span>
-            <br>- Để cài đặt giá trị:
-            <br><span class="ref-dtb">setInt(fbdo,"users/${user}/Out/Out-${card.id}-1",#gia_tri)</span>
-            <br>- Để tải về giá trị:
-            <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1")</span>
+            <br>- Để tải về giá trị giờ bật:
+            <br><span class="ref-dtb">Firebase.getInt(fbdo,"users/${user}/Card/Data-hoursta-${card.id}")</span>
+            <br>- Để tải về giá trị giờ tắt:
+            <br><span class="ref-dtb">Firebase.getInt(fbdo,"users/${user}/Card/Data-hoursto-${card.id}")</span>
+            <br>- Để tải về giá trị phút bật:
+            <br><span class="ref-dtb">Firebase.getInt(fbdo,"users/${user}/Card/Data-minsta-${card.id}")</span>
+            <br>- Để tải về giá trị phút tắt:
+            <br><span class="ref-dtb">Firebase.getInt(fbdo,"users/${user}/Card/Data-minsto-${card.id}")</span>
             <br>* Chú ý:
             <br>- Dữ liệu tải về từ database là <span class="ref-dtb">json</span> nên phải chuyển đổi sang<span class="ref-dtb">Integer</span>hoặc<span class="ref-dtb">Float</span>để sử dụng
-            <br>- Ví dụ:
-            <br><span class="ref-dtb">getInt(fbdo,"users/${user}/Out/Out-${card.id}-1");</span>
-            <br><span class="ref-dtb">int out1=fbdo.intData();</span>
+            <br>- Ví dụ tải về thời gian bật tắt:
+            <br><span class="ref-dtb">Firebase.getInt(fbdo,"users/${user}/Card/Data-hoursta-${card.id}");</span>
+            <br><span class="ref-dtb">int hoursta=fbdo.intData();</span>
             </p>
           </div>
           `;
@@ -1499,6 +1519,7 @@ document.getElementById("removeblock").onclick = function () {
     const cardToDelete = cards.find((card) => card.id === selectedId);
     remove(ref(db, `users/${user}/storage/${cardToDelete.id}`));
     if (cardToDelete.chartType == null) {
+      remove(ref(db, `users/${user}/Card/Data-${cardToDelete.id}-Warnled`));
       if (cardToDelete.pin2 == null) {
         if (cardToDelete.type == "timecontrol") {
           remove(ref(db, `users/${user}/Card/Data-hoursta-${selectedId}`));
@@ -1516,11 +1537,13 @@ document.getElementById("removeblock").onclick = function () {
         remove(ref(db, `users/${user}/In/In-${selectedId}-2`));
       }
     } else if (cardToDelete.chartType == "mixchart") {
+      remove(ref(db, `users/${user}/Card/Data-${selectedId}-Warnled`));
       remove(ref(db, `users/${user}/Card/Data-${selectedId}-1`));
       remove(ref(db, `users/${user}/Card/Data-${selectedId}-2`));
       remove(ref(db, `users/${user}/Card/Data-${selectedId}-CB1`));
       remove(ref(db, `users/${user}/Card/Data-${selectedId}-CB2`));
     } else {
+      remove(ref(db, `users/${user}/Card/Data-${selectedId}-Warnled`));
       remove(ref(db, `users/${user}/Card/Data-${selectedId}-1`));
       remove(ref(db, `users/${user}/Card/Data-${selectedId}-CB1`));
     }
@@ -1764,14 +1787,25 @@ function updateChatip() {
       } else {
         kenh = "2";
       }
-    } else {
+      box.innerHTML = `
+      <button class="tip-btn" id="tipchat-${card.id}">
+        <i class="fa-solid fa-lightbulb hint-icon"></i>
+        Hướng dẫn sử dụng card ${card.id}
+        <span class="txthint hint-text-${card.id}" style="display: none;">
+          Tôi muốn bạn hướng dẫn sử dụng card ${card.type} 
+          có id là ${card.id} 
+          có ${kenh} kênh
+          loại biểu đồ ${card.chartType}
+        </span>
+      </button>
+    `;
+    } else if (card.type == "control") {
       if (card.pin2 == null) {
         kenh = "1";
       } else {
         kenh = "2";
       }
-    }
-    box.innerHTML = `
+      box.innerHTML = `
       <button class="tip-btn" id="tipchat-${card.id}">
         <i class="fa-solid fa-lightbulb hint-icon"></i>
         Hướng dẫn sử dụng card ${card.id}
@@ -1782,6 +1816,18 @@ function updateChatip() {
         </span>
       </button>
     `;
+    } else if (card.type == "timecontrol") {
+      box.innerHTML = `
+      <button class="tip-btn" id="tipchat-${card.id}">
+        <i class="fa-solid fa-lightbulb hint-icon"></i>
+        Hướng dẫn sử dụng card ${card.id}
+        <span class="txthint hint-text-${card.id}" style="display: none;">
+          Tôi muốn bạn hướng dẫn sử dụng card ${card.type} 
+          có id là ${card.id} 
+        </span>
+      </button>
+    `;
+    }
     document.querySelector(".chat-tip").appendChild(box);
   });
 }
@@ -1826,6 +1872,12 @@ document.addEventListener("change", function (e) {
     } else {
       document.querySelector(".flow").style.display = "none";
     }
+  } else if (e.target.id === "-2") {
+    if (e.target.checked) {
+      document.querySelector(".box4").style.display = "flex";
+    } else {
+      document.querySelector(".box4").style.display = "none";
+    }
   } else if (e.target.id === "1") {
     if (e.target.checked) {
       document.querySelector(".box1").style.display = "flex";
@@ -1856,11 +1908,24 @@ document.addEventListener("change", function (e) {
     } else {
       document.querySelector("." + parts[1] + parts[2]).style.display = "none";
     }
-  } else {
+  } else if (parts[0] === "ct") {
+    console.log(e.target.id);
     if (e.target.checked) {
-      document.querySelector("." + parts[0] + parts[1]).style.display = "flex";
+      document.querySelector("." + parts[1] + parts[2]).style.display = "flex";
     } else {
-      document.querySelector("." + parts[0] + parts[1]).style.display = "none";
+      document.querySelector("." + parts[1] + parts[2]).style.display = "none";
     }
   }
 });
+
+//xử lý servo
+var slider = document.getElementById("servo0");
+var output = document.getElementById("angleservo");
+output.innerHTML = slider.value;
+
+slider.oninput = function () {
+  var val = this.value;
+  val = Number(val);
+  set(ref(db, `users/${user}/Servo/Servo0`), val);
+  output.innerHTML = this.value;
+};

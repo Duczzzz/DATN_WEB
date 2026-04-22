@@ -866,7 +866,7 @@ form button:active {
   right: 30px;
   bottom: 30px;
   width: 700px;
-  height: 575px;
+  height: 550px;
   z-index: 9999;
   pointer-events: auto;
 }
@@ -965,14 +965,13 @@ form button:active {
   background: rgba(255, 45, 120, 0.2);
   border: 1px solid rgba(255, 45, 120, 0.4);
   color: #ff7eb3;
-  font-family: "Orbitron", monospace;
-  font-size: 11px;
+  font-size: 14px;
   align-self: flex-start;
   letter-spacing: 1px;
 }
 
 .msg.user {
-  max-width: 260px;
+  max-width: fit-content;
   background: rgba(0, 98, 196, 0.996);
   border: 1px solid rgba(0, 128, 255, 0.4);
   align-self: flex-end;
@@ -982,7 +981,7 @@ form button:active {
 .chat-footer {
   display: flex;
   gap: 10px;
-  padding: 12px;
+  padding: 10px;
   background: rgba(0, 15, 40, 0.8);
   border-top: 1px solid var(--border-dim);
 }
@@ -1412,4 +1411,37 @@ footer {
 
 .live-indicator {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+.box4 {
+  width: fit-content;
+}
+.slider2 {
+  padding: 10px;
+  -webkit-appearance: none;
+  width: 300px;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+}
+
+.slider2::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #04aa6d;
+  cursor: pointer;
+}
+
+.slider2::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #04aa6d;
+  cursor: pointer;
 }
