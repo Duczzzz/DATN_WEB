@@ -15,7 +15,6 @@ async function getPing(url) {
     return null;
   }
 }
-
 async function pingMultiple() {
   const urls = [
     "https://reptiloid-natasha-gentlemanly.ngrok-free.dev",
@@ -538,17 +537,79 @@ async function loadData() {
     const data = snapshot.val();
     localStorage.removeItem("cards");
     Object.entries(data).forEach(([key, card]) => {
+      if (!card) return;
       localStorage.setItem("cardCount", key);
-      var infor = {
-        id: card.id,
-        name: card.name,
-        type: card.type,
-        pin1: card.pin1,
-        pin2: null,
-        chartType: card.chartType,
-        label: card.label,
-        label2: card.label2,
-      };
+      if (card.type === "control") {
+        if (card.pin2 !== null) {
+          var infor = {
+            id: card.id,
+            name: card.name,
+            type: card.type,
+            pin1: card.pin1,
+            pin2: card.pin2,
+            chartType: card.chartType,
+            label: card.label,
+            label2: card.label2,
+          };
+        } else {
+          var infor = {
+            id: card.id,
+            name: card.name,
+            type: card.type,
+            pin1: card.pin1,
+            pin2: null,
+            chartType: card.chartType,
+            label: card.label,
+            label2: card.label2,
+          };
+        }
+      } else if (card.type === "Sensor") {
+        if (card.label2 !== null) {
+          var infor = {
+            id: card.id,
+            name: card.name,
+            type: card.type,
+            pin1: card.pin1,
+            pin2: null,
+            chartType: card.chartType,
+            label: card.label,
+            label2: card.label2,
+          };
+        } else {
+          var infor = {
+            id: card.id,
+            name: card.name,
+            type: card.type,
+            pin1: card.pin1,
+            pin2: null,
+            chartType: card.chartType,
+            label: card.label,
+            label2: null,
+          };
+        }
+      } else if (card.type === "timecontrol") {
+        var infor = {
+          id: card.id,
+          name: card.name,
+          type: card.type,
+          pin1: card.pin1,
+          pin2: null,
+          chartType: null,
+          label: null,
+          label2: null,
+        };
+      } else if (card.type === "servocontrol") {
+        var infor = {
+          id: card.id,
+          name: card.name,
+          type: card.type,
+          pin1: card.pin1,
+          pin2: null,
+          chartType: null,
+          label: null,
+          label2: null,
+        };
+      }
       saveCardToLocal(infor);
     });
   } catch (err) {
@@ -579,20 +640,18 @@ window.onload = async () => {
     `<div>Lõi ESP32</div>`,
   );
   cards.forEach((card) => {
+    if (!card) return;
     let box = document.createElement("div");
-    if (card.type === "Sensor") {
-      box.className = "cb box box" + card.id;
-    } else {
-      box.className = "ct box box" + card.id;
-    }
-    document.querySelector(".container").appendChild(box);
     let name = document.createElement("input");
     name.type = "checkbox";
     if (card.type == "Sensor") {
+      box.className = "cb box box" + card.id;
       name.id = "cb-box-" + card.id;
     } else {
+      box.className = "ct box box" + card.id;
       name.id = "ct-box-" + card.id;
     }
+    document.querySelector(".container").appendChild(box);
     name.checked = true;
     let label = document.createElement("label");
     label.htmlFor = card.id;
@@ -1004,7 +1063,7 @@ window.onload = async () => {
             </p>
           </div>
         `;
-      } else {
+      } else if (card.pin2 == null) {
         get(cardRefco).then((snapshot) => {
           if (!snapshot.hasChild(`Out-${card.id}-1`)) {
             set(ref(db, `users/${user}/Out/Out-${card.id}-1`), 0);
@@ -1122,6 +1181,70 @@ window.onload = async () => {
             </p>
           </div>
           `;
+    } else if (card.type == "servocontrol") {
+      var nodeId = editor.addNode(
+        card.type,
+        1,
+        0,
+        650,
+        x,
+        "hi",
+        { card },
+        `<div>Tên card:${card.name}</div>
+      <br>
+      <div>GPIO${card.pin1}</div>`,
+      );
+      editor.addConnection(espId, nodeId, "output_1", "input_1");
+      x = x + 120;
+      if (x > maxHeight) {
+        drawflow.style.height = x + "px";
+      }
+      const cardRefco = ref(db, `users/${user}/Card`);
+      get(cardRefco).then((snapshot) => {
+        if (!snapshot.hasChild(`users/${user}/Servo/Servo-${card.id}`)) {
+          set(ref(db, `users/${user}/Servo/Servo-${card.id}`), 0);
+        }
+      });
+      box.innerHTML = `
+          <h1 class="heading">${card.name}</h1>
+          <h2>ID card: ${card.id}</h2>
+          <h2>Loại card: ${card.type}</h2>
+          <h2>Chân kết nối: GPIO${card.pin1}</h2>
+          <div class="slidecontainer">
+            <h2>góc: <span id="angles-${card.id}"></span></h2>
+            <input
+              type="range"
+              min="0"
+              max="180"
+              value="0"
+              class="slider2"
+              id="servo-${card.id}"
+            />
+          </div>
+          <div class="swBTN">
+            <p>Hướng dẫn sử dụng</p>
+            <label class="switch">
+              <input type="checkbox" id="SW-${card.id}"/>
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="txt-hd">
+            <p id="txt-${card.id}" style="display:none;line-height:1.6;">
+            Để có thể sử dụng được card:${card.name}
+            <br>Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
+            <br>- Để tải về giá trị góc servo:
+            <br><span class="ref-dtb">Firebase.getInt(fbdo,"users/${user}/Servo/Servo-${card.id}")</span>
+            <br>* Chú ý:
+            <br>- Dữ liệu tải về từ database là <span class="ref-dtb">json</span> nên phải chuyển đổi sang <span class="ref-dtb">Integer</span> hoặc <span class="ref-dtb">Float</span> để sử dụng
+            <br>- Ví dụ tải về thời gian bật tắt:
+            <br><span class="ref-dtb">Firebase.getInt(fbdo,"users/${user}/Servo/Servo-${card.id}");</span>
+            <br><span class="ref-dtb">int angle=fbdo.intData();</span>
+            </p>
+          </div>
+          `;
+      var slider = document.getElementById(`servo-${card.id}`);
+      var output = document.getElementById(`angles-${card.id}`);
+      output.innerHTML = 0;
     }
   });
   listenFirebase();
@@ -1152,6 +1275,7 @@ document.addEventListener("click", (e) => {
     Number(timeend[1]),
   );
 });
+
 document.getElementById("addblock").onclick = function () {
   let box = document.createElement("div");
   count++;
@@ -1167,6 +1291,7 @@ document.getElementById("addblock").onclick = function () {
         <option value="Sensor">Cảm biến</option>
         <option value="control">Điều khiển In Out</option>
         <option value="timecontrol">Điều khiển theo thời gian</option>
+        <option value="servocontrol">Điều khiển servo</option>
       </select>
       <div class="chartSelect" style="display:none;">
         <label for="chartType">Lựa chọn loại biểu đồ</label>
@@ -1401,6 +1526,15 @@ document.getElementById("addblock").onclick = function () {
         pin1: selectPin,
         pin2: null,
         chartType: null,
+      };
+      set(ref(db, `users/${user}/storage/${count}`), infor);
+      saved = 1;
+    } else if (selectCard == "servocontrol") {
+      let infor = {
+        id: count,
+        name: cardName,
+        type: selectCard,
+        pin1: selectPin,
       };
       set(ref(db, `users/${user}/storage/${count}`), infor);
       saved = 1;
@@ -1671,6 +1805,20 @@ function listenFirebase() {
     let hoursta, hoursto, minsta, minsto;
     Object.entries(Data).forEach(async ([key, val]) => {
       const parts = key.split("-");
+      if (document.getElementById(`time1-${parts[2]}`) == null) {
+        return;
+      }
+      if (document.getElementById(`time1-${parts[2]}`) == null) {
+        return;
+      }
+      if (
+        parts[1] !== "hoursta" &&
+        parts[1] !== "hoursto" &&
+        parts[1] !== "minsta" &&
+        parts[1] !== "minsto"
+      ) {
+        return;
+      }
       if (parts[1] == "hoursta") hoursta = val;
       if (parts[1] == "hoursto") hoursto = val;
       if (parts[1] == "minsta") minsta = val;
@@ -1778,6 +1926,7 @@ document.getElementById("closeChat").onclick = function () {
 function updateChatip() {
   const cards = JSON.parse(localStorage.getItem("cards")) || [];
   cards.forEach((card) => {
+    if (card == null) return;
     let kenh;
     const box = document.createElement("div");
     box.className = "msg tip";
@@ -1817,6 +1966,17 @@ function updateChatip() {
       </button>
     `;
     } else if (card.type == "timecontrol") {
+      box.innerHTML = `
+      <button class="tip-btn" id="tipchat-${card.id}">
+        <i class="fa-solid fa-lightbulb hint-icon"></i>
+        Hướng dẫn sử dụng card ${card.id}
+        <span class="txthint hint-text-${card.id}" style="display: none;">
+          Tôi muốn bạn hướng dẫn sử dụng card ${card.type} 
+          có id là ${card.id} 
+        </span>
+      </button>
+    `;
+    } else if (card.type == "servocontrol") {
       box.innerHTML = `
       <button class="tip-btn" id="tipchat-${card.id}">
         <i class="fa-solid fa-lightbulb hint-icon"></i>
@@ -1909,7 +2069,6 @@ document.addEventListener("change", function (e) {
       document.querySelector("." + parts[1] + parts[2]).style.display = "none";
     }
   } else if (parts[0] === "ct") {
-    console.log(e.target.id);
     if (e.target.checked) {
       document.querySelector("." + parts[1] + parts[2]).style.display = "flex";
     } else {
@@ -1918,14 +2077,20 @@ document.addEventListener("change", function (e) {
   }
 });
 
-//xử lý servo
-var slider = document.getElementById("servo0");
-var output = document.getElementById("angleservo");
-output.innerHTML = slider.value;
-
-slider.oninput = function () {
-  var val = this.value;
-  val = Number(val);
-  set(ref(db, `users/${user}/Servo/Servo0`), val);
-  output.innerHTML = this.value;
-};
+document.addEventListener("change", function (e) {
+  var parts = e.target.id.split("-");
+  if (parts[0] != "servo") return;
+  var slider = document.getElementById(`servo-${parts[1]}`);
+  var output = document.getElementById(`angles-${parts[1]}`);
+  output.innerHTML = slider.value;
+  slider.oninput = function () {
+    var val = this.value;
+    val = Number(val);
+    set(ref(db, `users/${user}/Servo/Servo-${parts[1]}`), val);
+    output.innerHTML = this.value;
+  };
+});
+var slider = document.getElementById(`servo-0`);
+var output = document.getElementById(`angles-0`);
+output.innerHTML = 0;
+set(ref(db, `users/${user}/Servo/Servo-0`), 0);

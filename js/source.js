@@ -1,4 +1,6 @@
 const user = localStorage.getItem("username");
+const servo =
+  "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/refs/heads/main/Source_testBoard/servo_ssd1306/servo_ssd1306.ino";
 const bme280 =
   "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/main/Source_testBoard/BME280_test/BME280_test.ino";
 const dht11 =
@@ -39,6 +41,7 @@ const sourcebtn = await downbox(btn1);
 const sourcecontrol = await downbox(control);
 const sourcetimecontrol = await downbox(timecontrol);
 const sourceuserbuild = await downbox(userbuild);
+const sourceServo = await downbox(servo);
 function load(source, title, Count) {
   let h1 = document.createElement("h1");
   h1.className = "heading";
@@ -75,7 +78,7 @@ load(sourcebtn, "BUTTON", 3);
 load(sourcecontrol, "CONTROL", 4);
 load(sourcetimecontrol, "TIMECONTROL", 5);
 load(sourceuserbuild, "USERBUILD", 6);
-
+load(sourceServo, "SERVOCONTROL", 7);
 const tabs = [
   "bme280",
   "dht11",
@@ -83,6 +86,7 @@ const tabs = [
   "button",
   "userbuild",
   "timecontrol",
+  "servocontrol",
 ];
 const panels = [
   "BME280",
@@ -91,6 +95,7 @@ const panels = [
   "BUTTON",
   "USERBUILD",
   "TIMECONTROL",
+  "SERVOCONTROL",
 ];
 
 const NEON_COLORS = {
@@ -100,6 +105,7 @@ const NEON_COLORS = {
   button: "#ff6600",
   userbuild: "#bf00ff",
   timecontrol: "#ffee00",
+  servocontrol: "#bbffd6",
 };
 
 function switchTab(activeTab) {
@@ -145,11 +151,14 @@ document.addEventListener("click", (e) => {
     navigator.clipboard.writeText(sourceuserbuild);
   } else if (btn == "copy-btnBUTTON") {
     navigator.clipboard.writeText(sourcebtn);
+  } else if (btn == "copy-btnSERVOCONTROL") {
+    navigator.clipboard.writeText(sourceServo);
   }
   document.getElementById(btn).innerHTML =
     `<i class="fa-solid fa-check"></i> Đã sao chép`;
   setTimeout(() => {
-    document.getElementById().innerHTML = `<i class="fa-solid fa-copy"></i> Sao chép code`;
+    document.getElementById(btn).innerHTML =
+      `<i class="fa-solid fa-copy"></i> Sao chép code`;
   }, 2000);
 });
 document.addEventListener("click", (e) => {
@@ -167,6 +176,9 @@ document.addEventListener("click", (e) => {
   } else if (btn == "download-btnTIMECONTROL") {
     download(hdsdTimecontrol);
   } else if (btn == "download-btnUSERBUILD") {
+    alert("tính năng đang phát triển");
+    return;
+  } else if (btn == "download-btnSERVOCONTROL") {
     alert("tính năng đang phát triển");
     return;
   }
