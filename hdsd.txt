@@ -1,65 +1,100 @@
-Hướng dẫn sử dụng loại card control:
-Để có thể sử dụng được cho loại card control, vui lòng làm theo hướng dẫn bên dưới.
-________________________________________
+===============================
+HUONG DAN SU DUNG CAC LOAI CARD
+===============================
+
+--------------------------------------------------
+1. CARD LOAI: control
+--------------------------------------------------
+
 🔹 Kênh 1
-•	Đường dẫn database:
-users/{user}/Out/Out-${card.id}-1
-•	Cài đặt giá trị kênh 1:
-Firebase.setInt(fbdo,"users/{user}/Out/Out-${card.id}-1", #gia_tri)
-•	Tải giá trị kênh 1:
-Firebase.getInt(fbdo,"users/{user}/Out/Out-${card.id}-1")
-________________________________________
+
+Đường dẫn database:
+users/{user}/Out/Out-{card.id}-1
+
+Cài đặt giá trị kênh 1:
+Firebase.setInt(fbdo,"users/{user}/Out/Out-{card.id}-1", #gia_tri)
+
+Tải giá trị kênh 1:
+Firebase.getInt(fbdo,"users/{user}/Out/Out-{card.id}-1")
+
+
 🔹 Kênh 2
-•	Đường dẫn database:
-users/{user}/Out/Out-${card.id}-2
-•	Cài đặt giá trị kênh 2:
-Firebase.setInt(fbdo,"users/{user}/Out/Out-${card.id}-2", #gia_tri)
-•	Tải giá trị kênh 2:
-Firebase.getInt(fbdo,"users/{user}/Out/Out-${card.id}-2")
-________________________________________
+
+Đường dẫn database:
+users/{user}/Out/Out-{card.id}-2
+
+Cài đặt giá trị kênh 2:
+Firebase.setInt(fbdo,"users/{user}/Out/Out-{card.id}-2", #gia_tri)
+
+Tải giá trị kênh 2:
+Firebase.getInt(fbdo,"users/{user}/Out/Out-{card.id}-2")
+
+
 ⚠️ Chú ý
-•	Dữ liệu tải về từ database có định dạng JSON, vì vậy cần chuyển đổi sang kiểu int hoặc float trước khi sử dụng.
-•	Ví dụ:
-Firebase.getInt(fbdo,"users/{user}/Out/Out-${card.id}-2");
+• Dữ liệu tải về từ database có định dạng JSON, vì vậy cần chuyển đổi sang kiểu int hoặc float trước khi sử dụng.
+• Ví dụ:
+Firebase.getInt(fbdo,"users/{user}/Out/Out-{card.id}-2");
 int out2 = fbdo.intData();
 
 
-Hướng dẫn sử dụng cho card loại sensor:
-+ Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới cho card loại sensor có loại biểu đồ là mixchart:
-•	Đường dẫn database:
-"users/${user}/Card/Data-${card.id}-1"
-•	Cài đặt giá trị cho kênh thông tin 1:
-Firebase.setFloat(fbdo,"users/${user}/Card/Data-${card.id}-1", #giá_trị)
-•	Cài đặt giá trị cho kênh thông tin 2:
-Firebase.setFloat(fbdo,"users/${user}/Card/Data-${card.id}-2", #giá_trị)
-•	Cài đặt giá trị cho đèn cảnh báo:
-Firebase.setInt(fbdo,"users/${user}/Card/Data-${card.id}-Warnled", #giá_trị)
-•	Tải về giá trị ngưỡng cảnh báo kênh 1:
-Firebase.getFloat(fbdo,"users/{user}/Card/Data-${card.id}-CB1")
-•	Tải về giá trị ngưỡng cảnh báo kênh 2:
-Firebase.getFloat(fbdo,"users/{user}/Card/Data-${card.id}-CB2")
-+ Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới cho card loại sensor có loại biểu đồ là line và bar:
-•	Cài đặt giá trị cho kênh thông tin 1:
-Firebase.setFloat(fbdo,"users/{user}/Card/Data-${card.id}-1", #giá_trị)
-•	Cài đặt giá trị cho đèn cảnh báo:
-Firebase.setInt(fbdo,"users/${user}/Card/Data-${card.id}-Warnled", #giá_trị)
-•	Tải về giá trị ngưỡng cảnh báo kênh 1:
-Firebase.getFloat(fbdo,"users/{user}/Card/Data-${card.id}-CB1")
-⚠️ Chú ý
-•	Dữ liệu tải về từ database có định dạng JSON, vì vậy cần chuyển đổi sang kiểu int hoặc float trước khi sử dụng.
-•	Ví dụ:
-•	Firebase.getFloat(fbdo,"users/{user}/Card/Data-${card.id}-CB1");
-•	float tempCB = fbdo.floatData();
+--------------------------------------------------
+2. CARD LOAI: sensor
+--------------------------------------------------
 
-Hướng dẫn sử dụng cho card loại servocontrol:
++ Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới cho card loại sensor có loại biểu đồ là mixchart:
+
+Đường dẫn database:
+users/{user}/Card/Data-{card.id}-1
+
+Cài đặt giá trị cho kênh thông tin 1:
+Firebase.setFloat(fbdo,"users/{user}/Card/Data-{card.id}-1", #gia_tri)
+
+Cài đặt giá trị cho kênh thông tin 2:
+Firebase.setFloat(fbdo,"users/{user}/Card/Data-{card.id}-2", #gia_tri)
+
+Cài đặt giá trị cho đèn cảnh báo:
+Firebase.setInt(fbdo,"users/{user}/Card/Data-{card.id}-Warnled", #gia_tri)
+
+Tải về giá trị ngưỡng cảnh báo kênh 1:
+Firebase.getFloat(fbdo,"users/{user}/Card/Data-{card.id}-CB1")
+
+Tải về giá trị ngưỡng cảnh báo kênh 2:
+Firebase.getFloat(fbdo,"users/{user}/Card/Data-{card.id}-CB2")
+
+
++ Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới cho card loại sensor có loại biểu đồ là line và bar:
+
+Cài đặt giá trị cho kênh thông tin 1:
+Firebase.setFloat(fbdo,"users/{user}/Card/Data-{card.id}-1", #gia_tri)
+
+Cài đặt giá trị cho đèn cảnh báo:
+Firebase.setInt(fbdo,"users/{user}/Card/Data-{card.id}-Warnled", #gia_tri)
+
+Tải về giá trị ngưỡng cảnh báo kênh 1:
+Firebase.getFloat(fbdo,"users/{user}/Card/Data-{card.id}-CB1")
+
+
+⚠️ Chú ý
+• Dữ liệu tải về từ database có định dạng JSON, vì vậy cần chuyển đổi sang kiểu int hoặc float trước khi sử dụng.
+• Ví dụ:
+Firebase.getFloat(fbdo,"users/{user}/Card/Data-{card.id}-CB1");
+float tempCB = fbdo.floatData();
+
+
+--------------------------------------------------
+3. CARD LOAI: servocontrol
+--------------------------------------------------
+
 Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
-- Đường dẫn database:
-users/duc/Servo/Servo-${card.id}
-- Để tải về giá trị góc servo:
-Firebase.getInt(fbdo,"users/duc/Servo/Servo-${card.id}")
+
+Đường dẫn database:
+users/{user}/Servo/Servo-{card.id}
+
+Để tải về giá trị góc servo:
+Firebase.getInt(fbdo,"users/{user}/Servo/Servo-{card.id}")
+
 * Chú ý:
 - Dữ liệu tải về từ database là json nên phải chuyển đổi sang Integer hoặc Float để sử dụng
 - Ví dụ tải về thời gian bật tắt:
-Firebase.getInt(fbdo,"users/duc/Servo/Servo-${card.id}");
-int angle=fbdo.intData();
-
+Firebase.getInt(fbdo,"users/{user}/Servo/Servo-{card.id}");
+int angle = fbdo.intData();
