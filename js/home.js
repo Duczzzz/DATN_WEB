@@ -43,7 +43,7 @@ async function showPing() {
     pingstt.innerText = "lỗi kết nối";
   }
 }
-// setInterval(showPing, 2000);
+setInterval(showPing, 2000);
 import devtools from "https://cdn.jsdelivr.net/npm/devtools-detect@4.0.2/index.js";
 const userControl = ["admin", "duc", "luong"];
 function checkUser() {
@@ -101,7 +101,12 @@ async function loadhdsd() {
   ).then((r) => r.text());
   return hdsdRaw.replaceAll("{user}", user);
 }
-
+async function loadcode() {
+  const codeRaw = await fetch(
+    "https://raw.githubusercontent.com/Duczzzz/DATN_WEB/refs/heads/main/userbuild.txt",
+  ).then((r) => r.text());
+  return codeRaw;
+}
 async function initchat() {
   const response = await fetch(
     "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
@@ -109,7 +114,7 @@ async function initchat() {
       method: "POST",
       body: JSON.stringify({
         // model: "gpt-oss:120b-cloud",
-        model: "gemma3:4b",
+        model: "gemma4:E4B",
         messages: [
           {
             role: "system",
@@ -142,86 +147,177 @@ async function chatNor(msgu) {
     const title = box.querySelector(".heading");
     return title ? title.innerText : "Sơ đồ kết nối của board";
   });
+  let box = document.createElement("div");
+  box.className = "msg bot";
+  box.innerText = `Đang suy luận...`;
+  document.querySelector("#chatBody").appendChild(box);
   const response = await fetch(
     "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
     {
       method: "POST",
       body: JSON.stringify({
         // model: "gpt-oss:120b-cloud",
-        model: "gemma3:4b",
+        model: "gemma4:E4B",
         messages: [
           {
             role: "system",
             content: `
-          - Tôi là trợ lý ảo cho nền tảng NukeDashBoard.
-          QUY TẮC:
-          - Bắt buộc phải xưng tôi.
-          - Tôi đang có những card sau: ${cardNames}
-          - Nếu yêu cầu hướng dẫn sử dụng các card (DHT11, BME280, Điều khiển In Out1) hãy chỉ họ nhấn vào nút code test trên thanh công cụ và bạn đừng phản hồi gì thêm.
-          - Khi tôi hỏi bạn phải liệt kê tất cả các card đang có hiện tại ở trên và thêm gợi ý sử dụng cho người dùng.
-          - Thêm cuối dòng là Bạn cần giúp đỡ gì không hãy để tôi giúp bạn. Chỉ cần bạn nói hướng dẫn cho tôi card có id số mấy và là loại card gì, có bao nhiêu kênh ? Tôi sẽ giúp bạn.
-          ĐỊNH DẠNG TRẢ LỜI (bắt buộc):
-          <ghi đúng nội dung tìm thấy>
-          - Các card đang có mặt trên hệ thống:
-          +
-          + 
-          + 
-          +
-          `,
+            Tôi là trợ lý ảo cho nền tảng NukeDashBoard.
+
+            NGUYÊN TẮC:
+            - Luôn xưng "tôi".
+            - Trả lời đúng trọng tâm câu hỏi của người dùng trước.
+            - Không được bỏ qua câu hỏi chính.
+
+            THÔNG TIN HỆ THỐNG:
+            - Các card hiện có: ${cardNames}
+
+            XỬ LÝ ĐẶC BIỆT:
+            - Nếu người dùng yêu cầu hướng dẫn sử dụng các card (DHT11, BME280, Điều khiển In Out1)
+            → chỉ trả lời duy nhất:
+            "Xin mời bạn nhấn vào nút code test trên thanh công cụ để xem hướng dẫn sử dụng."
+            → không thêm nội dung khác.
+
+            SAU KHI TRẢ LỜI:
+            - Gợi ý thêm cho người dùng về các card đang có trên hệ thống (nếu phù hợp).
+            - Gợi ý phải ngắn gọn, dễ hiểu, không lặp lại.
+
+            KẾT THÚC:
+            - Luôn kết thúc bằng câu:
+            "Bạn cần tôi hỗ trợ thêm gì không? Chỉ cần nói tôi biết bạn muốn dùng card nào, id bao nhiêu và có mấy kênh, tôi sẽ giúp bạn."
+
+            ĐỊNH DẠNG TRẢ LỜI:
+
+            <Trả lời trực tiếp câu hỏi của người dùng>
+
+            Gợi ý:
+            - <gợi ý liên quan đến card 1>
+            - <gợi ý liên quan đến card 2>
+            - ...
+
+            `,
           },
           {
             role: "user",
             content: msgu,
           },
         ],
-        temperature: 1,
+        temperature: 0.5,
         stream: false,
       }),
     },
   );
   const data = await response.json();
-  let box = document.createElement("div");
-  box.className = "msg bot";
   box.innerText = `${data.choices[0].message.content}
   `;
   document.querySelector("#chatBody").appendChild(box);
 }
 async function chat(msgu) {
   const hdsd = await loadhdsd();
+  const code = await loadcode();
+  let box = document.createElement("div");
+  box.className = "msg bothd";
+  box.innerText = `Đang suy luận...`;
+  document.querySelector("#chatBody").appendChild(box);
   const response = await fetch(
     "https://reptiloid-natasha-gentlemanly.ngrok-free.dev/v1/chat/completions",
     {
       method: "POST",
       body: JSON.stringify({
         // model: "gpt-oss:120b-cloud",
-        model: "gemma3:4b",
+        model: "gemma4:E4B",
         messages: [
           {
             role: "system",
             content: `
-          Bạn là trợ lý ảo cho nền tảng của tôi.
-          QUY TẮC:
-          - CHỈ được trả lời dựa trên HƯỚNG DẪN SỬ DỤNG bên dưới.
-          - Tôi có user là ${user} bạn hãy thay vào "{user}" trong vào đường dẫn database trong hướng dẫn sử dụng (bắt buộc).
-          - Nếu yêu cầu hướng dẫn sử dụng các card (DHT11, BME280, Điều khiển In Out1) hãy chỉ họ nhấn vào nút code test trên thanh công cụ và đừng phản hồi gì thêm.
-          - KHÔNG suy đoán.
-          - KHÔNG bổ sung kiến thức bên ngoài.
-          - Nếu không tìm thấy thông tin, trả lời đúng duy nhất:
-          "Không tìm thấy thông tin trong hướng dẫn sử dụng"
-          - Bắt buộc luôn luôn đính kèm theo chú ý và ví dụ trong file có ghi.
-          ĐỊNH DẠNG TRẢ LỜI (bắt buộc):
-          - Xin mời bạn chuyển đến trang code test và chọn userbuild để có thể code theo nhu cầu của bạn với đường dẫn database và hướng dẫn bên dưới.
-          - Đoạn tin nhắn này sẽ không được lưu lại nên bạn vui lòng sao chép lại nếu cần thiết.
-          ===Đường dẫn database===
-          <ghi đúng nội dung tìm thấy>
+            Bạn là trợ lý lập trình cho nền tảng của tôi.
 
-          ===Cách tải và lấy về dữ liệu===
-          <ghi đúng nội dung tìm thấy>
+            ====================
+            NHIỆM VỤ
+            ====================
+            - Sử dụng nội dung trong "HƯỚNG DẪN SỬ DỤNG".
+            - Thay "{user}" bằng "${user}" trong đường dẫn database.
+            - Không sửa lại nội dung gốc trong hướng dẫn.
 
-          ====================
-          HƯỚNG DẪN SỬ DỤNG:
-          ${hdsd}
-          `,
+            ====================
+            TRƯỜNG HỢP ĐẶC BIỆT
+            ====================
+            - Nếu người dùng yêu cầu hướng dẫn các card (DHT11, BME280, Điều khiển In Out1)
+            → chỉ trả lời:
+            "Xin mời bạn nhấn vào nút code test trên thanh công cụ để xem hướng dẫn sử dụng."
+
+            ====================
+            QUY TẮC XỬ LÝ CODE
+            ====================
+            Bạn được cung cấp một code mẫu.
+
+            - CHỈ được viết thêm code vào 2 vị trí sau:
+
+            1. /*
+              Người dùng build code tại đây
+              */
+
+            2. /*
+              Xây dựng cơ chế xử lý của bạn tại đây
+              */
+
+            - KHÔNG được:
+              + Viết lại toàn bộ chương trình
+              + Thêm lại WiFi, Firebase, OLED, LED (đã có sẵn)
+              + Thay đổi cấu trúc code mẫu
+
+            - ĐƯỢC phép:
+              + Thêm thư viện cần thiết (ví dụ: Servo)
+              + Khai báo biến
+              + Viết logic đọc Firebase và điều khiển thiết bị
+
+            - Code phải có thể chạy trực tiếp khi chèn vào code mẫu.
+
+            ====================
+            ĐỊNH DẠNG TRẢ LỜI (BẮT BUỘC)
+            ====================
+
+            ===Đường dẫn database===
+            <dán nguyên nội dung từ hướng dẫn, đã thay ${user}>
+
+            ===Cách tải và lấy về dữ liệu===
+            <dán nguyên nội dung từ hướng dẫn>
+
+            ===Chú ý và ví dụ===
+            <giữ nguyên nếu có>
+
+            ===Code bổ sung===
+
+            /*
+            Người dùng build code tại đây
+            */
+            <code thêm vào>
+
+            /*
+            Xây dựng cơ chế xử lý của bạn tại đây
+            */
+            <code thêm vào>
+
+            ===Gợi ý===
+            - GPIO đề xuất phù hợp cho thiết bị
+            - Thư viện cần dùng (Arduino / ESP32-S3)
+            - Lưu ý phần cứng (nguồn, chân đặc biệt nếu có)
+
+            ===Giải thích===
+            - Giải thích ngắn gọn (tối đa 5 dòng)
+
+            ⚠️ Đây là code do AI tạo ra, có thể xảy ra lỗi.
+
+            ====================
+            CODE MẪU:
+            ${code}
+            ====================
+
+            ====================
+            HƯỚNG DẪN SỬ DỤNG:
+            ${hdsd}
+            ====================
+            `,
           },
           {
             role: "user",
@@ -234,8 +330,6 @@ async function chat(msgu) {
     },
   );
   const data = await response.json();
-  let box = document.createElement("div");
-  box.className = "msg bothd";
   box.innerText = `${data.choices[0].message.content}
   `;
   document.querySelector("#chatBody").appendChild(box);
@@ -1941,10 +2035,11 @@ function updateChatip() {
         <i class="fa-solid fa-lightbulb hint-icon"></i>
         Hướng dẫn sử dụng card ${card.id}
         <span class="txthint hint-text-${card.id}" style="display: none;">
-          Tôi muốn bạn hướng dẫn sử dụng card ${card.type} 
-          có id là ${card.id} 
-          có ${kenh} kênh
-          loại biểu đồ ${card.chartType}
+          Tôi muốn bạn hướng dẫn sử dụng card ${card.type}: 
+          + Có id là ${card.id} 
+          + Có ${kenh} kênh
+          + Loại biểu đồ ${card.chartType}
+          + Kết nối chân GPIO${card.pin1}
         </span>
       </button>
     `;
@@ -1959,9 +2054,14 @@ function updateChatip() {
         <i class="fa-solid fa-lightbulb hint-icon"></i>
         Hướng dẫn sử dụng card ${card.id}
         <span class="txthint hint-text-${card.id}" style="display: none;">
-          Tôi muốn bạn hướng dẫn sử dụng card ${card.type} 
-          có id là ${card.id} 
-          có ${kenh} kênh
+          Tôi muốn bạn hướng dẫn sử dụng card ${card.type}: 
+          + Có id là ${card.id} 
+          + Có ${kenh} kênh
+          ${
+            card.pin2 == null
+              ? `+ Kết nối chân GPIO${card.pin1}`
+              : `+ Kết nối chân GPIO${card.pin1} và GPIO${card.pin2}`
+          }
         </span>
       </button>
     `;
@@ -1971,8 +2071,9 @@ function updateChatip() {
         <i class="fa-solid fa-lightbulb hint-icon"></i>
         Hướng dẫn sử dụng card ${card.id}
         <span class="txthint hint-text-${card.id}" style="display: none;">
-          Tôi muốn bạn hướng dẫn sử dụng card ${card.type} 
-          có id là ${card.id} 
+          Tôi muốn bạn hướng dẫn sử dụng card ${card.type}: 
+          + Có id là ${card.id}
+          + Kết nối chân GPIO${card.pin1} 
         </span>
       </button>
     `;
@@ -1982,8 +2083,9 @@ function updateChatip() {
         <i class="fa-solid fa-lightbulb hint-icon"></i>
         Hướng dẫn sử dụng card ${card.id}
         <span class="txthint hint-text-${card.id}" style="display: none;">
-          Tôi muốn bạn hướng dẫn sử dụng card ${card.type} 
-          có id là ${card.id} 
+          Tôi muốn bạn hướng dẫn sử dụng card ${card.type}: 
+          + Có id là ${card.id}
+          + Kết nối chân GPIO${card.pin1} 
         </span>
       </button>
     `;
