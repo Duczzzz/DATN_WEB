@@ -267,7 +267,7 @@ async function chat(msgu) {
               + Thay đổi cấu trúc code mẫu
 
             - ĐƯỢC phép:
-              + Thêm thư viện cần thiết (ví dụ: Servo)
+              + Thêm thư viện cần thiết cho esp32-s3 (ví dụ: Servo)
               + Khai báo biến
               + Viết logic đọc Firebase và điều khiển thiết bị
 

@@ -124,7 +124,7 @@ body::after {
 .menu {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 1;
   background: rgba(2, 10, 26, 0.88);
   backdrop-filter: blur(24px) saturate(180%);
   border-bottom: 1px solid var(--border-glow);
@@ -196,7 +196,7 @@ body::after {
   min-height: 100vh;
   padding: 10px;
   position: relative;
-  z-index: 1;
+  z-index: 0;
 }
 
 .container {
@@ -865,14 +865,13 @@ form button:active {
   position: fixed;
   right: 30px;
   bottom: 30px;
-  width: 700px;
-  height: 550px;
-  z-index: 9999;
+  width: 800px;
+  height: 650px;
+  z-index: 99999;
   pointer-events: auto;
 }
 
 .box.chat {
-  position: fixed;
   background: rgba(5, 12, 28, 0.97);
   border: 1px solid var(--border-glow);
   border-radius: var(--r-xl);
@@ -1232,7 +1231,10 @@ footer {
     min-height: 420px;
   }
   .box {
-    max-width: 650px;
+    max-width: 600px;
+  }
+  .box.chat {
+    max-width: 800px !important;
   }
   .container {
     gap: 14px;

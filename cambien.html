@@ -29,12 +29,33 @@
         <li><a href="home.html">Trang chủ</a></li>
         <li><a href="source.html">Code test</a></li>
         <li>
-          <a href="cambien.html" style="background-color: rgb(107, 0, 131)"
+          <a href="cambien.html" style="background-color: rgb(208, 0, 255)"
             >Bảng điều khiển</a
           >
         </li>
         <li><a id="logout">Đăng xuất</a></li>
       </ul>
+    </div>
+    <div class="chat" style="display: none">
+      <div class="box chat">
+        <h1>Trợ lý ảo</h1>
+        <div id="chatWindow" class="chat-window">
+          <div class="chat-header">
+            <span>🤖 Trợ lý ảo</span>
+            <button id="closeChat">✖</button>
+          </div>
+          <div class="chat-body" id="chatBody">
+            <div class="msg bot" id="chatinit">
+              Đang kết nối tới server... Vui lòng chờ trong giây lát!
+            </div>
+          </div>
+          <div class="chat-tip"></div>
+          <div class="chat-footer">
+            <textarea id="chatInput" placeholder="Nhập tin nhắn..."></textarea>
+            <button id="sendChat">Gửi</button>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="supercontainer">
       <div class="blockbtn">
@@ -86,30 +107,6 @@
         </div>
       </div>
       <div class="remove"></div>
-      <div class="chat" style="display: none">
-        <div class="box chat">
-          <h1>Trợ lý ảo</h1>
-          <div id="chatWindow" class="chat-window">
-            <div class="chat-header">
-              <span>🤖 Trợ lý ảo</span>
-              <button id="closeChat">✖</button>
-            </div>
-            <div class="chat-body" id="chatBody">
-              <div class="msg bot" id="chatinit">
-                Đang kết nối tới server... Vui lòng chờ trong giây lát!
-              </div>
-            </div>
-            <div class="chat-tip"></div>
-            <div class="chat-footer">
-              <textarea
-                id="chatInput"
-                placeholder="Nhập tin nhắn..."
-              ></textarea>
-              <button id="sendChat">Gửi</button>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="container">
         <div class="flow">
           <div class="contentMain">
