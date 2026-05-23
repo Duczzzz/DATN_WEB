@@ -1,0 +1,17 @@
+--------------------------------------------------
+3. CARD loại: timecontrol
+--------------------------------------------------
+Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
+- Để tải về giá trị giờ bật:
+Firebase.getInt(fbdo,"users/{user}/Card/Data-hoursta-10")
+- Để tải về giá trị giờ tắt:
+Firebase.getInt(fbdo,"users/{user}/Card/Data-hoursto-10")
+- Để tải về giá trị phút bật:
+Firebase.getInt(fbdo,"users/{user}/Card/Data-minsta-10")
+- Để tải về giá trị phút tắt:
+Firebase.getInt(fbdo,"users/{user}/Card/Data-minsto-10")
+⚠️ Chú ý:
+- Dữ liệu tải về từ database là json nên phải chuyển đổi sangIntegerhoặcFloatđể sử dụng
+- Ví dụ tải về thời gian bật tắt:
+Firebase.getInt(fbdo,"users/{user}/Card/Data-hoursta-10");
+int hoursta=fbdo.intData();

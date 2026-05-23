@@ -1,0 +1,17 @@
+--------------------------------------------------
+CARD loại: servocontrol
+--------------------------------------------------
+
+Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới
+
+Đường dẫn database:
+users/{user}/Servo/Servo-{card.id}
+
+Để tải về giá trị góc servo:
+Firebase.getInt(fbdo,"users/{user}/Servo/Servo-{card.id}")
+
+⚠️ Chú ý:
+- Dữ liệu tải về từ database là json nên phải chuyển đổi sang Integer hoặc Float để sử dụng
+- Ví dụ tải về thời gian bật tắt:
+Firebase.getInt(fbdo,"users/{user}/Servo/Servo-{card.id}");
+int angle = fbdo.intData();

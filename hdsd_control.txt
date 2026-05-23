@@ -1,0 +1,33 @@
+--------------------------------------------------
+CARD loại: control
+--------------------------------------------------
+
+🔹 Kênh 1
+
+Đường dẫn database:
+users/{user}/Out/Out-{card.id}-1
+
+Cài đặt giá trị kênh 1:
+Firebase.setInt(fbdo,"users/{user}/Out/Out-{card.id}-1", #gia_tri)
+
+Tải giá trị kênh 1:
+Firebase.getInt(fbdo,"users/{user}/Out/Out-{card.id}-1")
+
+
+🔹 Kênh 2
+
+Đường dẫn database:
+users/{user}/Out/Out-{card.id}-2
+
+Cài đặt giá trị kênh 2:
+Firebase.setInt(fbdo,"users/{user}/Out/Out-{card.id}-2", #gia_tri)
+
+Tải giá trị kênh 2:
+Firebase.getInt(fbdo,"users/{user}/Out/Out-{card.id}-2")
+
+
+⚠️ Chú ý
+• Dữ liệu tải về từ database có định dạng JSON, vì vậy cần chuyển đổi sang kiểu int hoặc float trước khi sử dụng.
+• Ví dụ:
+Firebase.getInt(fbdo,"users/{user}/Out/Out-{card.id}-2");
+int out2 = fbdo.intData();

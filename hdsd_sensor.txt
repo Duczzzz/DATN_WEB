@@ -1,0 +1,42 @@
+--------------------------------------------------
+CARD loại: sensor
+--------------------------------------------------
+
++ Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới cho card loại sensor có loại biểu đồ là mixchart:
+
+Đường dẫn database:
+users/{user}/Card/Data-{card.id}-1
+
+Cài đặt giá trị cho kênh thông tin 1:
+Firebase.setFloat(fbdo,"users/{user}/Card/Data-{card.id}-1", #gia_tri)
+
+Cài đặt giá trị cho kênh thông tin 2:
+Firebase.setFloat(fbdo,"users/{user}/Card/Data-{card.id}-2", #gia_tri)
+
+Cài đặt giá trị cho đèn cảnh báo:
+Firebase.setInt(fbdo,"users/{user}/Card/Data-{card.id}-Warnled", #gia_tri)
+
+Tải về giá trị ngưỡng cảnh báo kênh 1:
+Firebase.getFloat(fbdo,"users/{user}/Card/Data-{card.id}-CB1")
+
+Tải về giá trị ngưỡng cảnh báo kênh 2:
+Firebase.getFloat(fbdo,"users/{user}/Card/Data-{card.id}-CB2")
+
+
++ Bạn vui lòng sử dụng đường dẫn và hướng dẫn bên dưới cho card loại sensor có loại biểu đồ là line và bar:
+
+Cài đặt giá trị cho kênh thông tin 1:
+Firebase.setFloat(fbdo,"users/{user}/Card/Data-{card.id}-1", #gia_tri)
+
+Cài đặt giá trị cho đèn cảnh báo:
+Firebase.setInt(fbdo,"users/{user}/Card/Data-{card.id}-Warnled", #gia_tri)
+
+Tải về giá trị ngưỡng cảnh báo kênh 1:
+Firebase.getFloat(fbdo,"users/{user}/Card/Data-{card.id}-CB1")
+
+
+⚠️ Chú ý
+• Dữ liệu tải về từ database có định dạng JSON, vì vậy cần chuyển đổi sang kiểu int hoặc float trước khi sử dụng.
+• Ví dụ:
+Firebase.getFloat(fbdo,"users/{user}/Card/Data-{card.id}-CB1");
+float tempCB = fbdo.floatData();
