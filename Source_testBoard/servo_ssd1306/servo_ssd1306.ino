@@ -18,8 +18,8 @@
 #include <Adafruit_SH110X.h>
 #include <Wire.h>
 
-const char* ssid = "DUC";
-const char* pass = "14042004";
+const char* ssid = "-------";
+const char* pass = "-------";
 
 #define LED_PIN   9
 #define LED_COUNT 1
@@ -51,12 +51,7 @@ void setup() {
   if (!display.begin(SSD1306_SWITCHCAPVCC, i2c_Address)) {
     while (1);
   }
-	ESP32PWM::allocateTimer(0);
-	ESP32PWM::allocateTimer(1);
-	ESP32PWM::allocateTimer(2);
-	ESP32PWM::allocateTimer(3);
-	myservo.setPeriodHertz(50);
-	myservo.attach(servoPin, 1000, 2000);
+  myservo.attach(servoPin);
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
@@ -112,7 +107,7 @@ void setup() {
 
 void loop() {
   display.clearDisplay();
-  if(Firebase.getInt(fbdo,"/users/duc/Servo/Servo0")) pos = fbdo.intData();
+  if(Firebase.getInt(fbdo,"/users/{user}/Servo/Servo-0")) pos = fbdo.intData();
   myservo.write(pos);
   display.setCursor(0,0);
   display.printf("goc: %d",pos);
