@@ -15,7 +15,7 @@
 #include <WiFi.h>
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_GFX.h>
-#include <Adafruit_SH110X.h>
+#include <Adafruit_SSD1306.h>
 #include <Wire.h>
 
 const char* ssid = "-------";
