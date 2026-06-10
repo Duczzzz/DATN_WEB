@@ -6,13 +6,13 @@
 // + thư viện Adafruit SSD1306 by Adafruit
 // Tác giả MinhDuc
 // 07/03/2026
-// Led RGB được cấu hình chân DIN ở GPIO9
+// Led RGB chân 9
 // BME280 SDA chân 8
 // BME280 SCL chân 18
-// Oled tft SDA chân 8
-// Oled tft SCL chân 18
+// Oled tft SDA chân 13
+// Oled tft SCL chân 12
 // DHT chân 11
-// Điều khiển driver động cơ chân GPIO16 và GPIO15
+// Điều khiển driver động cơ chân 16 và 15
 
 #include <Wire.h>
 #include <FirebaseESP32.h>
@@ -23,21 +23,26 @@
 #include <Adafruit_SSD1306.h>
 #include <HTTPClient.h>
 #include <Update.h>
+#include <Adafruit_BME280.h>
 
-const char* ssid = "DUC";
-const char* pass = "14042004";
-
-#define LED_PIN   9
+const char* ssid = "........";
+const char* pass = "........";
 #define LED_COUNT 1
-Adafruit_NeoPixel led(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
+#define LED_RGB 9
+Adafruit_NeoPixel led(LED_COUNT, LED_RGB, NEO_GRB + NEO_KHZ800);
 
 #define LED 2
+
+TwoWire I2C_BME = TwoWire(0);
+TwoWire I2C_OLED = TwoWire(1);
 
 #define i2c_Address 0x3c
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 #define OLED_RESET -1
-Adafruit_SSD1306 display = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+Adafruit_SSD1306 display = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &I2C_OLED, OLED_RESET);
+
+Adafruit_BME280 bme;
 
 const char* firmwareUrl = "https://raw.githubusercontent.com/Duczzzz/testOTA/main/firmware.ino.bin";
 
@@ -147,7 +152,8 @@ void setup() {
   /*
     Người dùng build code tại đây
   */
-  Wire.begin(8,18);
+  I2C_BME.begin(8,18);
+  I2C_OLED.begin(13,12);
   led.begin();
   led.setBrightness(50);
   led.setPixelColor(0, led.Color(255, 0, 255));
@@ -159,10 +165,20 @@ void setup() {
     while (1);
   }
   display.clearDisplay();
+  display.setCursor(25, 30);
+  display.print("NUKEDASHBOARD");
+  if (!bme.begin(0x76,&I2C_BME)) {
+    display.clearDisplay();
+    Serial.println("Không tìm thấy BME280!");
+    display.setCursor(0, 0);
+    display.printf("Khong tim thay BME280!");
+    display.display();
+    led.setPixelColor(0, led.Color(255, 0, 0));
+    led.show();
+    while (1);
+  }
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0, 0);
-  display.printf("He thong dang \nkhoi dong...");
   display.display();
   delay(1000);
   pinMode(LED,OUTPUT);
@@ -175,10 +191,13 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
     led.setPixelColor(0, led.Color(255, 0, 255));
     led.show();
-    display.setCursor(0,0);
-    display.print("Conecting WiFi");
+    Serial.println("dang khoi dong WiFi...");
+    display.setCursor(10,0);
+    display.print("Dang ket noi WiFi");
+    display.setCursor(0,20);
+    display.printf("SSID: %s",ssid);
     if(demwf < 80) {
-      display.setCursor(demwf,10);
+      display.setCursor(demwf,30);
       display.print(".");
       Serial0.println(".");
     }
@@ -198,15 +217,10 @@ void setup() {
   Firebase.reconnectWiFi(true);
   fbdo.setBSSLBufferSize(512, 512);
   Firebase.begin(&config, &auth);
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setCursor(0, 30);
-  display.println("XIN CHAO CAC BAN");
-  display.display();
-  delay(300);
-  display.clearDisplay();
   led.setPixelColor(0, led.Color(0, 255, 0));
   led.show();
+  display.clearDisplay();
+  display.display();
 }
 
 void loop() {
