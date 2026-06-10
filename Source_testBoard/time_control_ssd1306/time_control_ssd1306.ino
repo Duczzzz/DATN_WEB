@@ -8,6 +8,10 @@
 // Tác giả MinhDuc
 // 07/03/2026
 // Led RGB được cấu hình chân DIN ở GPIO9
+// Ngõ ra động cơ được kết nối vào out1 là chân dương +12v 
+//                              và out2 là chân gnd
+// Chân in1 kết nối với GPIO16
+// Chân in2 kết nối với GPIO15
 
 #include <Wire.h>
 #include <FirebaseESP32.h>
@@ -17,14 +21,16 @@
 #include <Adafruit_SSD1306.h>
 #include <time.h>
 
-const char* ssid = ".......";
-const char* pass = ".......";
+const char* ssid = "........";
+const char* pass = "........";
 
 #define LED_PIN   9
 #define LED_COUNT 1
 Adafruit_NeoPixel led(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 #define LED 2
+#define in1 16
+#define in2 15
 
 #define i2c_Address 0x3c
 #define SCREEN_WIDTH 128
@@ -67,25 +73,30 @@ void setup() {
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0, 0);
-  display.printf("He thong dang \nkhoi dong...");
+  display.setCursor(25, 30);
+  display.print("NUKEDASHBOARD");
   display.display();
-  delay(1000);
   pinMode(LED,OUTPUT);
+  pinMode(in1,OUTPUT);
+  pinMode(in2,OUTPUT);
+  digitalWrite(in2,0);
   digitalWrite(LED,0);
   Serial.begin(115200);
   Serial.println("He thong dang khoi dong...");
   display.display();
   display.clearDisplay();
+  delay(1000);
   WiFi.begin(ssid,pass);
   while (WiFi.status() != WL_CONNECTED) {
     led.setPixelColor(0, led.Color(255, 0, 255));
     led.show();
     Serial.println("dang khoi dong WiFi...");
-    display.setCursor(0,0);
-    display.print("Conecting WiFi");
+    display.setCursor(10,0);
+    display.print("Dang ket noi WiFi");
+    display.setCursor(0,20);
+    display.printf("SSID: %s",ssid);
     if(demwf < 80) {
-      display.setCursor(demwf,10);
+      display.setCursor(demwf,30);
       display.print(".");
       Serial0.println(".");
     }
@@ -98,40 +109,39 @@ void setup() {
     digitalWrite(LED,1);
     delay(300);
   }
-  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer1);
   digitalWrite(LED,0);
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer1);
   Serial.printf("Firebase Client v%s\n\n", FIREBASE_CLIENT_VERSION);
   config.database_url = DATABASE_URL;
   config.signer.tokens.legacy_token = DATABASE_SECRET;
   Firebase.reconnectWiFi(true);
   fbdo.setBSSLBufferSize(512, 512);
   Firebase.begin(&config, &auth);
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setCursor(0, 30);
-  display.println("XIN CHAO CAC BAN");
-  display.display();
-  delay(300);
-  display.clearDisplay();
   led.setPixelColor(0, led.Color(0, 255, 0));
   led.show();
 }
 
 void loop() {
+  display.clearDisplay();
+  int rssi = WiFi.RSSI();
+  display.setCursor(10, 0);
+  display.print("DK THEO THOI GIAN");
   struct tm timeinfo;
   if (getLocalTime(&timeinfo)) {
     currentHour = timeinfo.tm_hour;
     currentMin  = timeinfo.tm_min;
+    display.setCursor(0, 20);
+    display.printf("Tg ht:%d:%d || %d",currentHour,currentMin,rssi);
+  }
+  else {
+    display.setCursor(0, 20);
+    display.print("Loi ket noi server");
   }
   if (Firebase.getInt(fbdo, "/users/{user}/Card/timeControl/hourstart")) hoursta = fbdo.intData();
   if (Firebase.getInt(fbdo, "/users/{user}/Card/timeControl/minutestart")) minsta = fbdo.intData();
   if (Firebase.getInt(fbdo, "/users/{user}/Card/timeControl/hourend")) hoursto = fbdo.intData();
   if (Firebase.getInt(fbdo, "/users/{user}/Card/timeControl/minuteend")) minsto = fbdo.intData();
-  display.clearDisplay();
-  display.setCursor(20, 0);
-  display.print("Time control");
-  display.setCursor(0, 20);
-  display.printf("Tg ht: %d:%d",currentHour,currentMin);
+
   display.setCursor(0, 30);
   display.printf("Tg bat: %d:%d",hoursta,minsta);
   display.setCursor(0, 40);
@@ -154,6 +164,12 @@ void loop() {
   if (state != ledstate) {
     ledstate = state;
     Firebase.setInt(fbdo, "/users/{user}/Card/timeControl/statusMotor",state);
+  }
+  if (state == 1) {
+    digitalWrite(in1,1);
+  }
+  else {
+    digitalWrite(in1,0);
   }
   display.display();
   delay(1000);
