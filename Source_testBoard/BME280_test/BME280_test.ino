@@ -23,8 +23,8 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-const char* ssid = "DUC";
-const char* pass = "14042004";
+const char* ssid = "........"; // điền tên wifi
+const char* pass = "........"; // điền pass wifi
 
 #define LED_PIN   9
 #define LED_COUNT 1
