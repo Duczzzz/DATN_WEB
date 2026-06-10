@@ -21,8 +21,8 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-const char* ssid = "DUC";
-const char* pass = "14042004";
+const char* ssid = "........";
+const char* pass = "........";
 
 #define LED_PIN   9
 #define LED_COUNT 1
@@ -121,11 +121,11 @@ void setup() {
   Firebase.reconnectWiFi(true);
   fbdo.setBSSLBufferSize(512, 512);
   Firebase.begin(&config, &auth);
-  if(Firebase.getInt(fbdo, "/users/duc/In/In1")) {
+  if(Firebase.getInt(fbdo, "/users/{user}/In/In1")) {
     state = fbdo.intData();
   }
-  Firebase.setInt(fbdo,"users/duc/Out/Out1",stateled);
-  if(!Firebase.beginStream(fbdo, "/users/duc/In/In1"))
+  Firebase.setInt(fbdo,"users/{user}/Out/Out1",stateled);
+  if(!Firebase.beginStream(fbdo, "/users/{user}/In/In1"))
     Serial.printf("stream data begin error, %s\n\n", fbdo.errorReason().c_str());
   led.setPixelColor(0, led.Color(255, 0, 255));
   led.show();
@@ -141,7 +141,7 @@ void loop() {
     Serial.printf("Stream data begin error: %s\n", fbdo.errorReason().c_str());
   }
   if (fbdo.streamAvailable()) {
-    if(Firebase.getInt(fbdo, "/users/duc/In/In1")) {
+    if(Firebase.getInt(fbdo, "/users/{user}/In/In1")) {
       state = fbdo.intData();
     }
   }
@@ -165,7 +165,7 @@ void loop() {
   if(state != laststate) {
     Serial.println(state);
     laststate = state;
-    Firebase.setInt(fbdo,"users/duc/Out/Out1",state);
+    Firebase.setInt(fbdo,"users/{user}/Out/Out1",state);
   }
   display.setCursor(0,20);
   display.printf("Trang thai: %s", state ? "Bat":"Tat");
