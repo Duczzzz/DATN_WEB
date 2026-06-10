@@ -1,25 +1,28 @@
 // Đây là source test các nút bấm trên board do Nuke Dashboard phát triển
 // Để có thể sử dụng source code này bạn cần cài danh sách các thư viện sau: 
 // + thư viện Adafruit NeoPixel by Adafruit
-// + thư viện Adafruit BME280 libraray by Adafruit
 // + thư viện Firebase ESP32 Client by Mobizt
 // + thư viện Adafruit GFX libraray by Adafruit
-// + thư viện Adafruit SH110X by Adafruit
+// + thư viện Adafruit SSD1306 by Adafruit
+// + thư viện ESP32Servo by Kevin Harrington, John K. Bennet
 // Tác giả MinhDuc
 // 07/03/2026
 // Led RGB được cấu hình chân DIN ở GPIO9
-// Chân SDA BME280 kết nối với GPIO8
-// Chân SCL BME280 kết nối với GPIO18
+// Chân SDA OLED kết nối với GPIO13
+// Chân SCL OLED kết nối với GPIO12
+// Servo được kết nối với GPIO17
+
 #include <ESP32Servo.h>
 #include <FirebaseESP32.h>
 #include <WiFi.h>
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
 #include <Wire.h>
+#include <Adafruit_SSD1306.h>
 
-const char* ssid = "-------";
-const char* pass = "-------";
+
+const char* ssid = "........";
+const char* pass = "........";
 
 #define LED_PIN   9
 #define LED_COUNT 1
@@ -47,34 +50,40 @@ void setup() {
   led.setBrightness(50);
   led.setPixelColor(0, led.Color(255, 0, 255));
   led.show(); 
-  Wire.begin(8,18);
+  Wire.begin(13,12);
   if (!display.begin(SSD1306_SWITCHCAPVCC, i2c_Address)) {
     while (1);
   }
-  myservo.attach(servoPin);
+	ESP32PWM::allocateTimer(0);
+	ESP32PWM::allocateTimer(1);
+	ESP32PWM::allocateTimer(2);
+	ESP32PWM::allocateTimer(3);
+	myservo.setPeriodHertz(50);
+	myservo.attach(servoPin, 1000, 2000);
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0, 0);
-  display.printf("He thong dang \nkhoi dong...");
+  display.setCursor(25, 30);
+  display.print("NUKEDASHBOARD");
   display.display();
-  delay(1000);
   pinMode(LED,OUTPUT);
   digitalWrite(LED,0);
   Serial.begin(115200);
   Serial.println("He thong dang khoi dong...");
   display.display();
-  delay(100);
+  delay(1000);
   display.clearDisplay();
   WiFi.begin(ssid,pass);
   while (WiFi.status() != WL_CONNECTED) {
     led.setPixelColor(0, led.Color(255, 0, 255));
     led.show();
     Serial.println("dang khoi dong WiFi...");
-    display.setCursor(0,0);
-    display.print("Conecting WiFi");
+    display.setCursor(10,0);
+    display.print("Dang ket noi WiFi");
+    display.setCursor(0,20);
+    display.printf("SSID: %s",ssid);
     if(demwf < 80) {
-      display.setCursor(demwf,10);
+      display.setCursor(demwf,30);
       display.print(".");
       Serial0.println(".");
     }
@@ -103,14 +112,27 @@ void setup() {
   display.clearDisplay();
   led.setPixelColor(0, led.Color(0, 255, 0));
   led.show();
+  myservo.write(0);
+  delay(100);
+  myservo.write(90);
+  delay(100);
+  myservo.write(180);
+  delay(100);
+  myservo.write(0);
+  delay(100);
 }
 
 void loop() {
+  int rssi = WiFi.RSSI();
   display.clearDisplay();
   if(Firebase.getInt(fbdo,"/users/{user}/Servo/Servo-0")) pos = fbdo.intData();
   myservo.write(pos);
-  display.setCursor(0,0);
+  display.setCursor(20,0);
+  display.print("DIEU KHIEN SERVO");
+  display.setCursor(0,20);
   display.printf("goc: %d",pos);
+  display.setCursor(0,30);
+  display.printf("RSSI WIFI: %d dbm",rssi);
   display.display();
   delay(1000);
 }
