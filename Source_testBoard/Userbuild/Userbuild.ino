@@ -25,8 +25,8 @@
 #include <Update.h>
 #include <Adafruit_BME280.h>
 
-const char* ssid = "........";
-const char* pass = "........";
+const char* ssid = "DUC";
+const char* pass = "14042004";
 #define LED_COUNT 1
 #define LED_RGB 9
 Adafruit_NeoPixel led(LED_COUNT, LED_RGB, NEO_GRB + NEO_KHZ800);
@@ -44,7 +44,7 @@ Adafruit_SSD1306 display = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &I2C_OL
 
 Adafruit_BME280 bme;
 
-const char* firmwareUrl = "https://raw.githubusercontent.com/Duczzzz/testOTA/main/firmware.ino.bin";
+const char* firmwareUrl = "https://raw.githubusercontent.com/Duczzzz/testOTA/main/firmware_duc.ino.bin";
 
 #define DATABASE_URL "https://doantn-885dc-default-rtdb.firebaseio.com/"
 #define DATABASE_SECRET "rPb2lv5DjHze997hD9pxnzTzWJsir4wwdP1poStt"
@@ -57,12 +57,11 @@ int demwf = 0;
 void getupdate()
 {
     display.setTextColor(SSD1306_WHITE);
-    Firebase.setInt(fbdo, "/updateOTA",0);  
+    Firebase.setInt(fbdo, "/users/{user}/updateOTA",0);  
     Serial.print("Firmware URL: ");
     Serial.println(firmwareUrl);
     HTTPClient http;
     http.begin(firmwareUrl);
-    Firebase.setInt(fbdo,"/updateOTA",0);
     int httpCode = http.GET();
 
     if (httpCode == HTTP_CODE_OK)
@@ -224,7 +223,7 @@ void setup() {
 }
 
 void loop() {
-  if(Firebase.getInt(fbdo, "/updateOTA")) checkupdate = fbdo.intData();
+  if(Firebase.getInt(fbdo, "/users/{user}/updateOTA")) checkupdate = fbdo.intData();
   if(checkupdate == 1) {
     display.clearDisplay();
     display.setTextSize(1);
