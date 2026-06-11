@@ -25,8 +25,8 @@
 #include <Update.h>
 #include <Adafruit_BME280.h>
 
-const char* ssid = "DUC";
-const char* pass = "14042004";
+const char* ssid = "........";
+const char* pass = "........";
 #define LED_COUNT 1
 #define LED_RGB 9
 Adafruit_NeoPixel led(LED_COUNT, LED_RGB, NEO_GRB + NEO_KHZ800);
