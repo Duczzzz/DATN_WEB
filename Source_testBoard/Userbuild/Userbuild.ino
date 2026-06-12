@@ -44,7 +44,7 @@ Adafruit_SSD1306 display = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &I2C_OL
 
 Adafruit_BME280 bme;
 
-const char* firmwareUrl = "https://raw.githubusercontent.com/Duczzzz/testOTA/main/firmware_duc.ino.bin";
+const char* firmwareUrl = "https://raw.githubusercontent.com/Duczzzz/testOTA/main/firmware_{user}.ino.bin";
 
 #define DATABASE_URL "https://doantn-885dc-default-rtdb.firebaseio.com/"
 #define DATABASE_SECRET "rPb2lv5DjHze997hD9pxnzTzWJsir4wwdP1poStt"
